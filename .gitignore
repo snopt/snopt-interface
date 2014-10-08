@@ -17,7 +17,6 @@ mod
 autom4te.cache
 configure
 Makefile
-config
 config.log
 config.status
 libtool
