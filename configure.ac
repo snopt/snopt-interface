@@ -21,6 +21,9 @@ AC_PROG_FC
 AC_PROG_CC
 AC_PROG_CXX
 
+AC_FC_LIBRARY_LDFLAGS
+AC_SUBST([FCLIBS])
+
 AC_FC_MODULE_OUTPUT_FLAG([],
   [ case $FC in
       *nagfor* ) FC_MODOUT="-mdir ";;
