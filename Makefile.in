@@ -151,10 +151,10 @@ $(SNOPT_CPP_EX_OBJDIR)/sntoyB: $(SNOPT_CPP_EX_SRCDIR)/sntoyB.lo
 $(SNOPT_CPP_EX_OBJDIR)/sntoyB.lo: $(SNOPT_CPP_EX_SRCDIR)/sntoyB.cpp
 	$(COMPILE_CXX) $(CXXFLAGS) $(SNOPT_INCLUDE) -c $< -o $@
 
-$(SNOPT_CPP_EX_OCJDIR)/sntoyC: $(SNOPT_CPP_EX_SRCDIR)/sntoyC.lo
+$(SNOPT_CPP_EX_OBJDIR)/sntoyC: $(SNOPT_CPP_EX_SRCDIR)/sntoyC.lo
 	$(LINK_CXX) $(CXXFLAGS) $^ -o $@ $(SNOPT_CPP_LIBS) $(FCLIBS)
 
-$(SNOPT_CPP_EX_OCJDIR)/sntoyC.lo: $(SNOPT_CPP_EX_SRCDIR)/sntoyC.cpp
+$(SNOPT_CPP_EX_OBJDIR)/sntoyC.lo: $(SNOPT_CPP_EX_SRCDIR)/sntoyC.cpp
 	$(COMPILE_CXX) $(CXXFLAGS) $(SNOPT_INCLUDE) -c $< -o $@
 
 #-----------------------------------------------------------------------
