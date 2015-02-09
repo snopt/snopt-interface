@@ -47,10 +47,10 @@ SNOPT_CPP_EX_SRCDIR = $(top_srcdir)/cppexamples
 SNOPT_C_EX_OBJDIR   = $(top_builddir)/cexamples
 SNOPT_CPP_EX_OBJDIR = $(top_builddir)/cppexamples
 
-#-----------------------------------------------------------------------
+#-------------------------------------------------<----------------------
 
 SNOPT_C_EXAMPLES    = $(SNOPT_C_EX_OBJDIR)/toyB $(SNOPT_C_EX_OBJDIR)/toyC
-SNOPT_CPP_EXAMPLES  = $(SNOPT_CPP_EX_OBJDIR)/sntoyb $(SNOPT_CPP_EX_OBJDIR)/sntoyc
+SNOPT_CPP_EXAMPLES  = $(SNOPT_CPP_EX_OBJDIR)/sntoyB $(SNOPT_CPP_EX_OBJDIR)/sntoyC
 
 #-----------------------------------------------------------------------
 
@@ -145,16 +145,16 @@ $(SNOPT_CPP_EX_OBJDIR)/%: $(SNOPT_CPP_EX_OBJDIR)/%.lo
 $(SNOPT_CPP_EX_OBJDIR)/%.lo: $(SNOPT_CPP_EX_SRCDIR)/%.cpp
 	$(COMPILE_CXX) $(CXXFLAGS) $(SNOPT_INCLUDE) -c $< -o $@
 
-$(SNOPT_CPP_EX_OBJDIR)/sntoyb: $(SNOPT_CPP_EX_OBJDIR)/sntoyb.lo
+$(SNOPT_CPP_EX_OBJDIR)/sntoyB: $(SNOPT_CPP_EX_OBJDIR)/sntoyB.lo
 	$(LINK_CXX) $(CXXFLAGS) $^ -o $@ $(SNOPT_CPP_LIBS) $(FCLIBS)
 
-$(SNOPT_CPP_EX_OBJDIR)/sntoyb.lo: $(SNOPT_CPP_EX_SRCDIR)/sntoyb.cpp
+$(SNOPT_CPP_EX_OBJDIR)/sntoyB.lo: $(SNOPT_CPP_EX_SRCDIR)/sntoyB.cpp
 	$(COMPILE_CXX) $(CXXFLAGS) $(SNOPT_INCLUDE) -c $< -o $@
 
-$(SNOPT_CPP_EX_OBJDIR)/sntoyc: $(SNOPT_CPP_EX_OBJDIR)/sntoyc.lo
+$(SNOPT_CPP_EX_OBJDIR)/sntoyC: $(SNOPT_CPP_EX_OBJDIR)/sntoyC.lo
 	$(LINK_CXX) $(CXXFLAGS) $^ -o $@ $(SNOPT_CPP_LIBS) $(FCLIBS)
 
-$(SNOPT_CPP_EX_OBJDIR)/sntoyc.lo: $(SNOPT_CPP_EX_SRCDIR)/sntoyc.cpp
+$(SNOPT_CPP_EX_OBJDIR)/sntoyC.lo: $(SNOPT_CPP_EX_SRCDIR)/sntoyC.cpp
 	$(COMPILE_CXX) $(CXXFLAGS) $(SNOPT_INCLUDE) -c $< -o $@
 
 #-----------------------------------------------------------------------
