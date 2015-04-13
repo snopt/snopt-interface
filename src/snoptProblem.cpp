@@ -584,8 +584,8 @@ snoptProblemC::~snoptProblemC()
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblemC::init2zero()
 {
-  m      =  0; n     = 0; ne    = 0; iObj   = 0;
-  nnCon  =  0; nnObj = 0; nnJac = 0; ObjAdd = 0;
+  m      =  0; n     = 0; ne    = 0; iObj   = -1;
+  nnCon  =  0; nnObj = 0; nnJac = 0; ObjAdd =  0;
   negCon = -1;
 
   hs  = 0; x  = 0;
@@ -651,7 +651,7 @@ int snoptProblemC::solve( int starttype )
   }
   if (userDataSet() != 0 ) { return 99; }
 
-  int nS, nInf, miniw, minrw;
+  int sniObj, nS, nInf, miniw, minrw;
   double sInf, Obj;
 
   if ( memCalled == 0 ) { setWorkspace(); }
@@ -662,11 +662,12 @@ int snoptProblemC::solve( int starttype )
   for ( int i = 0; i <= n; i++ ) {
     locJ[i]++;
   }
-  iObj++;
+
+  sniObj = iObj+1;
 
   f_snkerc ( &starttype, Prob,
 	     &m, &n, &ne, &nnCon, &nnObj, &nnJac,
-	     &iObj, &ObjAdd, usrfunC,
+	     &sniObj, &ObjAdd, usrfunC,
 	     snLog, snLog2, sqLog, snSTOP,
 	     Jval, indJ, locJ,
 	     bl, bu, hs, x, pi, rc,
@@ -680,7 +681,6 @@ int snoptProblemC::solve( int starttype )
   for ( int i = 0; i <= n; i++ ) {
     locJ[i]--;
   }
-  iObj--;
 
   return inform;
 }
@@ -778,7 +778,7 @@ int snoptProblemB::solve( int starttype )
   //Ensures all user data initialized.
   if (userDataSet() != 0 ) { return 99; }
 
-  int nS, nInf, miniw, minrw;
+  int sniObj, nS, nInf, miniw, minrw;
   double sInf, Obj;
 
   if ( memCalled == 0 ) { setWorkspace(); }
@@ -789,11 +789,11 @@ int snoptProblemB::solve( int starttype )
   for ( int i = 0; i <= n; i++ ) {
     locJ[i]++;
   }
-  iObj++;
+  sniObj = iObj+1;
 
   f_snkerb ( &starttype, Prob,
 	     &m, &n, &ne, &nnCon, &nnObj, &nnJac,
-	     &iObj, &ObjAdd, funcon, funobj,
+	     &sniObj, &ObjAdd, funcon, funobj,
 	     snLog, snLog2, sqLog, snSTOP,
 	     Jval, indJ, locJ,
 	     bl, bu, hs, x, pi, rc,
@@ -807,7 +807,6 @@ int snoptProblemB::solve( int starttype )
   for ( int i = 0; i <= n; i++ ) {
     locJ[i]--;
   }
-  iObj--;
 
   return inform;
 }

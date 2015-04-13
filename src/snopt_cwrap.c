@@ -45,7 +45,7 @@ void init2zero ( snProblem* prob )
   prob->nnCon     =  0;
   prob->nnObj     =  0;
   prob->nnJac     =  0;
-  prob->iObj      =  0;
+  prob->iObj      = -1;
   prob->ObjAdd    =  0;
 
   prob->valJ      = NULL;
@@ -354,7 +354,7 @@ void setSTOP ( snProblem* prob, isnSTOP snSTOP )
 
 int solveB ( snProblem* prob, int start )
 {
-  int i, inform, miniw, minrw, nInf, nS;
+  int i, inform, iObj, miniw, minrw, nInf, nS;
   double sInf, Obj;
 
   assert( prob->initCalled == 1 );
@@ -369,10 +369,11 @@ int solveB ( snProblem* prob, int start )
   for ( i = 0; i <= prob->n; i++ ) {
     prob->locJ[i]++;
   }
-  prob->iObj++;
+
+  iObj = prob->iObj+1;
 
   f_snkerb ( &start, prob->name, &(prob->m), &(prob->n), &(prob->ne),
-	     &(prob->nnCon), &(prob->nnObj), &(prob->nnJac), &(prob->iObj),
+	     &(prob->nnCon), &(prob->nnObj), &(prob->nnJac), &iObj,
 	     &(prob->ObjAdd),
 	     prob->funcon, prob->funobj,
 	     prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
@@ -389,7 +390,6 @@ int solveB ( snProblem* prob, int start )
   for ( i = 0; i <= prob->n; i++ ) {
     prob->locJ[i]--;
   }
-  prob->iObj--;
 
   return inform;
 }
@@ -398,7 +398,7 @@ int solveB ( snProblem* prob, int start )
 
 int solveC ( snProblem* prob, int start )
 {
-  int i, inform, miniw, minrw, nInf, nS;
+  int i, inform, iObj, miniw, minrw, nInf, nS;
   double sInf, Obj;
 
   assert( prob->initCalled == 1 );
@@ -413,11 +413,11 @@ int solveC ( snProblem* prob, int start )
   for ( i = 0; i <= prob->n; i++ ) {
     prob->locJ[i]++;
   }
-  prob->iObj++;
+  iObj = prob->iObj+1;
 
   f_snkerc ( &start, prob->name,
 	     &(prob->m), &(prob->n), &(prob->ne), &(prob->nnCon),
-	     &(prob->nnObj), &(prob->nnJac), &(prob->iObj),
+	     &(prob->nnObj), &(prob->nnJac), &iObj,
 	     &(prob->ObjAdd), prob->usrfun,
 	     prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
 	     prob->valJ, prob->indJ, prob->locJ,
@@ -433,7 +433,6 @@ int solveC ( snProblem* prob, int start )
   for ( i = 0; i <= prob->n; i++ ) {
     prob->locJ[i]--;
   }
-  prob->iObj--;
 
   return inform;
 }
