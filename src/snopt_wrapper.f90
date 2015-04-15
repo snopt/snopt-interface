@@ -200,10 +200,10 @@ contains
   subroutine f_sninit ( name, len, iPrint, iSumm, iw, leniw, rw, lenrw ) &
        bind(C,name="f_sninit")
 
-    integer(c_int),    intent(in)    :: len, iPrint, iSumm, leniw, lenrw
-    character(c_char), intent(in)    :: name(len)
-    integer(c_int),    intent(inout) :: iw(leniw)
-    real(c_double),    intent(inout) :: rw(lenrw)
+    integer(c_int),    intent(in), value :: len, iPrint, iSumm, leniw, lenrw
+    character(c_char), intent(in)        :: name(len)
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
 
     !===========================================================================
     ! Allocate (basic 500) workspace.
@@ -238,10 +238,10 @@ contains
   subroutine f_snsetprint ( name, len, iPrint, iw, leniw, rw, lenrw ) &
        bind(C,name="f_snsetprint")
 
-    integer(c_int),    intent(in)    :: len, iPrint, leniw, lenrw
-    character(c_char), intent(in)    :: name(len)
-    integer(c_int),    intent(inout) :: iw(leniw)
-    real(c_double),    intent(inout) :: rw(lenrw)
+    integer(c_int),    intent(in), value :: len, iPrint, leniw, lenrw
+    character(c_char), intent(in)        :: name(len)
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
 
     !===========================================================================
     integer        :: Errors, j
@@ -269,11 +269,11 @@ contains
   subroutine f_snspec ( name, len, inform, iw, leniw, rw, lenrw ) &
        bind(C,name="f_snspec")
 
-    integer(c_int),    intent(in)    :: len, leniw, lenrw
-    character(c_char), intent(in)    :: name(len)
-    integer(c_int),    intent(inout) :: iw(leniw)
-    real(c_double),    intent(inout) :: rw(lenrw)
-    integer(c_int),    intent(out)   :: inform
+    integer(c_int),    intent(in), value :: len, leniw, lenrw
+    character(c_char), intent(in)        :: name(len)
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
+    integer(c_int),    intent(out)       :: inform
 
     !===========================================================================
     integer        :: iSpec, j
@@ -304,10 +304,10 @@ contains
   subroutine f_snmema ( inform, nF, n, lenA, lenG, miniw, minrw, &
                         iw, leniw, rw, lenrw ) bind(C,name="f_snmema")
 
-    integer(c_int), intent(in)    :: n, nF, lenA, lenG, leniw, lenrw
-    integer(c_int), intent(inout) :: iw(leniw)
-    real(c_double), intent(inout) :: rw(lenrw)
-    integer(c_int), intent(out)   :: inform, miniw, minrw
+    integer(c_int), intent(in), value :: n, nF, lenA, lenG, leniw, lenrw
+    integer(c_int), intent(inout)     :: iw(leniw)
+    real(c_double), intent(inout)     :: rw(lenrw)
+    integer(c_int), intent(out)       :: inform, miniw, minrw
 
     !===========================================================================
     integer :: mincw, nxname, nFname
@@ -329,17 +329,17 @@ contains
                        miniw, minrw, iu, leniu, ru, lenru,    &
                        iw, leniw, rw, lenrw ) bind(C,name="f_snjac")
 
-    integer(c_int), intent(in)    :: n, nF, lenA, lenG, &
-                                     leniu, lenru, leniw, lenrw
-    real(c_double), intent(in)    :: xlow(n), xupp(n)
+    integer(c_int), intent(in), value :: n, nF, lenA, lenG, &
+                                         leniu, lenru, leniw, lenrw
+    real(c_double), intent(in)        :: xlow(n), xupp(n)
 
-    integer(c_int), intent(inout) :: iAfun(lenA), jAvar(lenA), &
-                                     iGfun(lenG), jGvar(lenG), &
-                                     iw(leniw), iu(leniu)
-    real(c_double), intent(inout) :: x(n), A(lenA), rw(lenrw), ru(lenru)
+    integer(c_int), intent(inout)     :: iAfun(lenA), jAvar(lenA), &
+                                         iGfun(lenG), jGvar(lenG), &
+                                         iw(leniw), iu(leniu)
+    real(c_double), intent(inout)     :: x(n), A(lenA), rw(lenrw), ru(lenru)
 
-    integer(c_int), intent(out)   :: inform, neA, neG, miniw, minrw
-    type(c_funptr), value         :: usrfunc
+    integer(c_int), intent(out)       :: inform, neA, neG, miniw, minrw
+    type(c_funptr), value             :: usrfunc
 
     !===========================================================================
     integer :: mincw
@@ -366,11 +366,13 @@ contains
                         iu, leniu, ru, lenru,                         &
                         iw, leniw, rw, lenrw ) bind(C,name="f_snopta")
 
-    integer(c_int),    intent(in) :: Start, n, nF, ObjRow, neA, neG, &
-                                     leniu, lenru, leniw, lenrw,     &
-                                     iAfun(neA), jAvar(neA),         &
+    integer(c_int), intent(in), value :: Start, n, nF, ObjRow, neA, neG, &
+                                         leniu, lenru, leniw, lenrw
+    real(c_double), intent(in), value :: ObjAdd
+
+    integer(c_int),    intent(in) :: iAfun(neA), jAvar(neA), &
                                      iGfun(neG), jGvar(neG)
-    real(c_double),    intent(in) :: ObjAdd, Flow(nF), Fupp(nF), &
+    real(c_double),    intent(in) :: Flow(nF), Fupp(nF), &
                                      xlow(n), xupp(n), A(neA)
     character(c_char), intent(in) :: Prob(*)
 
@@ -425,11 +427,13 @@ contains
                         iu, leniu, ru, lenru,                           &
                         iw, leniw, rw, lenrw ) bind(C,name="f_snkera")
 
-    integer(c_int),    intent(in) :: Start, n, nF, ObjRow, neA, neG, &
-                                     leniu, lenru, leniw, lenrw,     &
-                                     iAfun(neA), jAvar(neA),         &
+    integer(c_int), intent(in), value :: Start, n, nF, ObjRow, neA, neG, &
+                                         leniu, lenru, leniw, lenrw
+    real(c_double), intent(in), value :: ObjAdd
+
+    integer(c_int),    intent(in) :: iAfun(neA), jAvar(neA), &
                                      iGfun(neG), jGvar(neG)
-    real(c_double),    intent(in) :: ObjAdd, Flow(nF), Fupp(nF), &
+    real(c_double),    intent(in) :: Flow(nF), Fupp(nF), &
                                      xlow(n), xupp(n), A(neA)
     character(c_char), intent(in) :: Prob(*)
 
@@ -501,12 +505,12 @@ contains
                        miniw, minrw, iw, leniw, rw, lenrw ) &
                        bind(C,name="f_snmem")
 
-    integer(c_int), intent(in)    :: m, n, ne, negCon, nnCon, nnObj, nnJac, &
-                                     leniw, lenrw
-    integer(c_int), intent(inout) :: iw(leniw)
-    real(c_double), intent(inout) :: rw(lenrw)
+    integer(c_int), intent(in), value :: m, n, ne, negCon, nnCon, nnObj, nnJac, &
+                                         leniw, lenrw
+    integer(c_int), intent(inout)     :: iw(leniw)
+    real(c_double), intent(inout)     :: rw(lenrw)
 
-    integer(c_int), intent(out)   :: INFO, miniw, minrw
+    integer(c_int), intent(out)       :: INFO, miniw, minrw
 
     !===========================================================================
     integer :: mincw
@@ -527,10 +531,12 @@ contains
                         iw, leniw, rw, lenrw ) &
                         bind(C,name="f_snoptb")
 
-    integer(c_int),    intent(in) :: Start, m, n, ne, &
-                                     nnCon, nnObj, nnJac, iObj, &
-                                     leniu, lenru, leniw, lenrw
-    real(c_double),    intent(in) :: ObjAdd, Jval(ne), bl(n+m), bu(n+m)
+    integer(c_int), intent(in), value :: Start, m, n, ne, &
+                                         nnCon, nnObj, nnJac, iObj, &
+                                         leniu, lenru, leniw, lenrw
+    real(c_double), intent(in), value :: ObjAdd
+
+    real(c_double),    intent(in) :: Jval(ne), bl(n+m), bu(n+m)
     character(c_char), intent(in) :: Prob(*)
 
     integer(c_int), intent(inout) :: nInf, nS, indJ(ne), locJ(n+1), &
@@ -593,10 +599,12 @@ contains
                         miniw, minrw, iu, leniu, ru, lenru,         &
                         iw, leniw, rw, lenrw ) bind(C,name="f_snkerb")
 
-    integer(c_int),    intent(in) :: Start, m, n, ne,           &
-                                     nnCon, nnObj, nnJac, iObj, &
-                                     leniu, lenru, leniw, lenrw
-    real(c_double),    intent(in) :: ObjAdd, Jval(ne), bl(n+m), bu(n+m)
+    integer(c_int), intent(in), value :: Start, m, n, ne, &
+                                         nnCon, nnObj, nnJac, iObj, &
+                                         leniu, lenru, leniw, lenrw
+    real(c_double), intent(in), value :: ObjAdd
+
+    real(c_double),    intent(in) :: Jval(ne), bl(n+m), bu(n+m)
     character(c_char), intent(in) :: Prob(*)
 
     integer(c_int), intent(inout) :: nInf, nS, indJ(ne), locJ(n+1), &
@@ -680,10 +688,12 @@ contains
                         miniw, minrw, iu, leniu, ru, lenru,               &
                         iw, leniw, rw, lenrw ) bind(C,name="f_snoptc")
 
-    integer(c_int),    intent(in) :: Start, m, n, ne, &
-                                     nnCon, nnObj, nnJac, iObj, &
-                                     leniu, lenru, leniw, lenrw
-    real(c_double),    intent(in) :: ObjAdd, Jval(ne), bl(n+m), bu(n+m)
+    integer(c_int), intent(in), value :: Start, m, n, ne, &
+                                         nnCon, nnObj, nnJac, iObj, &
+                                         leniu, lenru, leniw, lenrw
+    real(c_double), intent(in), value :: ObjAdd
+
+    real(c_double),    intent(in) :: Jval(ne), bl(n+m), bu(n+m)
     character(c_char), intent(in) :: Prob(*)
 
     integer(c_int), intent(inout) :: nInf, nS, indJ(ne), locJ(n+1), &
@@ -743,10 +753,12 @@ contains
                         miniw, minrw, iu, leniu, ru, lenru,             &
                         iw, leniw, rw, lenrw ) bind(C,name="f_snkerc")
 
-    integer(c_int),    intent(in) :: Start, m, n, ne, &
-                                     nnCon, nnObj, nnJac, iObj, &
-                                     leniu, lenru, leniw, lenrw
-    real(c_double),    intent(in) :: ObjAdd, Jval(ne), bl(n+m), bu(n+m)
+    integer(c_int), intent(in), value :: Start, m, n, ne, &
+                                         nnCon, nnObj, nnJac, iObj, &
+                                         leniu, lenru, leniw, lenrw
+    real(c_double), intent(in), value :: ObjAdd
+
+    real(c_double),    intent(in) :: Jval(ne), bl(n+m), bu(n+m)
     character(c_char), intent(in) :: Prob(*)
 
     integer(c_int), intent(inout) :: nInf, nS, indJ(ne), locJ(n+1), &
@@ -825,9 +837,9 @@ contains
                        cCon, cJac, cMul, Objf, grad, Hess, x,               &
                        iw, leniw, rw, lenrw ) bind(C,name="f_npopt")
 
-    integer(c_int),    intent(in) :: n, nclin, ncnln, ldA, ldcJ, ldH, &
-                                     leniw, lenrw
-    real(c_double),    intent(in) :: bl(n+nclin+ncnln), bu(n+nclin+ncnln), &
+    integer(c_int), intent(in), value :: n, nclin, ncnln, ldA, ldcJ, ldH, &
+                                         leniw, lenrw
+    real(c_double), intent(in)    :: bl(n+nclin+ncnln), bu(n+nclin+ncnln), &
                                      A(ldA,*)
 
     integer(c_int), intent(inout) :: iState(n+nclin+ncnln)
@@ -863,11 +875,11 @@ contains
                         cCon, cJac, cMul, Objf, grad, Hess, x,           &
                         iw, leniw, rw, lenrw ) bind(C,name="f_npkern")
 
-    integer(c_int),    intent(in) :: n, nclin, ncnln, ldA, ldcJ, ldH, &
-                                     leniw, lenrw
-    real(c_double),    intent(in) :: bl(n+nclin+ncnln), bu(n+nclin+ncnln), &
-                                     A(ldA,*)
+    integer(c_int), intent(in), value :: n, nclin, ncnln, ldA, ldcJ, ldH, &
+                                         leniw, lenrw
 
+    real(c_double), intent(in)    :: bl(n+nclin+ncnln), bu(n+nclin+ncnln), &
+                                     A(ldA,*)
     integer(c_int), intent(inout) :: iState(n+nclin+ncnln)
     real(c_double), intent(inout) :: cCon(*), grad(n), Hess(ldH,*), x(n), &
                                      cJac(ldcJ,*), cMul(n+nclin+ncnln)
@@ -915,11 +927,11 @@ contains
 
   subroutine f_snset ( option, len, Errors, iw, leniw, rw, lenrw ) &
        bind(C,name="f_snset")
-    integer(c_int),    intent(in)    :: len, leniw, lenrw
-    character(c_char), intent(in)    :: option(len)
-    integer(c_int),    intent(inout) :: iw(leniw)
-    real(c_double),    intent(inout) :: rw(lenrw)
-    integer(c_int),    intent(out)   :: Errors
+    integer(c_int),    intent(in), value :: len, leniw, lenrw
+    character(c_char), intent(in)        :: option(len)
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
+    integer(c_int),    intent(out)       :: Errors
 
     !===========================================================================
     character(len) :: buffer
@@ -940,11 +952,11 @@ contains
 
   subroutine f_snseti ( option, len, ivalue, Errors, iw, leniw, rw, lenrw ) &
        bind(C,name="f_snseti")
-    integer(c_int),    intent(in)    :: len, ivalue, leniw, lenrw
-    character(c_char), intent(in)    :: option(len)
-    integer(c_int),    intent(inout) :: iw(leniw)
-    real(c_double),    intent(inout) :: rw(lenrw)
-    integer(c_int),    intent(out)   :: Errors
+    integer(c_int),    intent(in), value :: len, ivalue, leniw, lenrw
+    character(c_char), intent(in)        :: option(len)
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
+    integer(c_int),    intent(out)       :: Errors
 
     !===========================================================================
     character(len) :: buffer
@@ -966,12 +978,12 @@ contains
 
   subroutine f_snsetr ( option, len, rvalue, Errors, iw, leniw, rw, lenrw ) &
        bind(C,name="f_snsetr")
-    integer(c_int),    intent(in)    :: len, leniw, lenrw
-    real(c_double),    intent(in)    :: rvalue
-    character(c_char), intent(in)    :: option(len)
-    integer(c_int),    intent(inout) :: iw(leniw)
-    real(c_double),    intent(inout) :: rw(lenrw)
-    integer(c_int),    intent(out)   :: Errors
+    integer(c_int),    intent(in), value :: len, leniw, lenrw
+    real(c_double),    intent(in)        :: rvalue
+    character(c_char), intent(in)        :: option(len)
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
+    integer(c_int),    intent(out)       :: Errors
 
     !===========================================================================
     character(len) :: buffer
@@ -994,12 +1006,12 @@ contains
 
   subroutine f_sngetc ( option, lin, cvalue, lout, Errors, &
                         iw, leniw, rw, lenrw ) bind(C,name="f_sngetc")
-    integer(c_int),    intent(in)    :: lin, lout, leniw, lenrw
-    character(c_char), intent(in)    :: option(lin)
-    character(c_char), intent(inout) :: cvalue(lout)
-    integer(c_int),    intent(inout) :: iw(leniw)
-    real(c_double),    intent(inout) :: rw(lenrw)
-    integer(c_int),    intent(out)   :: Errors
+    integer(c_int),    intent(in), value :: lin, lout, leniw, lenrw
+    character(c_char), intent(in)        :: option(lin)
+    character(c_char), intent(inout)     :: cvalue(lout)
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
+    integer(c_int),    intent(out)       :: Errors
 
     !===========================================================================
     character(lin)  :: buffer
@@ -1026,12 +1038,11 @@ contains
 
   subroutine f_sngeti ( option, len, ivalue, Errors, iw, leniw, rw, lenrw ) &
        bind(C,name="f_sngeti")
-    integer(c_int),    intent(in)    :: len, leniw, lenrw
-    character(c_char), intent(in)    :: option(len)
-    integer(c_int),    intent(out)   :: ivalue
-    integer(c_int),    intent(inout) :: iw(leniw)
-    real(c_double),    intent(inout) :: rw(lenrw)
-    integer(c_int),    intent(out)   :: Errors
+    integer(c_int),    intent(in), value :: len, leniw, lenrw
+    character(c_char), intent(in)        :: option(len)
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
+    integer(c_int),    intent(out)       :: ivalue, Errors
 
     !===========================================================================
     character(len) :: buffer
@@ -1052,12 +1063,12 @@ contains
 
   subroutine f_sngetr ( option, len, rvalue, Errors, iw, leniw, rw, lenrw ) &
        bind(C,name="f_sngetr")
-    integer(c_int),    intent(in)    :: len, leniw, lenrw
-    character(c_char), intent(in)    :: option(len)
-    real(c_double),    intent(out)   :: rvalue
-    integer(c_int),    intent(inout) :: iw(leniw)
-    real(c_double),    intent(inout) :: rw(lenrw)
-    integer(c_int),    intent(out)   :: Errors
+    integer(c_int),    intent(in), value :: len, leniw, lenrw
+    character(c_char), intent(in)        :: option(len)
+    real(c_double),    intent(out)       :: rvalue
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
+    integer(c_int),    intent(out)       :: Errors
 
     !===========================================================================
     character(len) :: buffer
@@ -1077,7 +1088,7 @@ contains
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   subroutine f_snend ( iPrint ) bind(C,name="f_snend")
-    integer(c_int), intent(in) :: iPrint
+    integer(c_int), intent(in), value :: iPrint
 
     !===========================================================================
 

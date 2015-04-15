@@ -19,6 +19,7 @@ typedef struct {
   int    isumm;
   int    memCalled;
   int    initCalled;
+  int    sizeCalled;
 
   int    m;
   int    n;
@@ -93,12 +94,15 @@ void setProblemSize ( snProblem* prob, int m, int n, int ne,
 		      int nnCon, int nnJac, int nnObj );
 void setObjective   ( snProblem* prob, int iObj, double ObjAdd);
 
+void setProblemData( snProblem *prob, double *bl, double *bu,
+		     int *hs, double *x, int *indJ, int *locJ, double *valJ );
+
 void setUserfun     ( snProblem* prob, snFunC func );
 void setFuncon      ( snProblem* prob, snConB func );
 void setFunobj      ( snProblem* prob, snObjB func );
 
-int solveB          ( snProblem* prob, int start );
-int solveC          ( snProblem* prob, int start );
+int solveB          ( snProblem* prob, int start, double objective );
+int solveC          ( snProblem* prob, int start, double objective );
 
 void deleteSNOPT    ( snProblem* prob );
 

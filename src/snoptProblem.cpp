@@ -32,7 +32,7 @@ snoptProblem::snoptProblem() : isumm(snUnitS), iprint(0)
   allocR( 500 );
 
   probID = pID++;
-  f_sninit( "", &len, &iprint, &isumm, iw, &leniw, rw, &lenrw );
+  f_sninit( "", len, iprint, isumm, iw, leniw, rw, lenrw );
   initCalled = 1;
 }
 
@@ -51,7 +51,7 @@ snoptProblem::snoptProblem( const char *name ) :
   probID = pID++;
   iprint = probID;
 
-  f_sninit( "", &len, &iprint, &isumm, iw, &leniw, rw, &lenrw );
+  f_sninit( "", len, iprint, isumm, iw, leniw, rw, lenrw );
   initCalled = 1;
 }
 
@@ -70,14 +70,14 @@ snoptProblem::snoptProblem( const char *name, const char *prtfile ) :
   probID = pID++;
   iprint = probID;
 
-  f_sninit( prtfile, &len, &iprint, &isumm, iw, &leniw, rw, &lenrw );
+  f_sninit( prtfile, len, iprint, isumm, iw, leniw, rw, lenrw );
   initCalled = 1;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 snoptProblem::~snoptProblem()
 {
-  f_snend( &iprint );
+  f_snend( iprint );
 
   delete []rw;  delete []iw;
 }
@@ -169,7 +169,7 @@ void snoptProblem::setPrintFile( const char *prtname )
   int len = strlen(prtname);
 
   iprint = probID;
-  f_snsetprint( prtname, &len, &iprint, iw, &leniw, rw, &lenrw );
+  f_snsetprint( prtname, len, iprint, iw, leniw, rw, lenrw );
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -178,7 +178,7 @@ int snoptProblem::setSpecsFile( const char *specname )
   assert( initCalled == 1 );
 
   int len = strlen(specname);
-  f_snspec( specname, &len, &inform, iw, &leniw, rw, &lenrw );
+  f_snspec( specname, len, &inform, iw, leniw, rw, lenrw );
   if( inform != 101 ){
     printf("Warning: unable to find specs file %s \n", specname);
   }
@@ -192,7 +192,7 @@ int snoptProblem::setParameter( const char *stropt )
   assert( initCalled == 1 );
 
   int errors, stropt_len = strlen(stropt);
-  f_snset( stropt, &stropt_len, &errors, iw, &leniw, rw, &lenrw );
+  f_snset( stropt, stropt_len, &errors, iw, leniw, rw, lenrw );
   return errors;
 }
 
@@ -205,8 +205,8 @@ int snoptProblem::getParameter( const char *stroptin, char *stroptout )
   int stroptin_len  = strlen(stroptin);
   int stroptout_len = strlen(stroptout);
 
-  f_sngetc( stroptin, &stroptin_len, stroptout, &stroptout_len,
-	    &errors, iw, &leniw, rw, &lenrw );
+  f_sngetc( stroptin, stroptin_len, stroptout, stroptout_len,
+	    &errors, iw, leniw, rw, lenrw );
   return errors;
 }
 
@@ -217,8 +217,8 @@ int snoptProblem::setIntParameter( const char *stropt, int opt )
 
   int errors, stropt_len = strlen(stropt);
 
-  f_snseti( stropt, &stropt_len, &opt, &errors,
-	    iw, &leniw, rw, &lenrw );
+  f_snseti( stropt, stropt_len, opt, &errors,
+	    iw, leniw, rw, lenrw );
   return errors;
 }
 
@@ -228,8 +228,8 @@ int snoptProblem::getIntParameter( const char *stropt, int &opt )
   assert( initCalled == 1 );
 
   int errors, stropt_len = strlen(stropt);
-  f_sngeti( stropt, &stropt_len, &opt, &errors,
-	    iw, &leniw, rw, &lenrw );
+  f_sngeti( stropt, stropt_len, &opt, &errors,
+	    iw, leniw, rw, lenrw );
   return errors;
 }
 
@@ -239,8 +239,8 @@ int snoptProblem::setRealParameter( const char *stropt, double opt )
   assert( initCalled == 1 );
 
   int errors, stropt_len = strlen(stropt);
-  f_snsetr( stropt, &stropt_len, &opt, &errors,
-	    iw, &leniw, rw, &lenrw );
+  f_snsetr( stropt, stropt_len, opt, &errors,
+	    iw, leniw, rw, lenrw );
   return errors;
 }
 
@@ -250,8 +250,8 @@ int snoptProblem::getRealParameter( const char *stropt, double &opt )
   assert( initCalled == 1 );
 
   int errors, stropt_len = strlen(stropt);
-  f_sngetr( stropt, &stropt_len, &opt, &errors,
-	    iw, &leniw, rw, &lenrw );
+  f_sngetr( stropt, stropt_len, &opt, &errors,
+	    iw, leniw, rw, lenrw );
   return errors;
 }
 
@@ -334,8 +334,8 @@ void snoptProblemA::init2zero()
   // Data that must be set by user.
   jacComputed = 0;
 
-  n      = 0;  neF   = 0;
-  ObjRow = 0; ObjAdd = 0;
+  n      =  0;  neF   = 0;
+  ObjRow = -1; ObjAdd = 0;
 
   x = 0; xlow = 0; xupp = 0; xmul = 0;
   F = 0; Flow = 0; Fupp = 0; Fmul = 0;
@@ -390,8 +390,8 @@ void snoptProblemA::setWorkspace()
     memGuess = 1;
   }
 
-  f_snmema( &inform, &neF, &n, &neA, &neG, &miniw, &minrw,
-	    iw, &leniw, rw, &lenrw );
+  f_snmema( &inform, neF, n, neA, neG, &miniw, &minrw,
+	    iw, leniw, rw, lenrw );
 
   if ( miniw > leniw ) { reallocI ( miniw ); }
   if ( minrw > lenrw ) { reallocR ( minrw ); }
@@ -404,8 +404,8 @@ void snoptProblemA::setWorkspace()
     assert ( neA >= 0 );
     assert ( neG >= 0 );
 
-    f_snmema( &inform, &neF, &n, &neA, &neG, &miniw, &minrw,
-	      iw, &leniw, rw, &lenrw );
+    f_snmema( &inform, neF, n, neA, neG, &miniw, &minrw,
+	      iw, leniw, rw, lenrw );
 
     if ( miniw > leniw ) { reallocI ( miniw ); }
     if ( minrw > lenrw ) { reallocR ( minrw ); }
@@ -436,11 +436,11 @@ int snoptProblemA::computeJac()
 
   if ( memCalled == 0 ) { setWorkspace(); }
 
-  f_snjac( &inform, &neF, &n, usrfunA, x, xlow, xupp,
-	   iAfun, jAvar, &lenA, &neA, A,
-	   iGfun, jGvar, &lenG, &neG,
-	   &miniw, &minrw, iu, &leniu, ru, &lenru,
-	   iw, &leniw, rw, &lenrw );
+  f_snjac( &inform, neF, n, usrfunA, x, xlow, xupp,
+	   iAfun, jAvar, lenA, neA, A,
+	   iGfun, jGvar, lenG, neG,
+	   &miniw, &minrw, iu, leniu, ru, lenru,
+	   iw, leniw, rw, lenrw );
 
   jacComputed = 1;
 
@@ -455,7 +455,7 @@ int snoptProblemA::solve( int starttype )
   //Ensures all user data initialized.
   if (userDataSet() != 0 ) { return 99; }
 
-  int nS, nInf, miniw, minrw;
+  int nS, nInf, miniw, minrw, snObjRow;
   double sInf;
 
   if ( memCalled == 0 ) { setWorkspace(); }
@@ -466,18 +466,18 @@ int snoptProblemA::solve( int starttype )
       iGfun[i]++; jGvar[i]++;
     }
   }
-  ObjRow++;
+  snObjRow = ObjRow+1;
 
-  f_snkera ( &starttype, Prob,
-	     &neF, &n, &ObjAdd, &ObjRow, usrfunA,
+  f_snkera ( starttype, Prob,
+	     neF, n, ObjAdd, snObjRow, usrfunA,
 	     snLog, snLog2, sqLog, snSTOP,
-	     iAfun, jAvar, &neA, A,
-	     iGfun, jGvar, &neG,
+	     iAfun, jAvar, neA, A,
+	     iGfun, jGvar, neG,
 	     xlow, xupp, Flow, Fupp, x, xstate,
 	     xmul, F, Fstate, Fmul,
 	     &inform, &nS, &nInf, &sInf,
-	     &miniw, &minrw, iu, &leniu, ru, &lenru,
-	     iw, &leniw, rw, &lenrw );
+	     &miniw, &minrw, iu, leniu, ru, lenru,
+	     iw, leniw, rw, lenrw );
 
   if ( jacComputed == 0 ) {
     for ( int i = 0; i < lenA; i++ ) {
@@ -485,7 +485,6 @@ int snoptProblemA::solve( int starttype )
       iGfun[i]--; jGvar[i]--;
     }
   }
-  ObjRow--;
 
   return inform;
 }
@@ -629,8 +628,8 @@ void snoptProblemC::setWorkspace()
     memGuess = 1;
   }
 
-  f_snmem ( &inform, &m, &n, &ne, &negCon, &nnCon, &nnObj, &nnJac,
-	    &miniw, &minrw, iw, &leniw, rw, &lenrw );
+  f_snmem ( &inform, m, n, ne, negCon, nnCon, nnObj, nnJac,
+	    &miniw, &minrw, iw, leniw, rw, lenrw );
 
   if ( miniw > leniw ) { reallocI ( miniw ); }
   if ( minrw > lenrw ) { reallocR ( minrw ); }
@@ -665,15 +664,15 @@ int snoptProblemC::solve( int starttype )
 
   sniObj = iObj+1;
 
-  f_snkerc ( &starttype, Prob,
-	     &m, &n, &ne, &nnCon, &nnObj, &nnJac,
-	     &sniObj, &ObjAdd, usrfunC,
-	     snLog, snLog2, sqLog, snSTOP,
-	     Jval, indJ, locJ,
-	     bl, bu, hs, x, pi, rc,
-	     &inform, &nS, &nInf, &sInf, &Obj,
-	     &miniw, &minrw, iu, &leniu, ru, &lenru,
-	     iw, &leniw, rw, &lenrw );
+  f_snkerc( starttype, Prob,
+	    m, n, ne, nnCon, nnObj, nnJac,
+	    sniObj, ObjAdd, usrfunC,
+	    snLog, snLog2, sqLog, snSTOP,
+	    Jval, indJ, locJ,
+	    bl, bu, hs, x, pi, rc,
+	    &inform, &nS, &nInf, &sInf, &Obj,
+	    &miniw, &minrw, iu, leniu, ru, lenru,
+	    iw, leniw, rw, lenrw );
 
   for ( int i = 0; i < ne; i++ ) {
     indJ[i]--;
@@ -791,15 +790,15 @@ int snoptProblemB::solve( int starttype )
   }
   sniObj = iObj+1;
 
-  f_snkerb ( &starttype, Prob,
-	     &m, &n, &ne, &nnCon, &nnObj, &nnJac,
-	     &sniObj, &ObjAdd, funcon, funobj,
-	     snLog, snLog2, sqLog, snSTOP,
-	     Jval, indJ, locJ,
-	     bl, bu, hs, x, pi, rc,
-	     &inform, &nS, &nInf, &sInf, &Obj,
-	     &miniw, &minrw, iu, &leniu, ru, &lenru,
-	     iw, &leniw, rw, &lenrw );
+  f_snkerb( starttype, Prob,
+	    m, n, ne, nnCon, nnObj, nnJac,
+	    sniObj, ObjAdd, funcon, funobj,
+	    snLog, snLog2, sqLog, snSTOP,
+	    Jval, indJ, locJ,
+	    bl, bu, hs, x, pi, rc,
+	    &inform, &nS, &nInf, &sInf, &Obj,
+	    &miniw, &minrw, iu, leniu, ru, lenru,
+	    iw, leniw, rw, lenrw );
 
   for ( int i = 0; i < ne; i++ ) {
     indJ[i]--;

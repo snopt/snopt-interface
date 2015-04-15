@@ -21,9 +21,9 @@ void snInit ( snProblem* prob, char* name, char* prtfile, int iprint, int isumm 
 
   len = strlen(prtfile);
 
-  f_sninit ( prtfile, &len, &(prob->iprint), &(prob->isumm),
-	     prob->iw, &(prob->leniw),
-	     prob->rw, &(prob->lenrw) );
+  f_sninit ( prtfile, len, prob->iprint, prob->isumm,
+	     prob->iw, prob->leniw,
+	     prob->rw, prob->lenrw );
   prob->initCalled = 1;
 }
 
@@ -37,6 +37,7 @@ void init2zero ( snProblem* prob )
   prob->isumm      = 6;
   prob->memCalled  = 0;
   prob->initCalled = 0;
+  prob->sizeCalled = 0;
 
   prob->m         =  0;
   prob->n         =  0;
@@ -128,8 +129,8 @@ void setPrintfile ( snProblem* prob, char *prtname )
   int len = strlen(prtname);
 
   assert( prob->initCalled == 1 );
-  f_snsetprint ( prtname, &len, &(prob->iprint),
-		 prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+  f_snsetprint( prtname, len, prob->iprint,
+		prob->iw, prob->leniw, prob->rw, prob->lenrw );
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -140,8 +141,8 @@ int setSpecsfile ( snProblem* prob, char *spcname )
   int len = strlen(spcname);
 
   assert( prob->initCalled == 1 );
-  f_snspec ( spcname, &len, &inform,
-	     prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+  f_snspec( spcname, len, &inform,
+	    prob->iw, prob->leniw, prob->rw, prob->lenrw );
 
   return inform;
 }
@@ -153,8 +154,8 @@ int setParameter ( snProblem* prob, char stropt[] )
   int errors, len = strlen(stropt);
 
   assert( prob->initCalled == 1 );
-  f_snset ( stropt, &len, &errors,
-	    prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+  f_snset( stropt, len, &errors,
+	   prob->iw, prob->leniw, prob->rw, prob->lenrw );
 
   return errors;
 }
@@ -168,8 +169,8 @@ int getParameter ( snProblem* prob, char stropt[], char strout[] )
   int outlen = strlen(strout);
 
   assert( prob->initCalled == 1 );
-  f_sngetc ( stropt, &inlen, strout, &outlen, &errors,
-	     prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+  f_sngetc( stropt, inlen, strout, outlen, &errors,
+	    prob->iw, prob->leniw, prob->rw, prob->lenrw );
   return errors;
 }
 
@@ -180,8 +181,8 @@ int setIntParameter ( snProblem* prob, char stropt[], int opt )
   int errors, len = strlen(stropt);
 
   assert( prob->initCalled == 1 );
-  f_snseti ( stropt, &len, &opt, &errors,
-	     prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+  f_snseti ( stropt, len, opt, &errors,
+	     prob->iw, prob->leniw, prob->rw, prob->lenrw );
 
   return errors;
 }
@@ -193,8 +194,8 @@ int getIntParameter ( snProblem* prob, char stropt[], int opt )
   int errors, len = strlen(stropt);
 
   assert( prob->initCalled == 1 );
-  f_sngeti ( stropt, &len, &opt, &errors,
-	     prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+  f_sngeti( stropt, len, &opt, &errors,
+	    prob->iw, prob->leniw, prob->rw, prob->lenrw );
   return errors;
 }
 
@@ -205,8 +206,8 @@ int setRealParameter ( snProblem* prob, char stropt[], double opt )
   int errors, len = strlen(stropt);
 
   assert( prob->initCalled == 1 );
-  f_snsetr ( stropt, &len, &opt, &errors,
-	     prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+  f_snsetr ( stropt, len, opt, &errors,
+	     prob->iw, prob->leniw, prob->rw, prob->lenrw );
   return errors;
 }
 
@@ -217,8 +218,8 @@ int getRealParameter ( snProblem* prob, char stropt[], double opt )
   int errors, len = strlen(stropt);
 
   assert( prob->initCalled == 1 );
-  f_sngetr ( stropt, &len, &opt, &errors,
-	     prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+  f_sngetr ( stropt, len, &opt, &errors,
+	     prob->iw, prob->leniw, prob->rw, prob->lenrw );
   return errors;
 }
 
@@ -258,16 +259,17 @@ void setWorkspace( snProblem* prob )
   int memGuess = 0;
 
   assert( prob->initCalled == 1 );
+  assert( prob->sizeCalled == 1 );
 
   if ( prob->negCon < 0 ) {
     prob->negCon = prob->nnCon*prob->nnJac;
     memGuess = 1;
   }
 
-  f_snmem ( &inform, &(prob->m), &(prob->n), &(prob->ne),
-	    &(prob->negCon), &(prob->nnCon), &(prob->nnObj),
-	    &(prob->nnJac), &miniw, &minrw,
-	    prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+  f_snmem ( &inform, prob->m, prob->n, prob->ne,
+	    prob->negCon, prob->nnCon, prob->nnObj,
+	    prob->nnJac, &miniw, &minrw,
+	    prob->iw, prob->leniw, prob->rw, prob->lenrw );
 
   if ( miniw > prob->leniw ) { reallocI(prob, miniw); }
   if ( minrw > prob->lenrw ) { reallocR(prob, minrw); }
@@ -300,6 +302,34 @@ void setProblemSize ( snProblem* prob, int m, int n, int ne,
   prob->indJ = (int*   )malloc( sizeof(int   ) * ne );
   prob->locJ = (int*   )malloc( sizeof(int   ) * (n+1) );
   prob->valJ = (double*)malloc( sizeof(double) * ne  );
+
+  prob->sizeCalled = 1;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+void setProblemData( snProblem *prob, double *bl, double *bu, int *hs,
+		     double *x, int *indJ, int *locJ, double *valJ ) {
+
+  int i;
+  assert( prob->sizeCalled == 1 );
+
+  // Copy problem data.
+  for (i = 0; i < prob->m+prob->n; i++) {
+    prob->bl[i] = bl[i];
+    prob->bu[i] = bu[i];
+    prob->x[i]  =  x[i];
+    prob->hs[i] = hs[i];
+  }
+
+  for (i = 0; i < prob->ne; i++) {
+    prob->indJ[i] = indJ[i];
+    prob->valJ[i] = valJ[i];
+  }
+
+  for (i = 0; i < prob->n+1; i++) {
+    prob->locJ[i] = locJ[i];
+  }
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -352,12 +382,13 @@ void setSTOP ( snProblem* prob, isnSTOP snSTOP )
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int solveB ( snProblem* prob, int start )
+int solveB ( snProblem* prob, int start, double objective )
 {
   int i, inform, iObj, miniw, minrw, nInf, nS;
-  double sInf, Obj;
+  double sInf;
 
   assert( prob->initCalled == 1 );
+  assert( prob->sizeCalled == 1 );
   assert( prob->funcon     != NULL);
   assert( prob->funobj     != NULL);
 
@@ -372,17 +403,17 @@ int solveB ( snProblem* prob, int start )
 
   iObj = prob->iObj+1;
 
-  f_snkerb ( &start, prob->name, &(prob->m), &(prob->n), &(prob->ne),
-	     &(prob->nnCon), &(prob->nnObj), &(prob->nnJac), &iObj,
-	     &(prob->ObjAdd),
+  f_snkerb ( start, prob->name, prob->m, prob->n, prob->ne,
+	     prob->nnCon, prob->nnObj, prob->nnJac, iObj,
+	     prob->ObjAdd,
 	     prob->funcon, prob->funobj,
 	     prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
 	     prob->valJ, prob->indJ, prob->locJ,
 	     prob->bl, prob->bu, prob->hs, prob->x, prob->pi, prob->rc,
-	     &inform, &nS, &nInf, &sInf, &Obj,
+	     &inform, &nS, &nInf, &sInf, &objective,
 	     &miniw, &minrw,
-	     prob->iu, &(prob->leniu), prob->ru, &(prob->lenru),
-	     prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+	     prob->iu, prob->leniu, prob->ru, prob->lenru,
+	     prob->iw, prob->leniw, prob->rw, prob->lenrw );
 
   for ( i = 0; i < prob->ne; i++ ) {
     prob->indJ[i]--;
@@ -396,12 +427,13 @@ int solveB ( snProblem* prob, int start )
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int solveC ( snProblem* prob, int start )
+int solveC ( snProblem* prob, int start, double objective )
 {
   int i, inform, iObj, miniw, minrw, nInf, nS;
-  double sInf, Obj;
+  double sInf;
 
   assert( prob->initCalled == 1 );
+  assert( prob->sizeCalled == 1 );
   assert( prob->usrfun     != NULL);
 
 
@@ -415,17 +447,17 @@ int solveC ( snProblem* prob, int start )
   }
   iObj = prob->iObj+1;
 
-  f_snkerc ( &start, prob->name,
-	     &(prob->m), &(prob->n), &(prob->ne), &(prob->nnCon),
-	     &(prob->nnObj), &(prob->nnJac), &iObj,
-	     &(prob->ObjAdd), prob->usrfun,
-	     prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
-	     prob->valJ, prob->indJ, prob->locJ,
-	     prob->bl, prob->bu, prob->hs, prob->x, prob->pi, prob->rc,
-	     &inform, &nS, &nInf, &sInf, &Obj,
-	     &miniw, &minrw,
-	     prob->iu, &(prob->leniu), prob->ru, &(prob->lenru),
-	     prob->iw, &(prob->leniw), prob->rw, &(prob->lenrw) );
+  f_snkerc( start, prob->name, prob->m, prob->n, prob->ne,
+	    prob->nnCon, prob->nnObj, prob->nnJac, iObj,
+	    prob->ObjAdd,
+	    prob->usrfun,
+	    prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
+	    prob->valJ, prob->indJ, prob->locJ,
+	    prob->bl, prob->bu, prob->hs, prob->x, prob->pi, prob->rc,
+	    &inform, &nS, &nInf, &sInf, &objective,
+	    &miniw, &minrw,
+	    prob->iu, prob->leniu, prob->ru, prob->lenru,
+	    prob->iw, prob->leniw, prob->rw, prob->lenrw );
 
   for ( i = 0; i < prob->ne; i++ ) {
     prob->indJ[i]--;
@@ -441,7 +473,7 @@ int solveC ( snProblem* prob, int start )
 
 void deleteSNOPT ( snProblem* prob )
 {
-  f_snend ( &(prob->iprint) );
+  f_snend ( prob->iprint );
 
   free(prob->iw);
   free(prob->rw);
