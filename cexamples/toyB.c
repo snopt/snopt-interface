@@ -58,12 +58,12 @@ int main( int argc , char* argv[] )
   int    nnJac  =  2;
   int    iObj   =  2;
   double ObjAdd =  0;
-
+  double objective;
 
   // snInit must be called first.
   //   9, 6 are print and summary unit numbers (for Fortran).
   //   6 == standard out
-  snInit ( &toy, "ToyC", "ToyC.out", 9, 6 );
+  snInit ( &toy, "ToyB", "ToyB.out", 9, 6 );
 
   // Set the problem size and other data.
   // This will allocate arrays inside snProblem struct.
@@ -131,7 +131,7 @@ int main( int argc , char* argv[] )
   setIntParameter( &toy, "Verify level", 3 );
   setIntParameter( &toy, "Derivative option", 3 );
 
-  info = solveB( &toy, Cold );
+  info = solveB( &toy, Cold, objective );
 
 
   // Deallocate space.
