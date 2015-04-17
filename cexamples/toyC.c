@@ -119,7 +119,7 @@ int main( int argc , char* argv[] )
   setIntParameter( &toy, "Verify level", 3 );
   setIntParameter( &toy, "Derivative option", 3 );
 
-  info = solveC( &toy, Cold, objective );
+  info = solveC( &toy, Cold, &objective );
   printf ("SNOPT Exit, INFO = %d\n", info );
   printf ("Final nonlinear objective = %16.8f\n", objective );
 

@@ -101,8 +101,8 @@ void setUserfun     ( snProblem* prob, snFunC func );
 void setFuncon      ( snProblem* prob, snConB func );
 void setFunobj      ( snProblem* prob, snObjB func );
 
-int solveB          ( snProblem* prob, int start, double objective );
-int solveC          ( snProblem* prob, int start, double objective );
+int solveB          ( snProblem* prob, int start, double *objective );
+int solveC          ( snProblem* prob, int start, double *objective );
 
 void deleteSNOPT    ( snProblem* prob );
 

@@ -131,8 +131,7 @@ int main( int argc , char* argv[] )
   setIntParameter( &toy, "Verify level", 3 );
   setIntParameter( &toy, "Derivative option", 3 );
 
-  info = solveB( &toy, Cold, objective );
-
+  info = solveB( &toy, Cold, &objective );
 
   // Deallocate space.
   free ( toy.iu );
