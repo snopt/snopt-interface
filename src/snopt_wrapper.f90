@@ -979,7 +979,7 @@ contains
   subroutine f_snsetr ( option, len, rvalue, Errors, iw, leniw, rw, lenrw ) &
        bind(C,name="f_snsetr")
     integer(c_int),    intent(in), value :: len, leniw, lenrw
-    real(c_double),    intent(in)        :: rvalue
+    real(c_double),    intent(in), value :: rvalue
     character(c_char), intent(in)        :: option(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
     real(c_double),    intent(inout)     :: rw(lenrw)
