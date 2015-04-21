@@ -226,7 +226,7 @@ contains
           pname(j:j) = name(j)
        end do
        close ( iPrt )
-       open  ( iPrt, file=trim(pname), status='unknown', access='append' )
+       open  ( iPrt, file=trim(pname), status='unknown', position='append' )
     end if
 
     call snInit ( iPrt, iSumm, cw, lencw, iw, leniw, rw, lenrw )
@@ -257,7 +257,7 @@ contains
 
     if ( prtfile /= '' ) then
        close ( iPrint )
-       open ( iPrint, file=trim(prtfile), status='unknown', access='append' )
+       open ( iPrint, file=trim(prtfile), status='unknown', position='append' )
        call snSeti ( 'Print file', iPrint, 0, 0, Errors, &
                      cw, lencw, iw, leniw, rw, lenrw )
     end if
