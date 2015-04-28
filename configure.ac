@@ -29,7 +29,12 @@ AC_FC_MODULE_OUTPUT_FLAG([],
       *nagfor* ) FC_MODOUT="-mdir ";;
     esac
   ])
-AC_FC_MODULE_FLAG
+AC_FC_MODULE_FLAG([],
+  [ case $FC in
+      *nagfor* ) FC_MODINC="-mdir ";;
+    esac
+  ])
+
 AC_SUBST(FC_MODOUT)
 AC_SUBST(FC_MODINC)
 
