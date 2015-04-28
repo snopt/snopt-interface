@@ -80,7 +80,7 @@ UNINSTALL    = $(LIBTOOL) --mode=uninstall $(LTFLAGS)
 
 #-----------------------------------------------------------------------
 
-all: snopt_c snopt_cpp examples
+all: snopt_c snopt_cpp
 examples: examples_snopt_c examples_snopt_cpp
 install: install_cpp install_c
 uninstall: uninstall_cpp uninstall_c
