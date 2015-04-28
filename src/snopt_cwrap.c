@@ -84,7 +84,7 @@ void init2zero ( snProblem* prob )
 void allocI ( snProblem* prob, int len )
 {
   prob->leniw = len;
-  prob->iw    = (int*)malloc( sizeof(int)*len );
+  prob->iw    = malloc( sizeof(int)*len );
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -92,7 +92,7 @@ void allocI ( snProblem* prob, int len )
 void allocR ( snProblem* prob, int len )
 {
   prob->lenrw = len;
-  prob->rw    = (double*)malloc( sizeof(double)*len );
+  prob->rw    = malloc( sizeof(double)*len );
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -291,17 +291,17 @@ void setProblemSize ( snProblem* prob, int m, int n, int ne,
   prob->nnObj  = nnObj;
   prob->nnJac  = nnJac;
 
-  prob->bl = (double*)malloc( sizeof(double) * nb );
-  prob->bu = (double*)malloc( sizeof(double) * nb );
+  prob->bl = calloc( nb, sizeof(double) );
+  prob->bu = calloc( nb, sizeof(double) );
 
-  prob->hs = (int*   )malloc( sizeof(int   ) * nb );
-  prob->x  = (double*)malloc( sizeof(double) * nb );
-  prob->pi = (double*)malloc( sizeof(double) * m  );
-  prob->rc = (double*)malloc( sizeof(double) * nb );
+  prob->hs = calloc( nb, sizeof(int   ) );
+  prob->x  = calloc( nb, sizeof(double) );
+  prob->pi = calloc(  m, sizeof(double) );
+  prob->rc = calloc( nb, sizeof(double) );
 
-  prob->indJ = (int*   )malloc( sizeof(int   ) * ne );
-  prob->locJ = (int*   )malloc( sizeof(int   ) * (n+1) );
-  prob->valJ = (double*)malloc( sizeof(double) * ne  );
+  prob->indJ = calloc(  ne, sizeof(int   ) );
+  prob->locJ = calloc( n+1, sizeof(int   ) );
+  prob->valJ = calloc(  ne, sizeof(double) );
 
   prob->sizeCalled = 1;
 }
