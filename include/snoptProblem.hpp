@@ -108,17 +108,15 @@ public:
   snoptProblemA( const char *name, const char *prtfile );
   ~snoptProblemA();
 
-  int  computeJac    ();
+  int  computeJac    ( int &neA, int &neG );
   int  solve         ( int starttype );
   void setWorkspace  ();
 
   void setProblemSize( int n, int neF );
   void setObjective  ( int ObjRow, double ObjAdd );
 
-  void setA          ( int lenA, int *iAfun, int *jAvar, double *A );
-  void setG          ( int lenG, int *iGfun, int *jGvar );
-  void setNeA        ( int neA );
-  void setNeG        ( int neG );
+  void setA          ( int lenA, int neA, int *iAfun, int *jAvar, double *A );
+  void setG          ( int lenG, int neG, int *iGfun, int *jGvar );
 
   void setX          ( double *x, double *xlow, double *xupp,
                        double *xmul, int *xstate );
