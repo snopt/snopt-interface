@@ -399,7 +399,7 @@ void snoptProblemA::setWorkspace()
   memCalled = 1;
 
   if ( memGuess == 1 ) {
-    computeJac();
+    computeJac( neA, neG );
 
     assert ( neA >= 0 );
     assert ( neG >= 0 );
@@ -413,9 +413,10 @@ void snoptProblemA::setWorkspace()
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblemA::computeJac()
+int snoptProblemA::computeJac(int &aneA, int &aneG)
 {
   assert( initCalled == 1 );
+  aneA = 0; aneG = 0;
 
   if ( lenA <= 0 ) {
     lenA = n*neF;
@@ -437,11 +438,12 @@ int snoptProblemA::computeJac()
   if ( memCalled == 0 ) { setWorkspace(); }
 
   f_snjac( &inform, neF, n, usrfunA, x, xlow, xupp,
-	   iAfun, jAvar, lenA, neA, A,
-	   iGfun, jGvar, lenG, neG,
+	   iAfun, jAvar, lenA, &neA, A,
+	   iGfun, jGvar, lenG, &neG,
 	   &miniw, &minrw, iu, leniu, ru, lenru,
 	   iw, leniw, rw, lenrw );
 
+  aneA = neA; aneG = neG;
   jacComputed = 1;
 
   return inform;
@@ -504,26 +506,17 @@ void snoptProblemA::setObjective( int aObjRow, double aObjAdd )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemA::setA( int lenA0, int *iAfun0, int *jAvar0, double *A0 )
+void snoptProblemA::setA( int lenA0, int neA0, int *iAfun0, int *jAvar0,
+			  double *A0 )
 {
   lenA  = lenA0;  iAfun = iAfun0;  jAvar = jAvar0;  A = A0;
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemA::setG( int lenG0, int *iGfun0, int *jGvar0 )
-{
-  lenG  = lenG0;  iGfun = iGfun0;  jGvar = jGvar0;
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemA::setNeA( int neA0 )
-{
   jacComputed = 0;  neA = neA0;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemA::setNeG( int neG0 )
+void snoptProblemA::setG( int lenG0, int neG0, int *iGfun0, int *jGvar0 )
 {
+  lenG  = lenG0;  iGfun = iGfun0;  jGvar = jGvar0;
   jacComputed = 0;  neG = neG0;
 }
 
