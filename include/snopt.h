@@ -146,8 +146,8 @@ extern "C" {
 
   void f_snjac  ( int *info, int nf, int n, snFunA usrfun,
 		  double x[], double xlow[], double xupp[],
-		  int iAfun[], int jAvar[], int lenA, int neA, double A[],
-		  int iGfun[], int jGvar[], int lenG, int neG,
+		  int iAfun[], int jAvar[], int lenA, int *neA, double A[],
+		  int iGfun[], int jGvar[], int lenG, int *neG,
 		  int *miniw, int *minrw,
 		  int iu[], int leniu, double ru[], int lenru,
 		  int iw[], int leniw, double rw[], int lenrw );
