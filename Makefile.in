@@ -50,7 +50,9 @@ SNOPT_CPP_EX_OBJDIR = $(top_builddir)/cppexamples
 #-------------------------------------------------<----------------------
 
 SNOPT_C_EXAMPLES    = $(SNOPT_C_EX_OBJDIR)/toyB $(SNOPT_C_EX_OBJDIR)/toyC
-SNOPT_CPP_EXAMPLES  = $(SNOPT_CPP_EX_OBJDIR)/sntoyB $(SNOPT_CPP_EX_OBJDIR)/sntoyC
+SNOPT_CPP_EXAMPLES  = $(SNOPT_CPP_EX_OBJDIR)/sntoya $(SNOPT_CPP_EX_OBJDIR)/sntoya2 \
+                      $(SNOPT_CPP_EX_OBJDIR)/sntoya-jac \
+                      $(SNOPT_CPP_EX_OBJDIR)/sntoyB $(SNOPT_CPP_EX_OBJDIR)/sntoyC
 
 #-----------------------------------------------------------------------
 
