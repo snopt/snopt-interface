@@ -86,15 +86,6 @@ int main( int argc, char **argv)
   int n      =  2;
   int neF    =  3;
 
-  int lenA   = 6;
-  int *iAfun = new int[lenA];
-  int *jAvar = new int[lenA];
-  double *A  = new double[lenA];
-
-  int lenG   = 6;
-  int *iGfun = new int[lenG];
-  int *jGvar = new int[lenG];
-
   double *x      = new double[n];
   double *xlow   = new double[n];
   double *xupp   = new double[n];
@@ -131,10 +122,6 @@ int main( int argc, char **argv)
   ToyProb0.setX          ( x, xlow, xupp, xmul, xstate );
   ToyProb0.setF          ( F, Flow, Fupp, Fmul, Fstate );
 
-  // Still need to provide space for the derivatives
-  ToyProb0.setA          ( lenA, iAfun, jAvar, A );
-  ToyProb0.setG          ( lenG, iGfun, jGvar );
-
   ToyProb0.setIntParameter( "Derivative option", 0 );
   ToyProb0.setIntParameter( "Verify level ", 3 );
   ToyProb0.setUserFun    ( toyusrf_ );
@@ -147,7 +134,17 @@ int main( int argc, char **argv)
 
   /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
   snoptProblemA ToyProb1("ToyA1","ToyA1.out");
-  int           neA, neG;   // neA and neG must be defined when using dervatives
+
+  int neA, neG;
+
+  int lenA   = 6;
+  int *iAfun = new int[lenA];
+  int *jAvar = new int[lenA];
+  double *A  = new double[lenA];
+
+  int lenG   = 6;
+  int *iGfun = new int[lenG];
+  int *jGvar = new int[lenG];
 
 
   // Reset the state and variables.
@@ -181,14 +178,10 @@ int main( int argc, char **argv)
   ToyProb1.setX           ( x, xlow, xupp, xmul, xstate );
   ToyProb1.setF           ( F, Flow, Fupp, Fmul, Fstate );
 
-  ToyProb1.setA           ( lenA, iAfun, jAvar, A );
-  ToyProb1.setG           ( lenG, iGfun, jGvar );
+  ToyProb1.setA           ( lenA, neA, iAfun, jAvar, A );
+  ToyProb1.setG           ( lenG, neG, iGfun, jGvar );
 
   ToyProb1.setUserFun     ( toyusrfg_ );      // Sets the usrfun that supplies G and F.
-
-  // The following 2 calls tell SNOPT that you ARE providing derivatives:
-  ToyProb1.setNeA         ( neA );
-  ToyProb1.setNeG         ( neG );
 
   ToyProb1.setSpecsFile   ( "sntoya.spc" );
 

@@ -89,15 +89,6 @@ int main( int argc, char **argv)
   int n     =  2;
   int neF   =  3;
 
-  int lenA   = 6;
-  int *iAfun = new int[lenA];
-  int *jAvar = new int[lenA];
-  double *A  = new double[lenA];
-
-  int lenG   = 6;
-  int *iGfun = new int[lenG];
-  int *jGvar = new int[lenG];
-
   double *x      = new double[n];
   double *xlow   = new double[n];
   double *xupp   = new double[n];
@@ -138,27 +129,41 @@ int main( int argc, char **argv)
 
   ToyProb.setUserFun    ( toyusrf_ );
 
+
   // snopta will compute the Jacobian by finite-differences.
   // The user has the option of calling  snJac  to define the
   // coordinate arrays (iAfun,jAvar,A) and (iGfun, jGvar).
-  ToyProb.setA          ( lenA, iAfun, jAvar, A );
-  ToyProb.setG          ( lenG, iGfun, jGvar );
-
   ToyProb.setIntParameter( "Derivative option", 0 );
   ToyProb.setIntParameter( "Verify level ", 3 );
 
+
+  // Solve the problem.
+  // snJac is called implicitly in this case to compute the Jacobian.
   ToyProb.solve( Cold );
 
 
   printf("\nSolving toy1 problem using derivatives...\n");
 
   // Reset the variables and solve ...
-  int neA, neG; // neA and neG must be defined when using dervatives
+
+  int lenA   = 6;
+  int *iAfun = new int[lenA];
+  int *jAvar = new int[lenA];
+  double *A  = new double[lenA];
+
+  int lenG   = 6;
+  int *iGfun = new int[lenG];
+  int *jGvar = new int[lenG];
+
+  int neA, neG; // neA and neG must be defined when providing dervatives
+
   xstate[0] =   0;  xstate[1] = 0;
   Fmul[0]   =   0;  Fmul[0]   = 0; Fmul[0] =    0;
   x[0]      = 1.0;
   x[1]      = 1.0;
 
+
+  // Provide the elements of the Jacobian explicitly.
   iGfun[0] = 1;
   jGvar[0] = 0;
 
@@ -177,14 +182,11 @@ int main( int argc, char **argv)
   A[0]     = 1.0;
   neA      = 1;
 
-
-  // As snoptProblem::computeJac() is not used to compute the
-  // derivatives,  neA and neG must be set here to match the
-  // arrays  A, iAfun, jAvar, iGfun, jGvar.
   ToyProb.setProbName    ( "Toy1" );         // Give the problem a new name for Snopt.
 
-  ToyProb.setNeA         ( neA );
-  ToyProb.setNeG         ( neG );
+  // neA and neG must be set here
+  ToyProb.setA           ( lenA, neA, iAfun, jAvar, A );
+  ToyProb.setG           ( lenG, neG, iGfun, jGvar );
 
   ToyProb.setUserFun     ( toyusrfg_ );      // Sets the usrfun that supplies G and F.
 
@@ -201,7 +203,6 @@ int main( int argc, char **argv)
   for (int i = 0; i < neF; i++ ){
     cout << "F = " << F[i] << " Fstate = " << Fstate[i] << endl;
   }
-
 
   ToyProb.solve          ( Warm );
 
