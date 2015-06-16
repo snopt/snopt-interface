@@ -486,7 +486,15 @@ int snoptProblemA::solve( int starttype )
       iAfun[i]--; jAvar[i]--;
       iGfun[i]--; jGvar[i]--;
     }
+  } else if ( jacComputed == 1 ) {
+    delete []iAfun;
+    delete []jAvar;
+    delete []A;
+
+    delete []iGfun;
+    delete []jGvar;
   }
+
 
   return inform;
 }

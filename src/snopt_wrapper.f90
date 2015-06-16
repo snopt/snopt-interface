@@ -20,7 +20,8 @@ module snopt_wrapper
             f_snmem,  f_snoptb, f_snkerb, f_snoptc, f_snkerc, &
             f_snset,  f_snseti, f_snsetr, &
             f_sngetc, f_sngeti, f_sngetr, &
-            f_snend
+            f_snend, &
+            getUnit
 
   !-----------------------------------------------------------------------------
 
@@ -206,7 +207,6 @@ contains
     real(c_double),    intent(inout)     :: rw(lenrw)
 
     !===========================================================================
-    ! Allocate (basic 500) workspace.
     ! Call snInit.  If a name is provided, use it as the print file name.
     ! Else assume no print file required (for now).
     !
@@ -244,6 +244,8 @@ contains
     real(c_double),    intent(inout)     :: rw(lenrw)
 
     !===========================================================================
+    ! Set print file name and unit.
+    !===========================================================================
     integer        :: Errors, j
     character(len) :: prtfile
 
@@ -275,6 +277,8 @@ contains
     real(c_double),    intent(inout)     :: rw(lenrw)
     integer(c_int),    intent(out)       :: inform
 
+    !===========================================================================
+    ! Read options from the given specifications file.
     !===========================================================================
     integer        :: iSpec, j
     character(len) :: spcfile
@@ -310,6 +314,8 @@ contains
     integer(c_int), intent(out)       :: inform, miniw, minrw
 
     !===========================================================================
+    ! Call snMemA to get workspace estimate.
+    !===========================================================================
     integer :: mincw, nxname, nFname
 
     nxname = 1
@@ -341,6 +347,8 @@ contains
     integer(c_int), intent(out)       :: inform, neA, neG, miniw, minrw
     type(c_funptr), value             :: usrfunc
 
+    !===========================================================================
+    ! Call snJac to get Jacobian structure for SNOPTA.
     !===========================================================================
     integer :: mincw
     procedure(iusrfunA), pointer :: usrfun
@@ -385,6 +393,8 @@ contains
     integer(c_int), intent(out)   :: INFO, miniw, minrw
     type(c_funptr), value         :: c_usrfun
 
+    !===========================================================================
+    ! Solve the problem with SNOPTA.
     !===========================================================================
     integer      :: j, nxname, nFname, mincw
     character(8) :: pname, xnames(1), Fnames(1)
@@ -447,6 +457,8 @@ contains
     type(c_funptr), value         :: c_usrfun, c_snLog, c_snLog2, &
                                      c_sqLog, c_snSTOP
 
+    !===========================================================================
+    ! Advanced solve with SNOPTA.
     !===========================================================================
     integer      :: j, nxname, nFname, mincw
     character(8) :: pname, xnames(1), Fnames(1)
@@ -513,6 +525,8 @@ contains
     integer(c_int), intent(out)       :: INFO, miniw, minrw
 
     !===========================================================================
+    ! Estimate workspace for SNOPTB/C.
+    !===========================================================================
     integer :: mincw
 
     call snMem ( INFO, m, n, ne, negCon, nnCon, nnJac, nnObj, &
@@ -549,6 +563,8 @@ contains
     real(c_double), intent(out)   :: Obj
     type(c_funptr), value         :: c_funcon, c_funobj
 
+    !===========================================================================
+    ! Solve the problem with SNOPTB.
     !===========================================================================
     integer      :: j, nName, mincw
     character(8) :: pname, Names(1)
@@ -618,6 +634,8 @@ contains
     type(c_funptr), value         :: c_funcon, c_funobj
     type(c_funptr), value         :: c_snLog, c_snLog2, c_sqLog, c_snSTOP
 
+    !===========================================================================
+    ! Advanced solve with SNOPTB.
     !===========================================================================
     integer      :: j, nName, mincw
     character(8) :: pname, Names(1)
@@ -707,6 +725,8 @@ contains
     type(c_funptr), value         :: c_usrfun
 
     !===========================================================================
+    ! Solve the problem with SNOPTC.
+    !===========================================================================
     integer      :: j, nName, mincw
     character(8) :: pname, Names(1)
     character(4) :: nStart
@@ -772,6 +792,8 @@ contains
     type(c_funptr), value         :: c_usrfun
     type(c_funptr), value         :: c_snLog, c_snLog2, c_sqLog, c_snSTOP
 
+    !===========================================================================
+    ! Advanced solve with SNOPTC.
     !===========================================================================
     integer      :: j, nName, mincw
     character(8) :: pname, Names(1)
@@ -853,6 +875,8 @@ contains
     type(c_funptr), value         :: c_funcon, c_funobj
 
     !===========================================================================
+    ! Call SNOPT via NPOPT interface.
+    !===========================================================================
     procedure(ifuncon), pointer :: funcon
     procedure(ifunobj), pointer :: funobj
 
@@ -891,6 +915,8 @@ contains
     type(c_funptr), value         :: c_funcon, c_funobj
     type(c_funptr), value         :: c_snLog, c_snLog2, c_snSTOP
 
+    !===========================================================================
+    ! Advanced solve with NPOPT interface.
     !===========================================================================
     procedure(ifuncon),  pointer :: funcon
     procedure(ifunobj),  pointer :: funobj
@@ -934,6 +960,8 @@ contains
     integer(c_int),    intent(out)       :: Errors
 
     !===========================================================================
+    ! Set option via string.
+    !===========================================================================
     character(len) :: buffer
     integer        :: j
 
@@ -958,6 +986,8 @@ contains
     real(c_double),    intent(inout)     :: rw(lenrw)
     integer(c_int),    intent(out)       :: Errors
 
+    !===========================================================================
+    ! Set option with integer value.
     !===========================================================================
     character(len) :: buffer
     integer        :: j
@@ -986,6 +1016,8 @@ contains
     integer(c_int),    intent(out)       :: Errors
 
     !===========================================================================
+    ! Set option with real value.
+    !===========================================================================
     character(len) :: buffer
     integer        :: j
 
@@ -1013,6 +1045,8 @@ contains
     real(c_double),    intent(inout)     :: rw(lenrw)
     integer(c_int),    intent(out)       :: Errors
 
+    !===========================================================================
+    ! Get option value via string.
     !===========================================================================
     character(lin)  :: buffer
     character(lout) :: buffout
@@ -1045,6 +1079,8 @@ contains
     integer(c_int),    intent(out)       :: ivalue, Errors
 
     !===========================================================================
+    ! Get integer option value.
+    !===========================================================================
     character(len) :: buffer
     integer        :: j
 
@@ -1071,6 +1107,8 @@ contains
     integer(c_int),    intent(out)       :: Errors
 
     !===========================================================================
+    ! Get real option value.
+    !===========================================================================
     character(len) :: buffer
     integer        :: j
 
@@ -1091,10 +1129,35 @@ contains
     integer(c_int), intent(in), value :: iPrint
 
     !===========================================================================
+    ! Finish up.
+    !===========================================================================
 
     close ( iPrint )
 
   end subroutine f_snend
+
+  !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  subroutine getUnit( unit ) bind(C,name="getUnit")
+    integer(c_int), intent(out) :: unit
+
+    !===========================================================================
+    ! Return unused file unit number.
+    !===========================================================================
+    logical :: opened
+    integer :: j
+    integer, parameter :: uMin = 11, uMax = 100
+
+    unit = 0
+    do j = uMin, uMax
+       inquire(unit=j, opened=opened)
+       if (.not. opened) then
+          unit = j
+          return
+       end if
+    end do
+
+  end subroutine getUnit
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
