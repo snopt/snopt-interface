@@ -465,6 +465,8 @@ int snoptProblemA::solve( int starttype )
   if ( jacComputed == 0 ) {
     for ( int i = 0; i < lenA; i++ ) {
       iAfun[i]++; jAvar[i]++;
+    }
+    for ( int i = 0; i < lenG; i++ ) {
       iGfun[i]++; jGvar[i]++;
     }
   }
@@ -484,6 +486,8 @@ int snoptProblemA::solve( int starttype )
   if ( jacComputed == 0 ) {
     for ( int i = 0; i < lenA; i++ ) {
       iAfun[i]--; jAvar[i]--;
+    }
+    for ( int i = 0; i < lenG; i++ ) {
       iGfun[i]--; jGvar[i]--;
     }
   } else if ( jacComputed == 1 ) {
