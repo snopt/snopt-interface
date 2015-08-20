@@ -29,7 +29,7 @@ protected:
   char    Prob[30];
 
   int     inform;
-  int     initCalled, memCalled;
+  int     initCalled, memCalled, allocA, allocG;
 
   int     leniw, lenrw;
   double *rw;

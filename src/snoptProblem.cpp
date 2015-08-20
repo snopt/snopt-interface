@@ -87,7 +87,7 @@ void snoptProblem::init2zero()
 {
   inform = 0;
 
-  initCalled = 0; memCalled = 0;
+  initCalled = 0; memCalled = 0; allocA = 0; allocG = 0;
 
   leniw = 0; lenrw = 0;
   iw    = 0; rw    = 0;
@@ -420,15 +420,17 @@ int snoptProblemA::computeJac(int &aneA, int &aneG)
 
   if ( lenA <= 0 ) {
     lenA = n*neF;
-    iAfun = new int[lenA];
-    jAvar = new int[lenA];
-    A     = new double[lenA];
+    iAfun  = new int[lenA];
+    jAvar  = new int[lenA];
+    A      = new double[lenA];
+    allocA = 1;
   }
 
   if ( lenG <= 0 ) {
-    lenG = n*neF;
-    iGfun = new int[lenG];
-    jGvar = new int[lenG];
+    lenG   = n*neF;
+    iGfun  = new int[lenG];
+    jGvar  = new int[lenG];
+    allocG = 1;
   }
 
   if (userDataSet() != 0 ) { return 99; }
@@ -490,15 +492,18 @@ int snoptProblemA::solve( int starttype )
     for ( int i = 0; i < lenG; i++ ) {
       iGfun[i]--; jGvar[i]--;
     }
-  } else if ( jacComputed == 1 ) {
+  }
+
+  if ( allocA == 1 ) {
     delete []iAfun;
     delete []jAvar;
     delete []A;
+  }
 
+  if ( allocG == 1 ) {
     delete []iGfun;
     delete []jGvar;
   }
-
 
   return inform;
 }
@@ -523,6 +528,7 @@ void snoptProblemA::setA( int lenA0, int neA0, int *iAfun0, int *jAvar0,
 {
   lenA  = lenA0;  iAfun = iAfun0;  jAvar = jAvar0;  A = A0;
   jacComputed = 0;  neA = neA0;
+  allocA = 0;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -530,6 +536,7 @@ void snoptProblemA::setG( int lenG0, int neG0, int *iGfun0, int *jGvar0 )
 {
   lenG  = lenG0;  iGfun = iGfun0;  jGvar = jGvar0;
   jacComputed = 0;  neG = neG0;
+  allocG = 0;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
