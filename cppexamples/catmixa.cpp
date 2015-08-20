@@ -288,4 +288,13 @@ int main( int argc, char **argv)
   catmixa.setIntParameter( "Verify level ", 3 );
   catmixa.solve          ( Cold );
 
+  delete []iAfun;  delete []jAvar;  delete []A;
+  delete []iGfun;  delete []jGvar;
+
+  delete []x;      delete []xlow;   delete []xupp;
+  delete []xmul;   delete []xstate;
+
+  delete []F;      delete []Flow;   delete []Fupp;
+  delete []Fmul;   delete []Fstate;
+
 }
