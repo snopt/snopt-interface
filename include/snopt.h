@@ -43,7 +43,7 @@ extern "C" {
     int iw[], int *leniw );
 
   typedef void (*isnSTOP)
-  ( int *iAbort, int *info, int *HQNType, int KTcond[], int *MjrPrt, int *minimz,
+  ( int *iAbort, int KTcond[], int *MjrPrt, int *minimz,
     int *m, int *maxS, int *n, int *nb,
     int *nnCon0, int *nnCon, int *nnObj0, int *nnObj, int *nS,
     int *itn, int *nMajor, int *nMinor, int *nSwap,
