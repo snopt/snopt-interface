@@ -217,16 +217,20 @@ contains
 
     iPrt = iPrint
 
-    if ( len == 0 .or. name(1) == c_null_char ) then
+    if ( len == 0 ) then
        iPrt = 0
     else
-       pname  = ''
-       do j = 1, len
-          if ( name(j) == c_null_char ) exit
-          pname(j:j) = name(j)
-       end do
-       close ( iPrt )
-       open  ( iPrt, file=trim(pname), status='unknown', position='append' )
+       if ( name(1) == c_null_char ) then
+          iPrt = 0
+       else
+          pname  = ''
+          do j = 1, len
+             if ( name(j) == c_null_char ) exit
+             pname(j:j) = name(j)
+          end do
+          close ( iPrt )
+          open  ( iPrt, file=trim(pname), status='unknown', position='append' )
+       end if
     end if
 
     call snInit ( iPrt, iSumm, cw, lencw, iw, leniw, rw, lenrw )
