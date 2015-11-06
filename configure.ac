@@ -38,12 +38,30 @@ AC_FC_MODULE_FLAG([],
 AC_SUBST(FC_MODOUT)
 AC_SUBST(FC_MODINC)
 
+dnl ----------------------------------------------------------------------------
+
+# BLAS library.
+AC_ARG_WITH([blas],
+	    [AS_HELP_STRING([--with-blas=<lib>], [use BLAS library <lib>])],
+	    [with_blas=${withval} ], [ blas=no ] )
+case $with_blas in
+	yes | "" | no) blas=no ;;
+	-* | */* | *.a | *.so | *.so.* | *.o)
+	  blas=yes; BLAS_LIBS="$with_blas" ;;
+	*)
+	  blas=yes; BLAS_LIBS="-l$with_blas" ;;
+esac
+AC_SUBST([blas])
+AC_SUBST([BLAS_LIBS])
+
+dnl ----------------------------------------------------------------------------
 
 AC_ARG_WITH([snopt],
 	    [AS_HELP_STRING([--with-snopt=/path/to/snopt], [location of SNOPT library])],
 	    [snopt_dir=${withval}; ], [ snopt_dir=${libdir}; ] )
 AC_SUBST([snopt_dir])
 
+dnl ----------------------------------------------------------------------------
 
 CFLAGS="${user_CFLAGS}"
 CXXFLAGS="${user_CXXFLAGS}"
