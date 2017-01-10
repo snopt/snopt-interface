@@ -46,6 +46,7 @@ void init2zero(snProblem* prob) {
   prob->indJ      = NULL;
   prob->locJ      = NULL;
 
+  prob->hs        = NULL;
   prob->bl        = NULL;
   prob->bu        = NULL;
   prob->x         = NULL;
