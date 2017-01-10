@@ -13,45 +13,19 @@
 typedef struct {
   char   *name;
 
-  int    memCalled;
-  int    initCalled;
-  int    sizeCalled;
-
-  int    m;
-  int    n;
-  int    ne;
-  int    negCon;
-  int    nnCon;
-  int    nnObj;
-  int    nnJac;
-  int    iObj;
-  double ObjAdd;
-
-  double *valJ;
-  int    *indJ;
-  int    *locJ;
-
-  double *bl;
-  double *bu;
-  int    *hs;
-  double  *x;
-  double *pi;
-  double *rc;
-
-  snFunC usrfun;
-  snObjB funobj;
-  snConB funcon;
+  int     memCalled;
+  int     initCalled;
 
   isnSTOP snSTOP;
   isnLog  snLog;
   isnLog2 snLog2;
   isqLog  sqLog;
 
-  int    lenrw, leniw;
+  int     lenrw, leniw;
   int    *iw;
   double *rw;
 
-  int    lenru, leniu;
+  int     lenru, leniu;
   int    *iu;
   double *ru;
 
@@ -65,7 +39,6 @@ void allocR         ( snProblem* prob, int len );
 void reallocI       ( snProblem* prob, int len );
 void reallocR       ( snProblem* prob, int len );
 
-void setProbName    ( snProblem* prob, char* name );
 void setPrintfile   ( snProblem* prob, char* prtname );
 int  setSpecsfile   ( snProblem* prob, char* spcname );
 
@@ -84,23 +57,35 @@ void setUserspace   ( snProblem* prob, int *iu, int leniu,
 void setLog         ( snProblem* prob, isnLog snLog, isnLog2 snLog2, isqLog sqLog );
 void setSTOP        ( snProblem* prob, isnSTOP snSTOP );
 
-void setWorkspace   ( snProblem* prob );
+void setWorkspace   ( snProblem* prob, int m, int n, int ne,
+		      int negCon, int nnCon, int nnObj, int nnJac);
+void setWorkspaceA  ( snProblem* prob, int nF, int n, int neA, int neG);
 
-void setProblemSize ( snProblem* prob, int m, int n, int ne,
-		      int nnCon, int nnJac, int nnObj );
-void setObjective   ( snProblem* prob, int iObj, double ObjAdd);
+int solveA( snProblem* prob, int start,
+	    int nF, int n, double ObjAdd, int ObjRow,
+	    snFunA usrfun,
+	    int neA, int *iAfun, int *jAvar, double *A,
+	    int neG, int *iGfun, int *jGvar,
+	    double *xlow, double *xupp, double *Flow, double *Fupp,
+	    double *x, int *xstate, double *xmul,
+	    double *F, int *Fstate, double *Fmul,
+	    int* nS, int* nInf, double* sInf );
 
-void setProblemData( snProblem *prob, double *bl, double *bu,
-		     int *hs, double *x, int *indJ, int *locJ, double *valJ );
+int solveB( snProblem* prob, int start, int m, int n, int ne,
+	    int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
+	    snConB funcon, snObjB funobj,
+	    double *valJ, int *indJ, int *locJ,
+	    double *bl, double *bu, int *hs, double *x,
+	    double *pi, double *rc, double* objective,
+	    int* nS, int* nInf, double* sInf );
 
-void setUserfun     ( snProblem* prob, snFunC func );
-void setFuncon      ( snProblem* prob, snConB func );
-void setFunobj      ( snProblem* prob, snObjB func );
-
-int solveB          ( snProblem* prob, int start, double *objective,
-		      int *nS, int *nInf, double *sInf);
-int solveC          ( snProblem* prob, int start, double *objective,
-		      int *nS, int *nInf, double *sInf);
+int solveC( snProblem* prob, int start, int m, int n, int ne,
+	    int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
+	    snFunC usrfun,
+	    double *valJ, int *indJ, int *locJ,
+	    double *bl, double *bu, int *hs, double *x,
+	    double *pi, double *rc, double* objective,
+	    int* nS, int* nInf, double* sInf );
 
 void deleteSNOPT    ( snProblem* prob );
 
