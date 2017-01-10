@@ -90,7 +90,7 @@ extern "C" {
     double   ru[], int   *lenru );
 
 
-  void f_sninit ( const char *name, int len, int iprint, int isumm,
+  void f_sninit ( const char *name, int len, int summOn,
 		  int iw[], int leniw, double rw[], int lenrw );
   void f_snspec ( const char *specfile, int len, int *inform,
 		  int iw[], int leniw, double rw[], int lenrw );
@@ -110,9 +110,9 @@ extern "C" {
   void f_snsetr ( const char *buffer, int len, double rvalue, int *errors,
 		  int iw[], int leniw, double rw[], int lenrw );
 
-  void f_snsetprint ( const char *name, int len, int iprint,
+  void f_snsetprint ( const char *name, int len,
 		      int iw[], int leniw, double rw[], int lenrw );
-  void f_snend ( int iprint );
+  void f_snend ();
 
   /* SNOPTA */
   void f_snopta ( int start, const char *name,

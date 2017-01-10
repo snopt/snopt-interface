@@ -8,83 +8,36 @@
 
 using namespace std;
 
-static int pID = 7;
-int snUnitS = 6;
-
-void summaryOff()
-{
-  snUnitS = 0;
-}
-
-void summaryOn()
-{
-  snUnitS = 6;
-}
-
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblem::snoptProblem() : isumm(snUnitS), iprint(0)
-{
-  int len = 0;
+snoptProblem::snoptProblem() {
+  int len = 0, summOn = 6;
   init2zero();
   sprintf(Prob, "%8s", "        " );
 
   allocI( 500 );
   allocR( 500 );
-
-  probID = pID++;
-  f_sninit( "", len, iprint, isumm, iw, leniw, rw, lenrw );
-  initCalled = 1;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblem::snoptProblem( const char *name ) :
-  isumm(snUnitS), iprint(0)
-{
-  int len = 0;
+snoptProblem::snoptProblem( const char *name ) {
+  int len = 0, summOn = 6;
   init2zero();
 
   sprintf(Prob, "%8s", name );
 
   allocI( 500 );
   allocR( 500 );
-
-  probID = pID++;
-  iprint = probID;
-
-  f_sninit( "", len, iprint, isumm, iw, leniw, rw, lenrw );
-  initCalled = 1;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblem::snoptProblem( const char *name, const char *prtfile ) :
-  isumm(snUnitS)
-{
-  int len = strlen(prtfile);
-  init2zero();
-
-  sprintf(Prob, "%8s", name );
-
-  allocI( 500 );
-  allocR( 500 );
-
-  probID = pID++;
-  iprint = probID;
-
-  f_sninit( prtfile, len, iprint, isumm, iw, leniw, rw, lenrw );
-  initCalled = 1;
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblem::~snoptProblem()
-{
-  f_snend( iprint );
+snoptProblem::~snoptProblem() {
+  f_snend();
 
   delete []rw;  delete []iw;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::init2zero()
-{
+void snoptProblem::init2zero() {
   inform = 0;
 
   initCalled = 0; memCalled = 0; allocA = 0; allocG = 0;
@@ -100,8 +53,7 @@ void snoptProblem::init2zero()
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::allocI( int aleniw )
-{
+void snoptProblem::allocI( int aleniw ) {
   // Reset work array lengths.
   // Allocate new memory for work arrays.
   leniw = aleniw;
@@ -109,8 +61,7 @@ void snoptProblem::allocI( int aleniw )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::allocR( int alenrw )
-{
+void snoptProblem::allocR( int alenrw ) {
   // Reset work array lengths.
   // Allocate new memory for work arrays.
   lenrw = alenrw;
@@ -118,8 +69,7 @@ void snoptProblem::allocR( int alenrw )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::reallocI( int aleniw )
-{
+void snoptProblem::reallocI( int aleniw ) {
   int  tleniw = leniw;
   int    *tiw = iw;
 
@@ -137,8 +87,7 @@ void snoptProblem::reallocI( int aleniw )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::reallocR( int alenrw )
-{
+void snoptProblem::reallocR( int alenrw ) {
   int  tlenrw = lenrw;
   double *trw = rw;
 
@@ -156,25 +105,27 @@ void snoptProblem::reallocR( int alenrw )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::setProbName( const char *name )
-{
+void snoptProblem::initialize( const char*prtfile, int summOn ) {
+  int len = strlen(prtfile);
+  f_sninit( prtfile, len, summOn, iw, leniw, rw, lenrw );
+  initCalled = 1;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+void snoptProblem::setProbName( const char *name ) {
   sprintf(Prob, "%8s", name );
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::setPrintFile( const char *prtname )
-{
+void snoptProblem::setPrintFile( const char *prtname ) {
   assert( initCalled == 1 );
 
   int len = strlen(prtname);
-
-  iprint = probID;
-  f_snsetprint( prtname, len, iprint, iw, leniw, rw, lenrw );
+  f_snsetprint( prtname, len, iw, leniw, rw, lenrw );
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblem::setSpecsFile( const char *specname )
-{
+int snoptProblem::setSpecsFile( const char *specname ) {
   assert( initCalled == 1 );
 
   int len = strlen(specname);
@@ -187,8 +138,7 @@ int snoptProblem::setSpecsFile( const char *specname )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblem::setParameter( const char *stropt )
-{
+int snoptProblem::setParameter( const char *stropt ) {
   assert( initCalled == 1 );
 
   int errors, stropt_len = strlen(stropt);
@@ -197,8 +147,7 @@ int snoptProblem::setParameter( const char *stropt )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblem::getParameter( const char *stroptin, char *stroptout )
-{
+int snoptProblem::getParameter( const char *stroptin, char *stroptout ) {
   assert( initCalled == 1 );
 
   int errors;
@@ -211,8 +160,7 @@ int snoptProblem::getParameter( const char *stroptin, char *stroptout )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblem::setIntParameter( const char *stropt, int opt )
-{
+int snoptProblem::setIntParameter( const char *stropt, int opt ) {
   assert( initCalled == 1 );
 
   int errors, stropt_len = strlen(stropt);
@@ -223,8 +171,7 @@ int snoptProblem::setIntParameter( const char *stropt, int opt )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblem::getIntParameter( const char *stropt, int &opt )
-{
+int snoptProblem::getIntParameter( const char *stropt, int &opt ) {
   assert( initCalled == 1 );
 
   int errors, stropt_len = strlen(stropt);
@@ -234,8 +181,7 @@ int snoptProblem::getIntParameter( const char *stropt, int &opt )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblem::setRealParameter( const char *stropt, double opt )
-{
+int snoptProblem::setRealParameter( const char *stropt, double opt ) {
   assert( initCalled == 1 );
 
   int errors, stropt_len = strlen(stropt);
@@ -245,8 +191,7 @@ int snoptProblem::setRealParameter( const char *stropt, double opt )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblem::getRealParameter( const char *stropt, double &opt )
-{
+int snoptProblem::getRealParameter( const char *stropt, double &opt ) {
   assert( initCalled == 1 );
 
   int errors, stropt_len = strlen(stropt);
@@ -256,23 +201,20 @@ int snoptProblem::getRealParameter( const char *stropt, double &opt )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::setUserI( int *aiu, int aleniu )
-{
+void snoptProblem::setUserI( int *aiu, int aleniu ) {
   leniu = aleniu;
   iu    = aiu;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::setUserR( double *aru, int alenru )
-{
+void snoptProblem::setUserR( double *aru, int alenru ) {
   lenru = alenru;
   ru    = aru;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblem::setUserspace  ( int*aiu,     int aleniu,
-				   double *aru, int alenru )
-{
+				   double *aru, int alenru ) {
   leniu = aleniu;
   iu    = aiu;
 
@@ -281,8 +223,8 @@ void snoptProblem::setUserspace  ( int*aiu,     int aleniu,
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::setLog( isnLog asnLog, isnLog2 asnLog2, isqLog asqLog )
-{
+void snoptProblem::setLog( isnLog asnLog, isnLog2 asnLog2,
+			   isqLog asqLog ) {
   snLog  = asnLog;
   snLog2 = asnLog2;
   sqLog  = asqLog;
@@ -290,14 +232,12 @@ void snoptProblem::setLog( isnLog asnLog, isnLog2 asnLog2, isqLog asqLog )
 
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblem::setSTOP( isnSTOP asnSTOP )
-{
+void snoptProblem::setSTOP( isnSTOP asnSTOP ) {
   snSTOP = asnSTOP;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblem::errMsgExit( const char *var )
-{
+int snoptProblem::errMsgExit( const char *var ) {
   cerr << endl << "XXX: Input error: " << var << " must be set prior to call to "
        << endl << "     snoptProblem::solve() or snoptProblem::computeJac()!\n";
   return 99;
@@ -305,32 +245,21 @@ int snoptProblem::errMsgExit( const char *var )
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemA::snoptProblemA()
-{
+snoptProblemA::snoptProblemA() {
   init2zero();
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemA::snoptProblemA( const char *name ) : snoptProblem(name)
-{
+snoptProblemA::snoptProblemA( const char *name ) : snoptProblem(name) {
   init2zero();
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemA::snoptProblemA( const char *name, const char *prtfile ) :
-  snoptProblem(name, prtfile)
-{
-  init2zero();
+snoptProblemA::~snoptProblemA() {
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemA::~snoptProblemA()
-{
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemA::init2zero()
-{
+void snoptProblemA::init2zero() {
   // Data that must be set by user.
   jacComputed = 0;
 
@@ -351,8 +280,7 @@ void snoptProblemA::init2zero()
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblemA::userDataSet()
-{
+int snoptProblemA::userDataSet() {
   int errors = 0;
 
   if ( n    == 0)  errors = errMsgExit( "n"  );
@@ -374,8 +302,7 @@ int snoptProblemA::userDataSet()
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemA::setWorkspace()
-{
+void snoptProblemA::setWorkspace() {
   assert( initCalled == 1 );
 
   int miniw, minrw;
@@ -413,8 +340,7 @@ void snoptProblemA::setWorkspace()
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblemA::computeJac(int &aneA, int &aneG)
-{
+int snoptProblemA::computeJac(int &aneA, int &aneG) {
   assert( initCalled == 1 );
   aneA = 0; aneG = 0;
 
@@ -452,8 +378,7 @@ int snoptProblemA::computeJac(int &aneA, int &aneG)
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblemA::solve( int starttype )
-{
+int snoptProblemA::solve( int starttype ) {
   assert( initCalled == 1 );
 
   //Ensures all user data initialized.
@@ -509,31 +434,27 @@ int snoptProblemA::solve( int starttype )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemA::setProblemSize( int an, int aneF )
-{
+void snoptProblemA::setProblemSize( int an, int aneF ) {
   n   = an;
   neF = aneF;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemA::setObjective( int aObjRow, double aObjAdd )
-{
+void snoptProblemA::setObjective( int aObjRow, double aObjAdd ) {
   ObjRow = aObjRow;
   ObjAdd = aObjAdd;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblemA::setA( int lenA0, int neA0, int *iAfun0, int *jAvar0,
-			  double *A0 )
-{
+			  double *A0 ) {
   lenA  = lenA0;  iAfun = iAfun0;  jAvar = jAvar0;  A = A0;
   jacComputed = 0;  neA = neA0;
   allocA = 0;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemA::setG( int lenG0, int neG0, int *iGfun0, int *jGvar0 )
-{
+void snoptProblemA::setG( int lenG0, int neG0, int *iGfun0, int *jGvar0 ) {
   lenG  = lenG0;  iGfun = iGfun0;  jGvar = jGvar0;
   jacComputed = 0;  neG = neG0;
   allocG = 0;
@@ -541,8 +462,7 @@ void snoptProblemA::setG( int lenG0, int neG0, int *iGfun0, int *jGvar0 )
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblemA::setX( double *ax, double *axlow, double *axupp,
-                         double *axmul, int *axstate )
-{
+                         double *axmul, int *axstate ) {
   x      = ax;
   xlow   = axlow;
   xupp   = axupp;
@@ -552,8 +472,7 @@ void snoptProblemA::setX( double *ax, double *axlow, double *axupp,
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblemA::setF( double *aF, double *aFlow, double *aFupp,
-                         double *aFmul, int *aFstate )
-{
+                         double *aFmul, int *aFstate ) {
   F      = aF;
   Flow   = aFlow;
   Fupp   = aFupp;
@@ -562,39 +481,27 @@ void snoptProblemA::setF( double *aF, double *aFlow, double *aFupp,
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemA::setUserFun( snFunA ausrfun )
-{
+void snoptProblemA::setUserFun( snFunA ausrfun ) {
   usrfunA = ausrfun;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemC::snoptProblemC()
-{
+snoptProblemC::snoptProblemC() {
   init2zero();
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemC::snoptProblemC( const char *name ) : snoptProblem(name)
-{
+snoptProblemC::snoptProblemC( const char *name ) : snoptProblem(name) {
   init2zero();
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemC::snoptProblemC( const char *name, const char *prtfile ) :
-  snoptProblem(name, prtfile)
-{
-  init2zero();
+snoptProblemC::~snoptProblemC() {
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemC::~snoptProblemC()
-{
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemC::init2zero()
-{
+void snoptProblemC::init2zero() {
   m      =  0; n     = 0; ne    = 0; iObj   = -1;
   nnCon  =  0; nnObj = 0; nnJac = 0; ObjAdd =  0;
   negCon = -1;
@@ -609,8 +516,7 @@ void snoptProblemC::init2zero()
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblemC::userDataSet()
-{
+int snoptProblemC::userDataSet() {
   int errors = 0;
 
   if ( n    == 0)  errors = errMsgExit( "n"     );
@@ -629,8 +535,7 @@ int snoptProblemC::userDataSet()
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemC::setWorkspace()
-{
+void snoptProblemC::setWorkspace() {
   assert( initCalled == 1 );
 
   int miniw, minrw;
@@ -650,8 +555,7 @@ void snoptProblemC::setWorkspace()
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblemC::solve( int starttype )
-{
+int snoptProblemC::solve( int starttype ) {
   assert( initCalled == 1 );
 
   //Ensures all user data initialized.
@@ -698,8 +602,7 @@ int snoptProblemC::solve( int starttype )
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblemC::setProblemSize( int am, int an, int annCon,
-				    int annJac, int annObj)
-{
+				    int annJac, int annObj) {
   m = am;  n = an;
   nnCon = annCon;
   nnJac = annJac;
@@ -707,15 +610,13 @@ void snoptProblemC::setProblemSize( int am, int an, int annCon,
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemC::setObjective( int aiObj, double aObjAdd )
-{
+void snoptProblemC::setObjective( int aiObj, double aObjAdd ) {
   iObj   = aiObj;
   ObjAdd = aObjAdd;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemC::setJ( int ane, double *aJval, int *aindJ, int *alocJ )
-{
+void snoptProblemC::setJ( int ane, double *aJval, int *aindJ, int *alocJ ) {
   ne   = ane;
   Jval = aJval;
   indJ = aindJ;
@@ -724,8 +625,7 @@ void snoptProblemC::setJ( int ane, double *aJval, int *aindJ, int *alocJ )
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblemC::setX( double *abl, double *abu, double *ax,
-			  double *api, double *arc, int *ahs)
-{
+			  double *api, double *arc, int *ahs) {
   x  = ax;  hs = ahs;
   bl = abl; bu = abu;
   pi = api; rc = arc;
@@ -733,45 +633,32 @@ void snoptProblemC::setX( double *abl, double *abu, double *ax,
 
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemC::setUserFun( snFunC ausrfun )
-{
+void snoptProblemC::setUserFun( snFunC ausrfun ) {
   usrfunC = ausrfun;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemB::snoptProblemB() : snoptProblemC()
-{
+snoptProblemB::snoptProblemB() : snoptProblemC() {
   init2zero();
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemB::snoptProblemB( const char *name ) : snoptProblemC(name)
-{
+snoptProblemB::snoptProblemB( const char *name ) : snoptProblemC(name) {
   init2zero();
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemB::snoptProblemB( const char *name, const char *prtfile ) :
-  snoptProblemC(name,prtfile)
-{
-  init2zero();
+snoptProblemB::~snoptProblemB() {
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemB::~snoptProblemB()
-{
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemB::init2zero()
-{
+void snoptProblemB::init2zero() {
   funobj = 0; funcon = 0;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblemB::userDataSet()
-{
+int snoptProblemB::userDataSet() {
   int errors = 0;
 
   errors = snoptProblemC::userDataSet();
@@ -782,8 +669,7 @@ int snoptProblemB::userDataSet()
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblemB::solve( int starttype )
-{
+int snoptProblemB::solve( int starttype ) {
   assert( initCalled == 1 );
 
   //Ensures all user data initialized.
@@ -823,14 +709,12 @@ int snoptProblemB::solve( int starttype )
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemB::setFuncon( snConB afuncon )
-{
+void snoptProblemB::setFuncon( snConB afuncon ) {
   funcon = afuncon;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-void snoptProblemB::setFunobj( snObjB afunobj )
-{
+void snoptProblemB::setFunobj( snObjB afunobj ) {
   funobj = afunobj;
 }
 

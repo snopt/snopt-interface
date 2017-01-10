@@ -11,19 +11,13 @@
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-void summaryOff();
-void summaryOn();
-
 class snoptProblem {
 private:
-  int probID;
-  int iprint, isumm;
   void init2zero();
 
 protected:
   snoptProblem();
   snoptProblem(const char*name);
-  snoptProblem(const char*name, const char *prtfile);
   ~snoptProblem();
 
   char    Prob[30];
@@ -44,37 +38,39 @@ protected:
   isqLog  sqLog;
   isnSTOP snSTOP;
 
-  int  errMsgExit      ( const char *var );
-  void allocI          ( int leniw );
-  void allocR          ( int lenrw );
-  void reallocI        ( int leniw );
-  void reallocR        ( int lenrw );
+  int  errMsgExit(const char *var);
+  void allocI    (int leniw);
+  void allocR    (int lenrw);
+  void reallocI  (int leniw);
+  void reallocR  (int lenrw);
 
   virtual void setWorkspace () = 0;
 
 public:
-  virtual int solve   ( int starttype ) = 0;
+  virtual int solve   (int starttype) = 0;
 
-  int getParameter    ( const char *stroptin, char *stroptout );
-  int getIntParameter ( const char *stropt,   int    &opt );
-  int getRealParameter( const char *stropt,   double &opt );
-  int setParameter    ( const char *stroptin );
-  int setIntParameter ( const char *stropt,   int     opt );
-  int setRealParameter( const char *stropt,   double  opt );
+  void initialize     (const char *prtfile, int summOn);
 
-  void setProbName    ( const char *Prob );
+  int getParameter    (const char *stroptin, char *stroptout);
+  int getIntParameter (const char *stropt,   int    &opt);
+  int getRealParameter(const char *stropt,   double &opt);
+  int setParameter    (const char *stroptin);
+  int setIntParameter (const char *stropt,   int     opt);
+  int setRealParameter(const char *stropt,   double  opt);
 
-  int  setSpecsFile   ( const char *specname );
-  void setPrintFile   ( const char *prtname );
+  void setProbName    (const char *Prob);
 
-  void setUserI       ( int    *iu, int leniu );
-  void setUserR       ( double *ru, int lenru );
+  int  setSpecsFile   (const char *specname);
+  void setPrintFile   (const char *prtname);
 
-  void setUserspace   ( int    *iu, int leniu,
-			double *ru, int lenru );
+  void setUserI       (int    *iu, int leniu);
+  void setUserR       (double *ru, int lenru);
 
-  void setLog         ( isnLog snLog, isnLog2 snLog2, isqLog sqLog );
-  void setSTOP        ( isnSTOP snSTOP );
+  void setUserspace   (int    *iu, int leniu,
+			double *ru, int lenru);
+
+  void setLog         (isnLog snLog, isnLog2 snLog2, isqLog sqLog);
+  void setSTOP        (isnSTOP snSTOP);
 };
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -104,25 +100,24 @@ protected:
 
 public:
   snoptProblemA();
-  snoptProblemA( const char *name );
-  snoptProblemA( const char *name, const char *prtfile );
+  snoptProblemA(const char *name);
   ~snoptProblemA();
 
-  int  computeJac    ( int &neA, int &neG );
-  int  solve         ( int starttype );
+  int  computeJac    (int &neA, int &neG);
+  int  solve         (int starttype);
   void setWorkspace  ();
 
-  void setProblemSize( int n, int neF );
-  void setObjective  ( int ObjRow, double ObjAdd );
+  void setProblemSize(int n, int neF);
+  void setObjective  (int ObjRow, double ObjAdd);
 
-  void setA          ( int lenA, int neA, int *iAfun, int *jAvar, double *A );
-  void setG          ( int lenG, int neG, int *iGfun, int *jGvar );
+  void setA          (int lenA, int neA, int *iAfun, int *jAvar, double *A);
+  void setG          (int lenG, int neG, int *iGfun, int *jGvar);
 
-  void setX          ( double *x, double *xlow, double *xupp,
-                       double *xmul, int *xstate );
-  void setF          ( double *F, double *Flow, double *Fupp,
-                       double *Fmul, int *Fstate );
-  void setUserFun    ( snFunA usrfun );
+  void setX          (double *x, double *xlow, double *xupp,
+                       double *xmul, int *xstate);
+  void setF          (double *F, double *Flow, double *Fupp,
+                       double *Fmul, int *Fstate);
+  void setUserFun    (snFunA usrfun);
 };
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -147,21 +142,20 @@ protected:
 
 public:
   snoptProblemC();
-  snoptProblemC( const char*name );
-  snoptProblemC( const char*name, const char *prtfile );
+  snoptProblemC(const char*name);
   ~snoptProblemC();
 
-  int  solve         ( int starttype );
+  int  solve         (int starttype);
   void setWorkspace  ();
 
-  void setProblemSize( int m, int n, int nnCon, int nnJac, int nnObj );
-  void setObjective  ( int iObj, double ObjAdd );
+  void setProblemSize(int m, int n, int nnCon, int nnJac, int nnObj);
+  void setObjective  (int iObj, double ObjAdd);
 
-  void setJ          ( int ne, double *Jval, int *indJ, int *locJ );
+  void setJ          (int ne, double *Jval, int *indJ, int *locJ);
 
-  void setX          ( double *bl, double *bu, double *x,
-		       double *pi, double *rc, int *hs );
-  void setUserFun    ( snFunC usrfun );
+  void setX          (double *bl, double *bu, double *x,
+		       double *pi, double *rc, int *hs);
+  void setUserFun    (snFunC usrfun);
 };
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -177,13 +171,12 @@ protected:
 
 public:
   snoptProblemB();
-  snoptProblemB( const char*name );
-  snoptProblemB( const char*name, const char *prtfile );
+  snoptProblemB(const char*name);
   ~snoptProblemB();
 
-  int  solve         ( int starttype );
-  void setFuncon     ( snConB funcon );
-  void setFunobj     ( snObjB funobj );
+  int  solve         (int starttype);
+  void setFuncon     (snConB funcon);
+  void setFunobj     (snObjB funobj);
 };
 
 #endif /* SNOPTPROBLEM_H */
