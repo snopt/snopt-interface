@@ -116,10 +116,10 @@ uninstall_cpp:
 #-----------------------------------------------------------------------
 
 $(LIBDIR)/libsnopt7_cpp.la: $(SNOPT_OBJDIR)/snopt_wrapper.lo $(SNOPT_OBJDIR)/snoptProblem.lo
-	$(LINK_CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ $^ -rpath $(libdir)
+	$(LINK_F) $(LDFLAGS) $(CXXFLAGS) -o $@ $^ -rpath $(libdir)
 
 $(LIBDIR)/libsnopt7_c.la: $(SNOPT_OBJDIR)/snopt_wrapper.lo $(SNOPT_OBJDIR)/snopt_cwrap.lo
-	$(LINK_C) $(LDFLAGS) $(CFLAGS) -o $@ $^ -rpath $(libdir)
+	$(LINK_F) $(LDFLAGS) $(CFLAGS) -o $@ $^ -rpath $(libdir)
 
 #-----------------------------------------------------------------------
 
