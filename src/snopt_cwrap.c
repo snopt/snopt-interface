@@ -351,9 +351,9 @@ void setSTOP(snProblem* prob, isnSTOP snSTOP) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int solveB(snProblem* prob, int start, double* objective) {
-  int i, inform, iObj, miniw, minrw, nInf, nS;
-  double sInf;
+int solveB(snProblem* prob, int start, double* objective,
+	   int* nS, int* nInf, double* sInf) {
+  int i, inform, iObj, miniw, minrw;
 
   assert(prob->initCalled == 1);
   assert(prob->sizeCalled == 1);
@@ -378,7 +378,7 @@ int solveB(snProblem* prob, int start, double* objective) {
 	   prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
 	   prob->valJ, prob->indJ, prob->locJ,
 	   prob->bl, prob->bu, prob->hs, prob->x, prob->pi, prob->rc,
-	   &inform, &nS, &nInf, &sInf, objective,
+	   &inform, nS, nInf, sInf, objective,
 	   &miniw, &minrw,
 	   prob->iu, prob->leniu, prob->ru, prob->lenru,
 	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
@@ -395,9 +395,9 @@ int solveB(snProblem* prob, int start, double* objective) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int solveC(snProblem* prob, int start, double* objective) {
-  int i, inform, iObj, miniw, minrw, nInf, nS;
-  double sInf;
+int solveC(snProblem* prob, int start, double* objective,
+	   int* nS, int* nInf, double* sInf) {
+  int i, inform, iObj, miniw, minrw;
 
   assert(prob->initCalled == 1);
   assert(prob->sizeCalled == 1);
@@ -415,16 +415,16 @@ int solveC(snProblem* prob, int start, double* objective) {
   iObj = prob->iObj+1;
 
   f_snkerc(start, prob->name, prob->m, prob->n, prob->ne,
-	    prob->nnCon, prob->nnObj, prob->nnJac, iObj,
-	    prob->ObjAdd,
-	    prob->usrfun,
-	    prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
-	    prob->valJ, prob->indJ, prob->locJ,
-	    prob->bl, prob->bu, prob->hs, prob->x, prob->pi, prob->rc,
-	    &inform, &nS, &nInf, &sInf, objective,
-	    &miniw, &minrw,
-	    prob->iu, prob->leniu, prob->ru, prob->lenru,
-	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
+	   prob->nnCon, prob->nnObj, prob->nnJac, iObj,
+	   prob->ObjAdd,
+	   prob->usrfun,
+	   prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
+	   prob->valJ, prob->indJ, prob->locJ,
+	   prob->bl, prob->bu, prob->hs, prob->x, prob->pi, prob->rc,
+	   &inform, nS, nInf, sInf, objective,
+	   &miniw, &minrw,
+	   prob->iu, prob->leniu, prob->ru, prob->lenru,
+	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
 
   for (i = 0; i < prob->ne; i++) {
     prob->indJ[i]--;

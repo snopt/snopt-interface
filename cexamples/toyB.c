@@ -58,7 +58,9 @@ int main( int argc , char* argv[] )
   int    nnJac  =  2;
   int    iObj   =  2;
   double ObjAdd =  0;
-  double objective;
+
+  int    nS, nInf;
+  double objective, sInf;
 
   // snInit must be called first.
   //   9, 6 are print and summary unit numbers (for Fortran).
@@ -131,7 +133,9 @@ int main( int argc , char* argv[] )
   setIntParameter( &toy, "Verify level", 3 );
   setIntParameter( &toy, "Derivative option", 3 );
 
-  info = solveB( &toy, Cold, &objective );
+  nS   = 0;
+
+  info = solveB( &toy, Cold, &objective, &nS, &nInf, &sInf );
 
   // Deallocate space.
   free ( toy.iu );

@@ -7,10 +7,8 @@
 #include <assert.h>
 #include "snopt.h"
 
-/* File: snopt_c.h
- *   C interface for SNOPT.
- *
- * 10 Jul 2014: First version (based on cwrap).
+/* File: snopt_cwrap.h
+ *   C interface for SNOPTB and SNOPTC.
  */
 typedef struct {
   char   *name;
@@ -99,8 +97,10 @@ void setUserfun     ( snProblem* prob, snFunC func );
 void setFuncon      ( snProblem* prob, snConB func );
 void setFunobj      ( snProblem* prob, snObjB func );
 
-int solveB          ( snProblem* prob, int start, double *objective );
-int solveC          ( snProblem* prob, int start, double *objective );
+int solveB          ( snProblem* prob, int start, double *objective,
+		      int *nS, int *nInf, double *sInf);
+int solveC          ( snProblem* prob, int start, double *objective,
+		      int *nS, int *nInf, double *sInf);
 
 void deleteSNOPT    ( snProblem* prob );
 

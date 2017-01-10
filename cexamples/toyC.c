@@ -46,7 +46,9 @@ int main( int argc , char* argv[] )
   int    nnJac  =  2;
   int    iObj   =  2;
   double ObjAdd =  0;
-  double objective;
+
+  int    nS, nInf;
+  double objective, sInf;
 
 
   // snInit must be called first.
@@ -118,7 +120,9 @@ int main( int argc , char* argv[] )
   setIntParameter( &toy, "Verify level", 3 );
   setIntParameter( &toy, "Derivative option", 3 );
 
-  info = solveC( &toy, Cold, &objective );
+  nS   = 0;
+
+  info = solveC( &toy, Cold, &objective, &nS, &nInf, &sInf );
   printf ("SNOPT Exit, INFO = %d\n", info );
   printf ("Final nonlinear objective = %16.8f\n", objective );
 
