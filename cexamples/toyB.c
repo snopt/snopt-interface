@@ -63,7 +63,7 @@ int main( int argc , char* argv[] )
   // snInit must be called first.
   //   9, 6 are print and summary unit numbers (for Fortran).
   //   6 == standard out
-  snInit ( &toy, "ToyB", "ToyB.out", 9, 6 );
+  snInit ( &toy, "ToyB", "ToyB.out", 1 );
 
   // Set the problem size and other data.
   // This will allocate arrays inside snProblem struct.
@@ -127,7 +127,7 @@ int main( int argc , char* argv[] )
   toy.locJ[2] = 5;
 
   // Read options, set options.
-  info = setSpecsfile   ( &toy, "sntoy.spc" );
+  info = setSpecsfile( &toy, "sntoy.spc" );
   setIntParameter( &toy, "Verify level", 3 );
   setIntParameter( &toy, "Derivative option", 3 );
 

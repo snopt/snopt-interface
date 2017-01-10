@@ -12,8 +12,7 @@ void toyusrf_(int    *Status, int *n,    double x[],
 	      int    *needG,  int *neG,  double G[],
 	      char      *cu,  int *lencu,
 	      int    iu[],    int *leniu,
-	      double ru[],    int *lenru )
-{
+	      double ru[],    int *lenru ) {
   //==================================================================
   // Computes the nonlinear objective and constraint terms for the toy
   // problem featured in the SnoptA users guide.
@@ -36,8 +35,7 @@ void toyusrfg_( int    *Status, int *n,    double x[],
 		int    *needG,  int *neG,  double G[],
 		char      *cu,  int *lencu,
 		int    iu[],    int *leniu,
-		double ru[],    int *lenru )
-{
+		double ru[],    int *lenru ) {
   //==================================================================
   // Computes the nonlinear objective and constraint terms for the toy
   // problem featured in the SnoptA users guide.
@@ -80,8 +78,7 @@ void toyusrfg_( int    *Status, int *n,    double x[],
   }
 }
 
-int main( int argc, char **argv)
-{
+int main( int argc, char **argv) {
   // Allocate and initialize;
   int n      =  2;
   int neF    =  3;
@@ -117,6 +114,7 @@ int main( int argc, char **argv)
   /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
   // Set up Toy0, which solves the problem without providing derivatives.
   snoptProblemA ToyProb0("ToyA0");
+  ToyProb0.initialize("ToyA0-2.out",1);
   ToyProb0.setProblemSize( n, neF );
   ToyProb0.setObjective  ( ObjRow, ObjAdd );
   ToyProb0.setX          ( x, xlow, xupp, xmul, xstate );
@@ -126,14 +124,12 @@ int main( int argc, char **argv)
   ToyProb0.setIntParameter( "Verify level ", 3 );
   ToyProb0.setUserFun    ( toyusrf_ );
 
-  ToyProb0.setPrintFile   ( "ToyA0-2.out" );
-
   printf("\nSolving toy0 problem with no derivatives...\n");
   ToyProb0.solve( Cold );
 
 
   /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-  snoptProblemA ToyProb1("ToyA1","ToyA1.out");
+  snoptProblemA ToyProb1("ToyA1");
 
   int neA, neG;
 
@@ -172,6 +168,7 @@ int main( int argc, char **argv)
   A[0]     = 1.0;
   neA      = 1;
 
+  ToyProb1.initialize     ("ToyA1.out", 0); // only print to file, no summary
 
   ToyProb1.setProblemSize ( n, neF );
   ToyProb1.setObjective   ( ObjRow, ObjAdd );

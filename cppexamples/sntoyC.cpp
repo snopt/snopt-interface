@@ -13,8 +13,7 @@ void toyusrfun ( int *mode,  int *nnObj, int *nnCon,
 		 double fCon[], double gCon[], int *Status,
 		 char    *cu, int *lencu,
 		 int    iu[], int *leniu,
-		 double ru[], int *lenru )
-{
+		 double ru[], int *lenru ) {
   //==================================================================
   // Computes the nonlinear objective and constraint terms for the toy
   // problem featured in the SnoptA users guide.
@@ -44,8 +43,7 @@ void toyusrfun ( int *mode,  int *nnObj, int *nnCon,
 
 }
 
-int main( int argc, char **argv)
-{
+int main( int argc, char **argv) {
   snoptProblemC ToyProb("ToyC");
 
   int n     =  2;
@@ -117,6 +115,7 @@ int main( int argc, char **argv)
 
   locJ[2] = 5;
 
+  ToyProb.initialize     ( "", 1 );
   ToyProb.setProblemSize ( m, n, nnCon, nnJac, nnObj );
   ToyProb.setObjective   ( iObj, ObjAdd );
   ToyProb.setJ           ( ne, valJ, indJ, locJ );

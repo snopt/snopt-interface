@@ -12,8 +12,7 @@ void toyusrf_(int    *Status, int *n,    double x[],
 	      int    *needG,  int *neG,  double G[],
 	      char      *cu,  int *lencu,
 	      int    iu[],    int *leniu,
-	      double ru[],    int *lenru )
-{
+	      double ru[],    int *lenru ) {
   //==================================================================
   // Computes the nonlinear objective and constraint terms for the toy
   // problem featured in the SnoptA users guide.
@@ -36,8 +35,7 @@ void toyusrfg_( int    *Status, int *n,    double x[],
 		int    *needG,  int *neG,  double G[],
 		char      *cu,  int *lencu,
 		int    iu[],    int *leniu,
-		double ru[],    int *lenru )
-{
+		double ru[],    int *lenru ) {
   //==================================================================
   // Computes the nonlinear objective and constraint terms for the toy
   // problem featured in the SnoptA users guide.
@@ -60,7 +58,6 @@ void toyusrfg_( int    *Status, int *n,    double x[],
     F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1];
   }
 
-
   if ( *needG > 0 ) {
     // iGfun[0] = 1
     // jGvar[0] = 0
@@ -81,9 +78,8 @@ void toyusrfg_( int    *Status, int *n,    double x[],
 }
 
 
-int main( int argc, char **argv)
-{
-  snoptProblemA ToyProb;
+int main( int argc, char **argv) {
+  snoptProblemA ToyProb("Toy0");
 
   // Allocate and initialize;
   int n     =  2;
@@ -121,9 +117,7 @@ int main( int argc, char **argv)
 
 
   // Load the data for ToyProb ...
-  ToyProb.setProbName   ("Toy0");
-  ToyProb.setPrintFile  ( "Toy0.out" );
-
+  ToyProb.initialize    ( "Toy0.out", 1 );
   ToyProb.setProblemSize( n, neF );
   ToyProb.setObjective  ( ObjRow, ObjAdd );
   ToyProb.setX          ( x, xlow, xupp, xmul, xstate );
