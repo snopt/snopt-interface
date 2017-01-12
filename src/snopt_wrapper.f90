@@ -963,6 +963,17 @@ contains
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+  subroutine f_snend() bind(C,name="f_snend")
+
+    !===========================================================================
+    ! Finish up.
+    !===========================================================================
+    ! Nothing for now.
+
+  end subroutine f_snend
+
+  !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
   subroutine f_snset(option, len, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_snset")
     integer(c_int),    intent(in), value :: len, leniw, lenrw
@@ -1134,17 +1145,6 @@ contains
     call snGetR(buffer, rvalue, Errors, cw, lencw, iw, leniw, rw, lenrw)
 
   end subroutine f_sngetr
-
-  !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-  subroutine f_snend() bind(C,name="f_snend")
-
-    !===========================================================================
-    ! Finish up.
-    !===========================================================================
-    ! Nothing for now.
-
-  end subroutine f_snend
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

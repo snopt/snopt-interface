@@ -138,8 +138,9 @@ int main(int argc, char **argv) {
   int *iGfun = new int[lenG];
   int *jGvar = new int[lenG];
 
-  int neA = 0, neG = 0;
+  int nS = 0, nInf = 0, neA = 0, neG = 0;
   int jx1, jx2, ju, ode1, ode2, Obj;
+  double sInf;
 
   double inf = 1.0e20;
 
@@ -266,26 +267,19 @@ int main(int argc, char **argv) {
   Flow[ObjRow] = -inf;
   Fupp[ObjRow] =  inf;
 
-
   catmixa.initialize     ("", 1);  // no print file, summary on
   catmixa.setProbName    ("catmix");
 
-  catmixa.setProblemSize(n, nF);
-  catmixa.setUserFun    (usrFG);
-  catmixa.setX          (x, xlow, xupp, xmul, xstate);
-  catmixa.setF          (F, Flow, Fupp, Fmul, Fstate);
-
-  catmixa.setObjective  (ObjRow, ObjAdd);
-
-  // neA and neG must be set here
-  catmixa.setA           (lenA, neA, iAfun, jAvar, A);
-  catmixa.setG           (lenG, neG, iGfun, jGvar);
-
   catmixa.setPrintFile   ("catmix.out");  // ok now add a print file
-//  catmixa.setSpecsFile   ("catmix.spc");
-
   catmixa.setIntParameter("Verify level ", 3);
-  catmixa.solve          (Cold);
+
+  catmixa.solve          (Cold, nF, n, ObjAdd, ObjRow, usrFG,
+			  iAfun, jAvar, A, neA,
+			  iGfun, jGvar, neG,
+			  xlow, xupp, Flow, Fupp,
+			  x, xstate, xmul,
+			  F, Fstate, Fmul,
+			  nS, nInf, sInf);
 
   delete []iAfun;  delete []jAvar;  delete []A;
   delete []iGfun;  delete []jGvar;

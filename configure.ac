@@ -1,5 +1,5 @@
 AC_PREREQ(2.69)
-AC_INIT([SNOPT-APIs],[7.2-12-3],[optimizers@ccom.ucsd.edu],[snopt-interfaces])
+AC_INIT([SNOPT-APIs],[2.0.0],[optimizers@ccom.ucsd.edu],[snopt-interfaces])
 
 AC_CONFIG_SRCDIR([src/snoptProblem.cpp])
 AC_CONFIG_AUX_DIR([config])
