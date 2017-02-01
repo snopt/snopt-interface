@@ -347,12 +347,16 @@ contains
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqend() bind(C,name="f_sqend")
+  subroutine f_sqend(iw, leniw, rw, lenrw) bind(C,name="f_sqend")
+    integer(c_int),    intent(in), value :: leniw, lenrw
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
 
     !===========================================================================
     ! Finish up.
     !===========================================================================
-    ! Nothing for now.
+    close(iw(12))  ! print file
+    close(iw(13))  ! summary file
 
   end subroutine f_sqend
 

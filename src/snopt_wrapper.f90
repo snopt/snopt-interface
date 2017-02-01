@@ -963,12 +963,16 @@ contains
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_snend() bind(C,name="f_snend")
+  subroutine f_snend(iw, leniw, rw, lenrw) bind(C,name="f_snend")
+    integer(c_int),    intent(in), value :: leniw, lenrw
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
 
     !===========================================================================
     ! Finish up.
     !===========================================================================
-    ! Nothing for now.
+    close(iw(12))  ! print file
+    close(iw(13))  ! summary file
 
   end subroutine f_snend
 

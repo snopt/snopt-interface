@@ -17,6 +17,13 @@ void sqInit(sqProblem* prob, char* name, char* prtfile, int summOn) {
 
   len = strlen(prtfile);
 
+  if (summOn != 0) {
+    printf(" ==============================\n");
+    printf("   SQOPT  C interface  2.0.0   ");
+    fflush(stdout);
+    //------123456789|123456789|123456789|
+  }
+
   f_sqinit(prtfile, len, summOn,
 	   prob->iw, prob->leniw,
 	   prob->rw, prob->lenrw);
@@ -267,7 +274,7 @@ int solveQ(sqProblem* prob, int start, sqFunHx qpHx,
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void deleteSQOPT(sqProblem* prob) {
-  f_sqend ();
+  f_sqend(prob->iw, prob->leniw, prob->rw, prob->lenrw);
 
   free(prob->iw);
   free(prob->rw);

@@ -118,7 +118,7 @@ extern "C" {
 
   void f_snsetprint ( const char *name, int len,
 		      int iw[], int leniw, double rw[], int lenrw );
-  void f_snend ();
+  void f_snend ( int iw[], int leniw, double rw[], int lenrw );
 
 
   /* SQOPT */
@@ -144,7 +144,7 @@ extern "C" {
 
   void f_sqsetprint ( const char *name, int len,
 		      int iw[], int leniw, double rw[], int lenrw );
-  void f_sqend ();
+  void f_sqend ( int iw[], int leniw, double rw[], int lenrw );
 
 
   /* SNOPTA */

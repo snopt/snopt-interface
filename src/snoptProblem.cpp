@@ -1,7 +1,5 @@
-#include <string.h>
 #include <assert.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstring>
 #include <iostream>
 #include "snopt.h"
 #include "snoptProblem.hpp"
@@ -31,7 +29,7 @@ snoptProblem::snoptProblem(const char *name) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 snoptProblem::~snoptProblem() {
-  f_snend();
+  f_snend(iw, leniw, rw, lenrw);
 
   delete []rw;  delete []iw;
 }
@@ -230,6 +228,14 @@ void snoptProblemABC::init2zero() {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblemABC::initialize(const char*prtfile, int summOn) {
   int len = strlen(prtfile);
+
+  if (summOn != 0) {
+    printf(" ==============================\n");
+    printf("  SNOPT  C++ interface  2.0.0  ");
+    fflush(stdout);
+    //------123456789|123456789|123456789|
+  }
+
   f_sninit(prtfile, len, summOn, iw, leniw, rw, lenrw);
   initCalled = 1;
 }
@@ -550,6 +556,14 @@ void sqoptProblem::init2zero() {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void sqoptProblem::initialize(const char*prtfile, int summOn) {
   int len = strlen(prtfile);
+
+  if (summOn != 0) {
+    printf(" ==============================\n");
+    printf("  SQOPT  C++ interface  2.0.0  ");
+    fflush(stdout);
+    //------123456789|123456789|123456789|
+  }
+
   f_sqinit(prtfile, len, summOn, iw, leniw, rw, lenrw);
   initCalled = 1;
 }
