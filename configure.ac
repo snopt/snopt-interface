@@ -63,6 +63,21 @@ AC_SUBST([snopt_dir])
 
 dnl ----------------------------------------------------------------------------
 
+AC_ARG_WITH([c],[AS_HELP_STRING([--with-c, --without-c],
+     [Compile C interfaces for SNOPT (default: with-c)]) ],
+     [with_c=no;], [with_c=yes;] )
+AC_MSG_CHECKING([for C interface])
+AC_MSG_RESULT([${with_c}])
+
+AC_ARG_WITH([cpp],
+	    [AS_HELP_STRING([--with-cpp, --without-cpp],
+                  [Compile C++ interfaces for SNOPT (default: with-cpp)]) ],
+          [with_cpp=no;], [with_cpp=yes;] )
+AC_MSG_CHECKING([for C++ interface])
+AC_MSG_RESULT([${with_cpp}])
+
+dnl ----------------------------------------------------------------------------
+
 CFLAGS="${user_CFLAGS}"
 CXXFLAGS="${user_CXXFLAGS}"
 LDFLAGS="${user_LDFLAGS}"
@@ -71,3 +86,33 @@ AC_SUBST([CFLAGS])
 AC_SUBST([CXXFLAGS])
 
 AC_OUTPUT([Makefile])
+
+echo ""
+echo "The SNOPT interface libraries will be compiled:"
+echo "  C   support?                      ${with_c}"
+echo "  C++ support?                      ${with_cpp}"
+echo ""
+echo "Libraries will be installed into      ${prefix}/lib"
+echo "  Shared libraries will be created:   ${enable_shared}"
+echo "  Static libraries will be created:   ${enable_static}"
+echo ""
+echo "SNOPT library location?               ${snopt_dir}"
+echo ""
+echo "Using external BLAS library?          ${blas}    ${BLAS_LIBS} "
+echo ""
+echo "To build everything                   'make'          "
+echo "To install the libraries              'make install'  "
+echo "To build the examples                 'make examples' "
+if test x"${with_c}" == xyes; then
+  echo ""
+  echo "To build   the SNOPT C interface      'make snopt_c'"
+  echo "To install the SNOPT C interface      'make install_c'"
+  echo "To build   the C examples             'make examples_c' "
+fi
+
+if test x"${with_cpp}" == xyes; then
+  echo ""
+  echo "To build   the SNOPT C++ interface    'make snopt_cpp'"
+  echo "To install the SNOPT C++ interface    'make install_cpp'"
+  echo "To build   the C++ examples           'make examples_cpp' "
+fi
