@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <cstring>
 #include <iostream>
+#include <stdio.h>
 #include "snopt.h"
 #include "snoptProblem.hpp"
 
@@ -8,7 +9,6 @@ using namespace std;
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 snoptProblem::snoptProblem() {
-  int len = 0, summOn = 6;
   init2zero();
   sprintf(Prob, "%8s", "        ");
 
@@ -18,7 +18,6 @@ snoptProblem::snoptProblem() {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 snoptProblem::snoptProblem(const char *name) {
-  int len = 0, summOn = 6;
   init2zero();
 
   sprintf(Prob, "%8s", name);
@@ -36,8 +35,6 @@ snoptProblem::~snoptProblem() {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblem::init2zero() {
-  inform = 0;
-
   initCalled = 0; memCalled = 0;
 
   leniw = 0; lenrw = 0;
@@ -244,7 +241,7 @@ void snoptProblemABC::initialize(const char*prtfile, int summOn) {
 int snoptProblemABC::setSpecsFile(const char *specname) {
   assert(initCalled == 1);
 
-  int len = strlen(specname);
+  int inform, len = strlen(specname);
   f_snspec(specname, len, &inform, iw, leniw, rw, lenrw);
   if(inform != 101){
     printf("Warning: unable to find specs file %s \n", specname);
@@ -282,7 +279,7 @@ snoptProblemA::~snoptProblemA() {
 void snoptProblemA::setWorkspace(int neF, int n, int neA, int neG) {
   assert(initCalled == 1);
 
-  int miniw, minrw;
+  int inform, miniw, minrw;
 
   f_snmema(&inform, neF, n, neA, neG, &miniw, &minrw,
 	    iw, leniw, rw, lenrw);
@@ -300,7 +297,7 @@ int snoptProblemA::computeJac(int neF, int n, snFunA usrfunA,
 			      int *&iGfun, int *&jGvar, int &neG) {
   assert(initCalled == 1);
 
-  int lenA, lenG, miniw, minrw;
+  int inform, lenA, lenG, miniw, minrw;
 
   lenA    = n*neF;
   iAfun  = new int[lenA];
@@ -331,7 +328,7 @@ int snoptProblemA::solve(int starttype, int neF, int n, double ObjAdd,
 			 int &nS, int &nInf, double &sInf) {
   assert(initCalled == 1);
 
-  int miniw, minrw, neA, neG, snObjRow;
+  int inform, miniw, minrw, neA, neG, snObjRow;
   int *iAfun, *jAvar, *iGfun, *jGvar;
   double *A;
 
@@ -366,7 +363,7 @@ int snoptProblemA::solve(int starttype, int neF, int n, double ObjAdd,
 			 int &nS, int &nInf, double &sInf) {
   assert(initCalled == 1);
 
-  int miniw, minrw, snObjRow;
+  int inform, miniw, minrw, snObjRow;
 
   if (memCalled == 0) { setWorkspace(neF, n, neA, neG); }
 
@@ -417,7 +414,7 @@ void snoptProblemC::setWorkspace(int m, int n, int ne, int negCon,
 				 int nnCon, int nnObj, int nnJac) {
   assert(initCalled == 1);
 
-  int miniw, minrw;
+  int inform, miniw, minrw;
 
   if (negCon < 0) {
     negCon   = nnCon*nnJac;
@@ -442,7 +439,7 @@ int snoptProblemC::solve(int starttype, int m, int n, int ne, int negCon,
 			 int &nS, int &nInf, double &sInf, double &objective) {
   assert(initCalled == 1);
 
-  int sniObj, miniw, minrw;
+  int inform, sniObj, miniw, minrw;
 
   if (memCalled == 0) {
     setWorkspace(m, n, ne, negCon, nnCon, nnObj, nnJac);
@@ -501,7 +498,7 @@ int snoptProblemB::solve(int starttype, int m, int n, int ne, int negCon,
 			 int &nS, int &nInf, double &sInf, double &objective) {
   assert(initCalled == 1);
 
-  int sniObj, miniw, minrw;
+  int inform, sniObj, miniw, minrw;
 
   if (memCalled == 0) { setWorkspace(m, n, ne, negCon, nnCon, nnObj, nnJac); }
 
@@ -572,7 +569,7 @@ void sqoptProblem::initialize(const char*prtfile, int summOn) {
 int sqoptProblem::setSpecsFile(const char *specname) {
   assert(initCalled == 1);
 
-  int len = strlen(specname);
+  int inform, len = strlen(specname);
   f_sqspec(specname, len, &inform, iw, leniw, rw, lenrw);
   if(inform != 101){
     printf("Warning: unable to find specs file %s \n", specname);
@@ -590,7 +587,7 @@ void sqoptProblem::setLog(isqLog asqLog) {
 void sqoptProblem::setWorkspace(int m, int n, int neA, int ncObj, int nnH) {
   assert(initCalled == 1);
 
-  int miniw, minrw;
+  int inform, miniw, minrw;
 
   f_sqmem(&inform, m, n, neA, ncObj, nnH,
 	   &miniw, &minrw, iw, leniw, rw, lenrw);
@@ -611,7 +608,7 @@ int sqoptProblem::solve(int starttype, sqFunHx qpHx,
 			int &nS, int &nInf, double &sInf, double &objective) {
   assert(initCalled == 1);
 
-  int sniObj, miniw, minrw;
+  int inform, sniObj, miniw, minrw;
 
   if (memCalled == 0) { setWorkspace(m, n, neA, ncObj, nnH); }
 

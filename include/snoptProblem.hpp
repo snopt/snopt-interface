@@ -19,7 +19,6 @@ protected:
 
   char    Prob[30];
 
-  int     inform;
   int     initCalled, memCalled;
 
   int     leniw, lenrw;
@@ -34,7 +33,6 @@ protected:
   void allocR    (int lenrw);
   void reallocI  (int leniw);
   void reallocR  (int lenrw);
-  int  errMsgExit(const char *var);
 
 public:
   void setProbName    (const char *Prob);
