@@ -273,6 +273,53 @@ int solveQ(sqProblem* prob, int start, sqFunHx qpHx,
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
+int sqopt(sqProblem* prob, int start, sqFunHx qpHx,
+	  int m, int n, int neA, int ncObj, int nnH,
+	  int iObj, double ObjAdd,
+	  double *valA, int *indA, int *locA,
+	  double *bl, double *bu, double *cObj,
+	  int *eType, int *hs, double *x, double *pi, double *rc,
+	  double* objective,
+	  int* nS, int* nInf, double* sInf) {
+
+  int i, inform, iiObj, miniw, minrw;
+
+  assert(prob->initCalled == 1);
+
+  if (prob->memCalled == 0) {
+    sqWorkspace(prob, m, n, neA, ncObj, nnH);
+  }
+
+  for (i = 0; i < neA; i++) {
+    indA[i]++;
+  }
+  for (i = 0; i <= n; i++) {
+    locA[i]++;
+  }
+  iiObj = iObj+1;
+
+  f_snkerq(start, qpHx, prob->sqLog,
+	   m, n, neA, ncObj, nnH,
+	   iiObj, ObjAdd, prob->name,
+	   valA, indA, locA,
+	   bl, bu, cObj, eType, hs, x, pi, rc,
+	   &inform, nS, nInf, sInf, objective,
+	   &miniw, &minrw,
+	   prob->iu, prob->leniu, prob->ru, prob->lenru,
+	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
+
+  for (i = 0; i < neA; i++) {
+    indA[i]--;
+  }
+  for (i = 0; i <= n; i++) {
+    locA[i]--;
+  }
+
+  return inform;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
 void deleteSQOPT(sqProblem* prob) {
   f_sqend(prob->iw, prob->leniw, prob->rw, prob->lenrw);
 

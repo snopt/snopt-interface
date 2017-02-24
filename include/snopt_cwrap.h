@@ -71,6 +71,16 @@ int solveA( snProblem* prob, int start,
 	    double *F, int *Fstate, double *Fmul,
 	    int* nS, int* nInf, double* sInf );
 
+int snoptA( snProblem* prob, int start,
+	    int nF, int n, double ObjAdd, int ObjRow,
+	    snFunA usrfun,
+	    int neA, int *iAfun, int *jAvar, double *A,
+	    int neG, int *iGfun, int *jGvar,
+	    double *xlow, double *xupp, double *Flow, double *Fupp,
+	    double *x, int *xstate, double *xmul,
+	    double *F, int *Fstate, double *Fmul,
+	    int* nS, int* nInf, double* sInf );
+
 int solveB( snProblem* prob, int start, int m, int n, int ne,
 	    int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
 	    snConB funcon, snObjB funobj,
@@ -79,7 +89,23 @@ int solveB( snProblem* prob, int start, int m, int n, int ne,
 	    double *pi, double *rc, double* objective,
 	    int* nS, int* nInf, double* sInf );
 
+int snoptB( snProblem* prob, int start, int m, int n, int ne,
+	    int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
+	    snConB funcon, snObjB funobj,
+	    double *valJ, int *indJ, int *locJ,
+	    double *bl, double *bu, int *hs, double *x,
+	    double *pi, double *rc, double* objective,
+	    int* nS, int* nInf, double* sInf );
+
 int solveC( snProblem* prob, int start, int m, int n, int ne,
+	    int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
+	    snFunC usrfun,
+	    double *valJ, int *indJ, int *locJ,
+	    double *bl, double *bu, int *hs, double *x,
+	    double *pi, double *rc, double* objective,
+	    int* nS, int* nInf, double* sInf );
+
+int snoptC( snProblem* prob, int start, int m, int n, int ne,
 	    int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
 	    snFunC usrfun,
 	    double *valJ, int *indJ, int *locJ,

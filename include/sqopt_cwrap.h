@@ -60,6 +60,15 @@ int solveQ(sqProblem* prob, int start, sqFunHx qpHx,
 	   double* objective,
 	   int* nS, int* nInf, double* sInf);
 
+int sqopt(sqProblem* prob, int start, sqFunHx qpHx,
+	  int m, int n, int neA, int ncObj, int nnH,
+	  int iObj, double ObjAdd,
+	  double *valA, int *indA, int *locA,
+	  double *bl, double *bu, double *cObj,
+	  int *eType, int *hs, double *x, double *pi, double *rc,
+	  double* objective,
+	  int* nS, int* nInf, double* sInf);
+
 void deleteSQOPT(sqProblem* prob);
 
 #endif /* SQOPT_C_H */

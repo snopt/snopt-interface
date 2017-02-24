@@ -270,6 +270,60 @@ void setSTOP(snProblem* prob, isnSTOP snSTOP) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
+int snoptA(snProblem* prob, int start,
+	   int nF, int n, double ObjAdd, int ObjRow,
+	   snFunA usrfun,
+	   int neA, int *iAfun, int *jAvar, double *A,
+	   int neG, int *iGfun, int *jGvar,
+	   double *xlow, double *xupp, double *Flow, double *Fupp,
+	   double *x, int *xstate, double *xmul,
+	   double *F, int *Fstate, double *Fmul,
+	   int* nS, int* nInf, double* sInf) {
+
+  int i, inform, iObj, miniw, minrw;
+
+  assert(prob->initCalled == 1);
+
+  if (prob->memCalled == 0) { setWorkspaceA(prob, nF, n, neA, neG); }
+
+  for (i = 0; i < neA; i++) {
+    iAfun[i]++;
+    jAvar[i]++;
+  }
+  for (i = 0; i < neG; i++) {
+    iGfun[i]++;
+    jGvar[i]++;
+  }
+
+  iObj = ObjRow+1;
+
+  f_snkera(start, prob->name, nF, n, ObjAdd, iObj, usrfun,
+	   prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
+	   iAfun, jAvar, neA, A,
+	   iGfun, jGvar, neG,
+	   xlow, xupp, Flow, Fupp,
+	   x, xstate, xmul,
+	   F, Fstate, Fmul,
+	   &inform, nS, nInf, sInf,
+	   &miniw, &minrw,
+	   prob->iu, prob->leniu, prob->ru, prob->lenru,
+	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
+
+
+  for (i = 0; i < neA; i++) {
+    iAfun[i]--;
+    jAvar[i]--;
+  }
+  for (i = 0; i < neG; i++) {
+    iGfun[i]--;
+    jGvar[i]--;
+  }
+
+  return inform;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
 int solveA(snProblem* prob, int start,
 	   int nF, int n, double ObjAdd, int ObjRow,
 	   snFunA usrfun,
@@ -324,6 +378,56 @@ int solveA(snProblem* prob, int start,
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
+int snoptB(snProblem* prob, int start, int m, int n, int ne,
+	   int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
+	   snConB funcon, snObjB funobj,
+	   double *valJ, int *indJ, int *locJ,
+	   double *bl, double *bu, int *hs, double *x,
+	   double *pi, double *rc, double* objective,
+	   int* nS, int* nInf, double* sInf) {
+
+  int i, inform, iiObj, miniw, minrw;
+
+  assert(prob->initCalled == 1);
+
+  if (prob->memCalled == 0) {
+    setWorkspace(prob, m, n, ne, -1, nnCon, nnObj, nnJac);
+  }
+
+
+  for (i = 0; i < ne; i++) {
+    indJ[i]++;
+  }
+  for (i = 0; i <= n; i++) {
+    locJ[i]++;
+  }
+
+  iiObj = iObj+1;
+
+  f_snkerb(start, prob->name, m, n, ne,
+	   nnCon, nnObj, nnJac, iiObj,
+	   ObjAdd,
+	   funcon, funobj,
+	   prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
+	   valJ, indJ, locJ,
+	   bl, bu, hs, x, pi, rc,
+	   &inform, nS, nInf, sInf, objective,
+	   &miniw, &minrw,
+	   prob->iu, prob->leniu, prob->ru, prob->lenru,
+	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
+
+  for (i = 0; i < ne; i++) {
+    indJ[i]--;
+  }
+  for (i = 0; i <= n; i++) {
+    locJ[i]--;
+  }
+
+  return inform;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
 int solveB(snProblem* prob, int start, int m, int n, int ne,
 	   int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
 	   snConB funcon, snObjB funobj,
@@ -354,6 +458,53 @@ int solveB(snProblem* prob, int start, int m, int n, int ne,
 	   nnCon, nnObj, nnJac, iiObj,
 	   ObjAdd,
 	   funcon, funobj,
+	   prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
+	   valJ, indJ, locJ,
+	   bl, bu, hs, x, pi, rc,
+	   &inform, nS, nInf, sInf, objective,
+	   &miniw, &minrw,
+	   prob->iu, prob->leniu, prob->ru, prob->lenru,
+	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
+
+  for (i = 0; i < ne; i++) {
+    indJ[i]--;
+  }
+  for (i = 0; i <= n; i++) {
+    locJ[i]--;
+  }
+
+  return inform;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+int snoptC(snProblem* prob, int start, int m, int n, int ne,
+	   int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
+	   snFunC usrfun,
+	   double *valJ, int *indJ, int *locJ,
+	   double *bl, double *bu, int *hs, double *x,
+	   double *pi, double *rc, double* objective,
+	   int* nS, int* nInf, double* sInf) {
+
+  int i, inform, iiObj, miniw, minrw;
+
+  assert(prob->initCalled == 1);
+
+  if (prob->memCalled == 0) {
+    setWorkspace(prob, m, n, ne, -1, nnCon, nnObj, nnJac);
+  }
+
+  for (i = 0; i < ne; i++) {
+    indJ[i]++;
+  }
+  for (i = 0; i <= n; i++) {
+    locJ[i]++;
+  }
+  iiObj = iObj+1;
+
+  f_snkerc(start, prob->name, m, n, ne,
+	   nnCon, nnObj, nnJac, iiObj, ObjAdd,
+	   usrfun,
 	   prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
 	   valJ, indJ, locJ,
 	   bl, bu, hs, x, pi, rc,
