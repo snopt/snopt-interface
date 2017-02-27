@@ -94,8 +94,6 @@ contains
              file(j:j) = name(j)
           end do
           iPrt = newunit()
-          !close (iPrt)
-          !open  (iPrt, file=trim(file), status='unknown', position='append')
           call snFileOpenAppend(iPrt, trim(file))
        end if
     end if
@@ -133,8 +131,6 @@ contains
     end do
 
     if (prtfile /= '') then
-       !close (iPrint)
-       !open (iPrint, file=trim(prtfile), status='unknown', position='append')
        iPrt = newunit()
        call snFileOpenAppend(iPrt,trim(prtfile))
        call sqSeti('Print file', iPrt, 0, 0, Errors, &
@@ -172,8 +168,6 @@ contains
 
     ! If we have a file, try to read it.
     if (spcfile /= '') then
-       !close(iSpec)
-       !open(unit=iSpec, file=trim(spcfile), status='old')
        call snFileOpenRead(iSpec,trim(spcfile))
        call sqSpec(iSpec, inform, cw, lencw, iw, leniw, rw, lenrw)
        close(iSpec)
@@ -356,7 +350,7 @@ contains
     ! Finish up.
     !===========================================================================
     close(iw(12))  ! print file
-    close(iw(13))  ! summary file
+    if (iw(13) /= 6) close(iw(13))  ! summary file
 
   end subroutine f_sqend
 
