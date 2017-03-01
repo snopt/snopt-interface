@@ -201,7 +201,7 @@ contains
 
   subroutine f_sninit(name, len, summOn, iw, leniw, rw, lenrw) &
        bind(C,name="f_sninit")
-
+    !DEC$ ATTRIBUTES dllexport :: f_sninit
     integer(c_int),    intent(in), value :: len, summOn, leniw, lenrw
     character(c_char), intent(in)        :: name(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -246,7 +246,7 @@ contains
 
   subroutine f_snsetprint(name, len, iw, leniw, rw, lenrw) &
        bind(C,name="f_snsetprint")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snsetprint
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: name(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -277,7 +277,7 @@ contains
 
   subroutine f_snspec(name, len, inform, iw, leniw, rw, lenrw) &
        bind(C,name="f_snspec")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snspec
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: name(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -313,7 +313,7 @@ contains
 
   subroutine f_snmema(inform, nF, n, lenA, lenG, miniw, minrw, &
                       iw, leniw, rw, lenrw) bind(C,name="f_snmema")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snmema
     integer(c_int), intent(in), value :: n, nF, lenA, lenG, leniw, lenrw
     integer(c_int), intent(inout)     :: iw(leniw)
     real(c_double), intent(inout)     :: rw(lenrw)
@@ -340,7 +340,7 @@ contains
                      iGfun, jGvar, lenG, neG,               &
                      miniw, minrw, iu, leniu, ru, lenru,    &
                      iw, leniw, rw, lenrw) bind(C,name="f_snjac")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snjac
     integer(c_int), intent(in), value :: n, nF, lenA, lenG, &
                                          leniu, lenru, leniw, lenrw
     real(c_double), intent(in)        :: xlow(n), xupp(n)
@@ -379,7 +379,7 @@ contains
                       miniw, minrw,                                 &
                       iu, leniu, ru, lenru,                         &
                       iw, leniw, rw, lenrw) bind(C,name="f_snopta")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snopta
     integer(c_int), intent(in), value :: Start, n, nF, ObjRow, neA, neG, &
                                          leniu, lenru, leniw, lenrw
     real(c_double), intent(in), value :: ObjAdd
@@ -442,7 +442,7 @@ contains
                       miniw, minrw,                                   &
                       iu, leniu, ru, lenru,                           &
                       iw, leniw, rw, lenrw) bind(C,name="f_snkera")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snkera
     integer(c_int), intent(in), value :: Start, n, nF, ObjRow, neA, neG, &
                                          leniu, lenru, leniw, lenrw
     real(c_double), intent(in), value :: ObjAdd
@@ -522,7 +522,7 @@ contains
   subroutine f_snmem(info, m, n, ne, negCon, nnCon, nnObj, nnJac, &
                      miniw, minrw, iw, leniw, rw, lenrw) &
                      bind(C,name="f_snmem")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snmem
     integer(c_int), intent(in), value :: m, n, ne, negCon, nnCon, nnObj, nnJac, &
                                          leniw, lenrw
     integer(c_int), intent(inout)     :: iw(leniw)
@@ -550,7 +550,7 @@ contains
                       miniw, minrw, iu, leniu, ru, lenru,         &
                       iw, leniw, rw, lenrw) &
                       bind(C,name="f_snoptb")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snoptb
     integer(c_int), intent(in), value :: Start, m, n, ne, &
                                          nnCon, nnObj, nnJac, iObj, &
                                          leniu, lenru, leniw, lenrw
@@ -620,7 +620,7 @@ contains
                       x, pi, rc, INFO, nS, nInf, sInf, Obj,       &
                       miniw, minrw, iu, leniu, ru, lenru,         &
                       iw, leniw, rw, lenrw) bind(C,name="f_snkerb")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snkerb
     integer(c_int), intent(in), value :: Start, m, n, ne, &
                                          nnCon, nnObj, nnJac, iObj, &
                                          leniu, lenru, leniw, lenrw
@@ -711,7 +711,7 @@ contains
                       bl, bu, hs, x, pi, rc, INFO, nS, nInf, sInf, Obj, &
                       miniw, minrw, iu, leniu, ru, lenru,               &
                       iw, leniw, rw, lenrw) bind(C,name="f_snoptc")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snoptc
     integer(c_int), intent(in), value :: Start, m, n, ne, &
                                          nnCon, nnObj, nnJac, iObj, &
                                          leniu, lenru, leniw, lenrw
@@ -778,7 +778,7 @@ contains
                       x, pi, rc, INFO, nS, nInf, sInf, Obj,           &
                       miniw, minrw, iu, leniu, ru, lenru,             &
                       iw, leniw, rw, lenrw) bind(C,name="f_snkerc")
-
+    !DEC$ ATTRIBUTES dllexport :: f_snkerc
     integer(c_int), intent(in), value :: Start, m, n, ne, &
                                          nnCon, nnObj, nnJac, iObj, &
                                          leniu, lenru, leniw, lenrw
@@ -864,7 +864,7 @@ contains
                      A, bl, bu, c_funcon, c_funobj, INFO, majIts, iState, &
                      cCon, cJac, cMul, Objf, grad, Hess, x,               &
                      iw, leniw, rw, lenrw) bind(C,name="f_npopt")
-
+    !DEC$ ATTRIBUTES dllexport :: f_npopt
     integer(c_int), intent(in), value :: n, nclin, ncnln, ldA, ldcJ, ldH, &
                                          leniw, lenrw
     real(c_double), intent(in)    :: bl(n+nclin+ncnln), bu(n+nclin+ncnln), &
@@ -904,7 +904,7 @@ contains
                       INFO, majIts, iState,                            &
                       cCon, cJac, cMul, Objf, grad, Hess, x,           &
                       iw, leniw, rw, lenrw) bind(C,name="f_npkern")
-
+    !DEC$ ATTRIBUTES dllexport :: f_npkern
     integer(c_int), intent(in), value :: n, nclin, ncnln, ldA, ldcJ, ldH, &
                                          leniw, lenrw
 
@@ -958,10 +958,10 @@ contains
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   subroutine f_snend(iw, leniw, rw, lenrw) bind(C,name="f_snend")
+    !DEC$ ATTRIBUTES dllexport :: f_snend
     integer(c_int),    intent(in), value :: leniw, lenrw
     integer(c_int),    intent(inout)     :: iw(leniw)
     real(c_double),    intent(inout)     :: rw(lenrw)
-
     !===========================================================================
     ! Finish up.
     !===========================================================================
@@ -974,6 +974,7 @@ contains
 
   subroutine f_snset(option, len, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_snset")
+    !DEC$ ATTRIBUTES dllexport :: f_snset
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -1001,6 +1002,7 @@ contains
 
   subroutine f_snseti(option, len, ivalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_snseti")
+    !DEC$ ATTRIBUTES dllexport :: f_snseti
     integer(c_int),    intent(in), value :: len, ivalue, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -1029,6 +1031,7 @@ contains
 
   subroutine f_snsetr(option, len, rvalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_snsetr")
+    !DEC$ ATTRIBUTES dllexport :: f_snsetr
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     real(c_double),    intent(in), value :: rvalue
     character(c_char), intent(in)        :: option(len)
@@ -1059,6 +1062,7 @@ contains
 
   subroutine f_sngetc(option, lin, cvalue, lout, Errors, &
                       iw, leniw, rw, lenrw) bind(C,name="f_sngetc")
+    !DEC$ ATTRIBUTES dllexport :: f_sngetc
     integer(c_int),    intent(in), value :: lin, lout, leniw, lenrw
     character(c_char), intent(in)        :: option(lin)
     character(c_char), intent(inout)     :: cvalue(lout)
@@ -1093,6 +1097,7 @@ contains
 
   subroutine f_sngeti(option, len, ivalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sngeti")
+    !DEC$ ATTRIBUTES dllexport :: f_sngeti
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -1120,6 +1125,7 @@ contains
 
   subroutine f_sngetr(option, len, rvalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sngetr")
+    !DEC$ ATTRIBUTES dllexport :: f_sngetr
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
     real(c_double),    intent(out)       :: rvalue

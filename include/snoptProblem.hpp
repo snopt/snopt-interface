@@ -1,5 +1,6 @@
 #ifndef SNOPTPROBLEM_H
 #define SNOPTPROBLEM_H
+#define DLL_ATTR __declspec(dllexport)
 
 #include "snopt.h"
 
@@ -35,19 +36,19 @@ protected:
   void reallocR  (int lenrw);
 
 public:
-  void setProbName    (const char *Prob);
-  void setPrintFile   (const char *prtname);
+  DLL_ATTR void setProbName    (const char *Prob);
+  DLL_ATTR void setPrintFile   (const char *prtname);
 
-  int getParameter    (const char *stroptin, char *stroptout);
-  int getIntParameter (const char *stropt,   int    &opt);
-  int getRealParameter(const char *stropt,   double &opt);
-  int setParameter    (const char *stroptin);
-  int setIntParameter (const char *stropt,   int     opt);
-  int setRealParameter(const char *stropt,   double  opt);
+  DLL_ATTR int getParameter    (const char *stroptin, char *stroptout);
+  DLL_ATTR int getIntParameter (const char *stropt,   int    &opt);
+  DLL_ATTR int getRealParameter(const char *stropt,   double &opt);
+  DLL_ATTR int setParameter    (const char *stroptin);
+  DLL_ATTR int setIntParameter (const char *stropt,   int     opt);
+  DLL_ATTR int setRealParameter(const char *stropt,   double  opt);
 
-  void setUserI       (int    *iu, int leniu);
-  void setUserR       (double *ru, int lenru);
-  void setUserspace   (int    *iu, int leniu, double *ru, int lenru);
+  DLL_ATTR void setUserI       (int    *iu, int leniu);
+  DLL_ATTR void setUserR       (double *ru, int lenru);
+  DLL_ATTR void setUserspace   (int    *iu, int leniu, double *ru, int lenru);
 };
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -66,80 +67,80 @@ protected:
   isnSTOP snSTOP;
 
 public:
-  void initialize     (const char *prtfile, int summOn);
-  int  setSpecsFile   (const char *specname);
+  DLL_ATTR void initialize     (const char *prtfile, int summOn);
+  DLL_ATTR int  setSpecsFile   (const char *specname);
 
-  void setLog         (isnLog snLog, isnLog2 snLog2, isqLog sqLog);
-  void setSTOP        (isnSTOP snSTOP);
+  DLL_ATTR void setLog         (isnLog snLog, isnLog2 snLog2, isqLog sqLog);
+  DLL_ATTR void setSTOP        (isnSTOP snSTOP);
 };
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 class snoptProblemA : public snoptProblemABC {
 public:
-  snoptProblemA();
-  snoptProblemA(const char *name);
-  ~snoptProblemA();
+  DLL_ATTR snoptProblemA();
+  DLL_ATTR snoptProblemA(const char *name);
+  DLL_ATTR ~snoptProblemA();
 
-  void setWorkspace(int neF, int n, int neA, int neG);
-  int  computeJac(int neF, int n, snFunA usrfunA,
-		  double *x, double *xlow, double*xupp,
-		  int *&iAfun, int *&jAvar, double *&A, int &neA,
-		  int *&iGfun, int *&jGvar, int &neG);
+  DLL_ATTR void setWorkspace(int neF, int n, int neA, int neG);
+  DLL_ATTR int  computeJac(int neF, int n, snFunA usrfunA,
+			   double *x, double *xlow, double*xupp,
+			   int *&iAfun, int *&jAvar, double *&A, int &neA,
+			   int *&iGfun, int *&jGvar, int &neG);
 
-  int  solve(int starttype, int nF, int n, double ObjAdd,
-	     int ObjRow, snFunA usrfunA,
-	     double *xlow, double *xupp, double *Flow, double *Fupp,
-	     double *x, int *xstate, double *xmul,
-	     double *F, int *Fstate, double *Fmul,
-	     int &nS, int &nInf, double &sInf);
+  DLL_ATTR int  solve(int starttype, int nF, int n, double ObjAdd,
+		      int ObjRow, snFunA usrfunA,
+		      double *xlow, double *xupp, double *Flow, double *Fupp,
+		      double *x, int *xstate, double *xmul,
+		      double *F, int *Fstate, double *Fmul,
+		      int &nS, int &nInf, double &sInf);
 
-  int  solve(int starttype, int nF, int n, double ObjAdd,
-	     int ObjRow, snFunA usrfunA,
-	     int *iAfun, int *jAvar, double *A, int neA,
-	     int *iGfun, int *jGvar, int neG,
-	     double *xlow, double *xupp, double *Flow, double *Fupp,
-	     double *x, int *xstate, double *xmul,
-	     double *F, int *Fstate, double *Fmul,
-	     int &nS, int &nInf, double &sInf);
+  DLL_ATTR int  solve(int starttype, int nF, int n, double ObjAdd,
+		      int ObjRow, snFunA usrfunA,
+		      int *iAfun, int *jAvar, double *A, int neA,
+		      int *iGfun, int *jGvar, int neG,
+		      double *xlow, double *xupp, double *Flow, double *Fupp,
+		      double *x, int *xstate, double *xmul,
+		      double *F, int *Fstate, double *Fmul,
+		      int &nS, int &nInf, double &sInf);
 };
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 class snoptProblemC : public snoptProblemABC {
 public:
-  snoptProblemC();
-  snoptProblemC(const char*name);
-  ~snoptProblemC();
+  DLL_ATTR snoptProblemC();
+  DLL_ATTR snoptProblemC(const char*name);
+  DLL_ATTR ~snoptProblemC();
 
-  void setWorkspace(int m, int n, int ne, int negCon,
-		    int nnCon, int nnObj, int nnJac);
+  DLL_ATTR void setWorkspace(int m, int n, int ne, int negCon,
+			     int nnCon, int nnObj, int nnJac);
 
-  int solve(int starttype, int m, int n, int ne, int negCon,
-	    int nnCon, int nnObj, int nnJac,
-	    int iObj, double ObjAdd, snFunC usrfunC,
-	    double *Jval, int *indJ, int *locJ,
-	    double *bl, double *bu, int *hs,
-	    double *x, double *pi, double *rc,
-	    int &nS, int &nInf, double &sInf, double &objective);
+  DLL_ATTR int solve(int starttype, int m, int n, int ne, int negCon,
+		     int nnCon, int nnObj, int nnJac,
+		     int iObj, double ObjAdd, snFunC usrfunC,
+		     double *Jval, int *indJ, int *locJ,
+		     double *bl, double *bu, int *hs,
+		     double *x, double *pi, double *rc,
+		     int &nS, int &nInf, double &sInf, double &objective);
 };
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 class snoptProblemB : public snoptProblemC {
 public:
-  snoptProblemB();
-  snoptProblemB(const char*name);
-  ~snoptProblemB();
+  DLL_ATTR snoptProblemB();
+  DLL_ATTR snoptProblemB(const char*name);
+  DLL_ATTR ~snoptProblemB();
 
-  int solve(int starttype, int m, int n, int ne, int negCon,
-	    int nnCon, int nnObj, int nnJac,
-	    int iObj, double ObjAdd,
-	    snConB funcon, snObjB funobj,
-	    double *Jval, int *indJ, int *locJ,
-	    double *bl, double *bu, int *hs,
-	    double *x, double *pi, double *rc,
-	    int &nS, int &nInf, double &sInf, double &objective);
+  DLL_ATTR int solve(int starttype, int m, int n, int ne, int negCon,
+		     int nnCon, int nnObj, int nnJac,
+		     int iObj, double ObjAdd,
+		     snConB funcon, snObjB funobj,
+		     double *Jval, int *indJ, int *locJ,
+		     double *bl, double *bu, int *hs,
+		     double *x, double *pi, double *rc,
+		     int &nS, int &nInf, double &sInf, double &objective);
 };
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -150,22 +151,22 @@ private:
   void init2zero();
 
 public:
-  sqoptProblem();
-  sqoptProblem(const char*name);
-  ~sqoptProblem();
+  DLL_ATTR sqoptProblem();
+  DLL_ATTR sqoptProblem(const char*name);
+  DLL_ATTR ~sqoptProblem();
 
-  void initialize  (const char *prtfile, int summOn);
-  int  setSpecsFile(const char *specname);
-  void setLog      (isqLog sqLog);
-  void setWorkspace(int m, int n, int neA, int ncObj, int nnH);
+  DLL_ATTR void initialize  (const char *prtfile, int summOn);
+  DLL_ATTR int  setSpecsFile(const char *specname);
+  DLL_ATTR void setLog      (isqLog sqLog);
+  DLL_ATTR void setWorkspace(int m, int n, int neA, int ncObj, int nnH);
 
-  int solve(int starttype, sqFunHx qpHx,
-	    int m, int n, int neA, int ncObj, int nnH,
-	    int iObj, double ObjAdd,
-	    double *A, int *indA, int *locA,
-	    double *bl, double *bu, double *cObj,
-	    int *eType, int *hs, double *x, double *pi, double *rc,
-	    int &nS, int &nInf, double &sInf, double &objective);
+  DLL_ATTR int solve(int starttype, sqFunHx qpHx,
+		     int m, int n, int neA, int ncObj, int nnH,
+		     int iObj, double ObjAdd,
+		     double *A, int *indA, int *locA,
+		     double *bl, double *bu, double *cObj,
+		     int *eType, int *hs, double *x, double *pi, double *rc,
+		     int &nS, int &nInf, double &sInf, double &objective);
 };
 
 #endif /* SNOPTPROBLEM_H */

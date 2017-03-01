@@ -67,7 +67,7 @@ contains
 
   subroutine f_sqinit(name, len, summOn, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqinit")
-
+    !DEC$ ATTRIBUTES dllexport :: f_sqinit
     integer(c_int),    intent(in), value :: len, summOn, leniw, lenrw
     character(c_char), intent(in)        :: name(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -112,7 +112,7 @@ contains
 
   subroutine f_sqsetprint(name, len, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqsetprint")
-
+    !DEC$ ATTRIBUTES dllexport :: f_sqsetprint
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: name(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -143,7 +143,7 @@ contains
 
   subroutine f_sqspec(name, len, inform, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqspec")
-
+    !DEC$ ATTRIBUTES dllexport :: f_sqspec
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: name(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -180,7 +180,7 @@ contains
   subroutine f_sqmem(info, m, n, neA, ncObj, nnH, &
                      miniw, minrw, iw, leniw, rw, lenrw) &
                      bind(C,name="f_sqmem")
-
+    !DEC$ ATTRIBUTES dllexport :: f_sqmem
     integer(c_int), intent(in), value :: m, n, neA, ncObj, nnH, &
                                          leniw, lenrw
     integer(c_int), intent(inout)     :: iw(leniw)
@@ -209,6 +209,7 @@ contains
                      miniw, minrw,                         &
                      iu, leniu, ru, lenru,                 &
                      iw, leniw, rw, lenrw) bind(C,name='f_sqopt')
+    !DEC$ ATTRIBUTES dllexport :: f_sqopt
     integer(c_int), intent(in), value :: Start, m, n, iObj, neA, ncObj, nnH, &
                                          leniu, lenru, leniw, lenrw
     real(c_double), intent(in), value :: ObjAdd
@@ -276,6 +277,7 @@ contains
                       miniw, minrw,                   &
                       iu, leniu, ru, lenru,           &
                       iw, leniw, rw, lenrw) bind(C,name='f_snkerq')
+    !DEC$ ATTRIBUTES dllexport :: f_snkerq
     integer(c_int), intent(in), value :: Start, m, n, iObj, neA, ncObj, nnH, &
                                          leniu, lenru, leniw, lenrw
     real(c_double), intent(in), value :: ObjAdd
@@ -342,6 +344,7 @@ contains
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   subroutine f_sqend(iw, leniw, rw, lenrw) bind(C,name="f_sqend")
+    !DEC$ ATTRIBUTES dllexport :: f_sqend
     integer(c_int),    intent(in), value :: leniw, lenrw
     integer(c_int),    intent(inout)     :: iw(leniw)
     real(c_double),    intent(inout)     :: rw(lenrw)
@@ -358,6 +361,7 @@ contains
 
   subroutine f_sqset(option, len, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqset")
+    !DEC$ ATTRIBUTES dllexport :: f_sqset
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -385,6 +389,7 @@ contains
 
   subroutine f_sqseti(option, len, ivalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqseti")
+    !DEC$ ATTRIBUTES dllexport :: f_sqseti
     integer(c_int),    intent(in), value :: len, ivalue, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -413,6 +418,7 @@ contains
 
   subroutine f_sqsetr(option, len, rvalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqsetr")
+    !DEC$ ATTRIBUTES dllexport :: f_sqsetr
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     real(c_double),    intent(in), value :: rvalue
     character(c_char), intent(in)        :: option(len)
@@ -443,6 +449,7 @@ contains
 
   subroutine f_sqgetc(option, lin, cvalue, lout, Errors, &
                       iw, leniw, rw, lenrw) bind(C,name="f_sqgetc")
+    !DEC$ ATTRIBUTES dllexport :: f_sqgetc
     integer(c_int),    intent(in), value :: lin, lout, leniw, lenrw
     character(c_char), intent(in)        :: option(lin)
     character(c_char), intent(inout)     :: cvalue(lout)
@@ -477,6 +484,7 @@ contains
 
   subroutine f_sqgeti(option, len, ivalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqgeti")
+    !DEC$ ATTRIBUTES dllexport :: f_sqgeti
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
@@ -504,6 +512,7 @@ contains
 
   subroutine f_sqgetr(option, len, rvalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqgetr")
+    !DEC$ ATTRIBUTES dllexport :: f_sqgetr
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
     real(c_double),    intent(out)       :: rvalue
