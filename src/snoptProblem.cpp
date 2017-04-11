@@ -195,13 +195,6 @@ void snoptProblem::setUserspace  (int*aiu,     int aleniu,
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblem::errMsgExit(const char *var) {
-  cerr << endl << "XXX: Input error: " << var << " must be set prior to call to "
-       << endl << "     snoptProblem::solve() or snoptProblem::computeJac()!\n";
-  return 99;
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 snoptProblemABC::snoptProblemABC() {
   init2zero();
