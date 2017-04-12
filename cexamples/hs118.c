@@ -8,7 +8,8 @@ void hs118Hx
   int    iu[], int   *leniu,
   double ru[], int   *lenru) {
 
-  for (int i = 0; i < 5; i++) {
+  int i;
+  for (i = 0; i < 5; i++) {
     Hx[3*i]   = .0002*x[3*i];
     Hx[3*i+1] = .0002*x[3*i+1];
     Hx[3*i+2] = .0003*x[3*i+2];
@@ -31,11 +32,11 @@ int main(int argc , char* argv[])
   int    iObj   = 17;
   double ObjAdd =  0;
 
-  int    indA[lenA], locA[lenA];
-  double valA[lenA];
+  int    indA[54], locA[16];
+  double valA[54];
 
-  int    eType[n+m], hs[n+m];
-  double x[n+m], bl[n+m], bu[n+m], pi[m], rc[n+m], cObj[1];
+  int    eType[33], hs[33];
+  double x[33], bl[33], bu[33], pi[18], rc[33], cObj[1];
 
   int    nS, nInf;
   double objective, sInf;

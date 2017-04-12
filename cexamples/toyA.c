@@ -60,14 +60,14 @@ int main( int argc , char* argv[] )
   int    ObjRow =  0;
   double ObjAdd =  0;
 
-  int    iAfun[lenA], jAvar[lenA], iGfun[lenG], jGvar[lenG];
-  double A[lenA];
+  int    iAfun[6], jAvar[6], iGfun[6], jGvar[6];
+  double A[6];
 
-  int    xstate[n];
-  double x[n], xlow[n], xupp[n], xmul[n];
+  int    xstate[2];
+  double x[2], xlow[2], xupp[2], xmul[2];
 
-  int    Fstate[nF];
-  double F[nF], Flow[nF], Fupp[nF], Fmul[nF];
+  int    Fstate[3];
+  double F[3], Flow[3], Fupp[3], Fmul[3];
 
   int    nS, nInf;
   double sInf;

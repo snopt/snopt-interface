@@ -47,8 +47,8 @@ int main( int argc , char* argv[] )
   int    iObj   =  2;
   double ObjAdd =  0;
 
-  int    hs[n+m], locJ[n+1], indJ[ne];
-  double bl[n+m], bu[n+m], x[n+m], pi[m], rc[n+m], valJ[ne];
+  int    hs[5], locJ[3], indJ[5];
+  double bl[5], bu[5], x[5], pi[3], rc[5], valJ[5];
 
   int    nS, nInf;
   double objective, sInf;
