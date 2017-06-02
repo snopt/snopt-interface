@@ -292,14 +292,8 @@ int snoptProblemA::computeJac(int neF, int n, snFunA usrfunA,
 
   int inform, lenA, lenG, miniw, minrw;
 
-  lenA    = n*neF;
-  iAfun  = new int[lenA];
-  jAvar  = new int[lenA];
-  A      = new double[lenA];
-
-  lenG   = n*neF;
-  iGfun  = new int[lenG];
-  jGvar  = new int[lenG];
+  lenA  = n*neF;
+  lenG  = n*neF;
 
   if (memCalled == 0) { setWorkspace(neF, n, lenA, lenG); }
 
@@ -325,6 +319,13 @@ int snoptProblemA::solve(int starttype, int neF, int n, double ObjAdd,
   int *iAfun, *jAvar, *iGfun, *jGvar;
   double *A;
 
+  iAfun  = new int[n*neF];
+  jAvar  = new int[n*neF];
+  A      = new double[n*neF];
+
+  iGfun  = new int[n*neF];
+  jGvar  = new int[n*neF];
+
   // computeJac will check for memCalled.
   computeJac(neF, n, usrfunA, x, xlow, xupp,
 	     iAfun, jAvar, A, neA,
@@ -341,6 +342,13 @@ int snoptProblemA::solve(int starttype, int neF, int n, double ObjAdd,
 	   &miniw, &minrw,
 	   iu, leniu, ru, lenru,
 	   iw, leniw, rw, lenrw);
+
+  delete []iAfun;
+  delete []jAvar;
+  delete []A;
+
+  delete []iGfun;
+  delete []jGvar;
 
   return inform;
 }

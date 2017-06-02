@@ -2,6 +2,32 @@
 #include <stdio.h>
 #include "snopt_cwrap.h"
 
+void toyusrf
+( int *Status, int *n,   double x[],
+  int *needF,  int *nF,  double F[],
+  int *needG,  int *neG, double G[],
+  char   cu[], int   *lencu,
+  int    iu[], int   *leniu,
+  double ru[], int   *lenru ) {
+  //==================================================================
+  // Computes the nonlinear objective and constraint terms for the toy
+  // problem featured in the SnoptA users guide.
+  // neF = 3, n = 2.
+  //
+  //   Minimize     x(2)
+  //
+  //   subject to   x(1)**2      + 4 x(2)**2  <= 4,
+  //               (x(1) - 2)**2 +   x(2)**2  <= 5,
+  //                x(1) >= 0.
+  //==================================================================
+  if ( *needF > 0 ) {
+    F[0] =  x[1]; //  Objective row
+    F[1] =  x[0]*x[0] + 4*x[1]*x[1];
+    F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1];
+  }
+}
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void toyusrfg
 ( int *Status, int *n,   double x[],
   int *needF,  int *nF,  double F[],
@@ -95,6 +121,42 @@ int main( int argc , char* argv[] )
   Flow[2] = -1e20;  Fupp[2] =    5;
 
   // Initialize states, x and multipliers
+  for ( i = 0; i < n; i++ ) {
+    xstate[i] = 0;
+    x[i]      = 0;
+    xmul[i]   = 0;
+  }
+
+  for ( i = 0; i < nF; i++ ) {
+    Fstate[i] = 0;
+    F[i]      = 0;
+    Fmul[i]   = 0;
+  }
+
+  x[0] = 1.0;
+  x[1] = 1.0;
+
+
+  // Read options.
+  info = setSpecsfile( &toy, "sntoy.spc" );
+
+  // Let snJac estimate the Jacobian structure
+  info = snJac( &toy, nF, n, toyusrf,
+		x, xlow, xupp,
+		&neA, iAfun, jAvar, A,
+		&neG, iGfun, jGvar );
+
+  // Solve the problem
+  info = solveA( &toy, Cold,
+		 nF, n, ObjAdd, ObjRow, toyusrf,
+		 neA, iAfun, jAvar, A,
+		 neG, iGfun, jGvar,
+		 xlow, xupp, Flow, Fupp,
+		 x, xstate, xmul, F, Fstate, Fmul,
+		 &nS, &nInf, &sInf);
+
+  // Try solving with explicit Jacobian structure now
+  // Re-initialize states, x and multipliers
   for ( i = 0; i < n; i++ ) {
     xstate[i] = 0;
     x[i]      = 0;

@@ -61,6 +61,12 @@ void setWorkspace   ( snProblem* prob, int m, int n, int ne,
 		      int negCon, int nnCon, int nnObj, int nnJac);
 void setWorkspaceA  ( snProblem* prob, int nF, int n, int neA, int neG);
 
+int snJac( snProblem* prob,
+	   int nF, int n, snFunA usrfun,
+	   double *x, double *xlow, double *xupp,
+	   int *neA, int *iAfun, int *jAvar, double *A,
+	   int *neG, int *iGfun, int *jGvar );
+
 int solveA( snProblem* prob, int start,
 	    int nF, int n, double ObjAdd, int ObjRow,
 	    snFunA usrfun,

@@ -4,7 +4,19 @@
 
 void snInit(snProblem* prob, char* name, char* prtfile, int summOn) {
   int leniw, lenrw, len;
-
+  /*
+   * snInit - call snInit to initialize workspace for SNOPT
+   * On entry:
+   *   prob     is the snProblem struct
+   *   name     is the name of the problem
+   *   prtfile  is the name of the output print file
+   *            (empty string for no print file)
+   *   summOn   is an integer indicating whether summary output
+   *            (to screen) should be turned on (!= 0) or off (== 0)
+   *
+   * On exit:
+   *   Internal workspace for SNOPT is initialized
+   */
   init2zero(prob);
 
   leniw = 500;
@@ -33,6 +45,9 @@ void snInit(snProblem* prob, char* name, char* prtfile, int summOn) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void init2zero(snProblem* prob) {
+  /*
+   * init2zero - initializes internal variables to NULL/0
+   */
   prob->name      = NULL;
 
   prob->memCalled  = 0;
@@ -57,6 +72,12 @@ void init2zero(snProblem* prob) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void allocI(snProblem* prob, int len) {
+  /*
+   * allocI - allocate integer workspace for SNOPT
+   * On entry:
+   *   prob  is the snProblem struct
+   *   len   is the desired length of the workspace
+   */
   prob->leniw = len;
   prob->iw    = malloc(sizeof(int)*len);
 }
@@ -64,6 +85,12 @@ void allocI(snProblem* prob, int len) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void allocR(snProblem* prob, int len) {
+  /*
+   * allocR - allocate real workspace for SNOPT
+   * On entry:
+   *   prob  is the snProblem struct
+   *   len   is the desired length of the workspace
+   */
   prob->lenrw = len;
   prob->rw    = malloc(sizeof(double)*len);
 }
@@ -71,6 +98,12 @@ void allocR(snProblem* prob, int len) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void reallocI (snProblem* prob, int len) {
+  /*
+   * reallocI - reallocate integer workspace for SNOPT
+   * On entry:
+   *   prob  is the snProblem struct
+   *   len   is the desired length of the workspace
+   */
   prob->leniw = len;
   prob->iw    = (int*)realloc(prob->iw, sizeof(int)*prob->leniw);
 
@@ -80,6 +113,12 @@ void reallocI (snProblem* prob, int len) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void reallocR(snProblem* prob, int len) {
+  /*
+   * reallocR - reallocate real workspace for SNOPT
+   * On entry:
+   *   prob  is the snProblem struct
+   *   len   is the desired length of the workspace
+   */
   prob->lenrw = len;
   prob->rw = (double*)realloc(prob->rw, sizeof(double)*prob->lenrw);
 
@@ -89,6 +128,12 @@ void reallocR(snProblem* prob, int len) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void setPrintfile(snProblem* prob, char *prtname) {
+  /*
+   * setPrintfile - set name of the output print file
+   * On entry:
+   *   prob     is the snProblem struct
+   *   prtname  is the name of the file
+   */
   int len = strlen(prtname);
 
   assert(prob->initCalled == 1);
@@ -99,6 +144,15 @@ void setPrintfile(snProblem* prob, char *prtname) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 int setSpecsfile(snProblem* prob, char *spcname) {
+  /*
+   * setPrintfile - call snSpecs to read in options file
+   * On entry:
+   *   prob     is the snProblem struct
+   *   spcname  is the name of the file
+   * On exit:
+   *   Returns integer info code
+   *     (see SNOPT documentation for snSpecs)
+   */
   int inform;
   int len = strlen(spcname);
 
@@ -112,6 +166,15 @@ int setSpecsfile(snProblem* prob, char *spcname) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 int setParameter(snProblem* prob, char stropt[]) {
+  /*
+   * setParameter - set given SNOPT option/parameter
+   * On entry:
+   *   prob     is the snProblem struct
+   *   stropt   is the string containing the option and its value
+   * On exit:
+   *   Returns number of errors encountered
+   *     (see SNOPT documentation for snSet)
+   */
   int errors, len = strlen(stropt);
 
   assert(prob->initCalled == 1);
@@ -124,6 +187,16 @@ int setParameter(snProblem* prob, char stropt[]) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 int getParameter(snProblem* prob, char stropt[], char strout[]) {
+  /*
+   * getParameter - returns SNOPT option/parameter
+   * On entry:
+   *   prob     is the snProblem struct
+   *   stropt   is the string containing the option and its value
+   * On exit:
+   *   Returns number of errors encountered
+   *   strout   contains the option's value
+   *     (see SNOPT documentation for snGetC)
+   */
   int errors;
   int inlen  = strlen(stropt);
   int outlen = strlen(strout);
@@ -137,6 +210,16 @@ int getParameter(snProblem* prob, char stropt[], char strout[]) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 int setIntParameter(snProblem* prob, char stropt[], int opt) {
+  /*
+   * setIntParameter - set an integer SNOPT option/parameter
+   * On entry:
+   *   prob     is the snProblem struct
+   *   stropt   is the string containing the option keyword
+   *   opt      is the integer containg the option value
+   * On exit:
+   *   Returns number of errors encountered
+   *     (see SNOPT documentation for snSetI)
+   */
   int errors, len = strlen(stropt);
 
   assert(prob->initCalled == 1);
@@ -149,6 +232,16 @@ int setIntParameter(snProblem* prob, char stropt[], int opt) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 int getIntParameter(snProblem* prob, char stropt[], int opt) {
+  /*
+   * getIntParameter - get an integer SNOPT option/parameter
+   * On entry:
+   *   prob     is the snProblem struct
+   *   stropt   is the string containing the option keyword
+   * On exit:
+   *   Returns number of errors encountered
+   *   opt      is the integer containg the option value
+   *     (see SNOPT documentation for snGetI)
+   */
   int errors, len = strlen(stropt);
 
   assert(prob->initCalled == 1);
@@ -160,6 +253,16 @@ int getIntParameter(snProblem* prob, char stropt[], int opt) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 int setRealParameter(snProblem* prob, char stropt[], double opt) {
+  /*
+   * setRealParameter - set a real SNOPT option/parameter
+   * On entry:
+   *   prob     is the snProblem struct
+   *   stropt   is the string containing the option keyword
+   *   opt      is the double containg the option value
+   * On exit:
+   *   Returns number of errors encountered
+   *     (see SNOPT documentation for snSetR)
+   */
   int errors, len = strlen(stropt);
 
   assert(prob->initCalled == 1);
@@ -171,6 +274,16 @@ int setRealParameter(snProblem* prob, char stropt[], double opt) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 int getRealParameter(snProblem* prob, char stropt[], double opt) {
+  /*
+   * getRealParameter - get a real SNOPT option/parameter
+   * On entry:
+   *   prob     is the snProblem struct
+   *   stropt   is the string containing the option keyword
+   * On exit:
+   *   Returns number of errors encountered
+   *   opt      is the double containg the option value
+   *     (see SNOPT documentation for snGetR)
+   */
   int errors, len = strlen(stropt);
 
   assert(prob->initCalled == 1);
@@ -182,6 +295,12 @@ int getRealParameter(snProblem* prob, char stropt[], double opt) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void setUserI(snProblem* prob, int *iu, int leniu) {
+  /*
+   * setUserI - sets user integer workspace
+   * On entry:
+   *   prob       is the snProblem struct
+   *   iu, leniu  is the integer workspace and its length
+   */
   prob->iu    = iu;
   prob->leniu = leniu;
 }
@@ -189,6 +308,12 @@ void setUserI(snProblem* prob, int *iu, int leniu) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void setUserR(snProblem* prob, double *ru, int lenru) {
+  /*
+   * setUserR - sets user real workspace
+   * On entry:
+   *   prob       is the snProblem struct
+   *   ru, lenru  is the double workspace and its length
+   */
   prob->ru    = ru;
   prob->lenru = lenru;
 }
@@ -196,6 +321,13 @@ void setUserR(snProblem* prob, double *ru, int lenru) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void setUserspace(snProblem* prob, int *iu, int leniu, double *ru, int lenru) {
+  /*
+   * setUserspace - sets user integer and real workspace
+   * On entry:
+   *   prob       is the snProblem struct
+   *   iu, leniu  is the integer workspace and its length
+   *   ru, lenru  is the double workspace and its length
+   */
   prob->iu    = iu;
   prob->leniu = leniu;
 
@@ -207,6 +339,22 @@ void setUserspace(snProblem* prob, int *iu, int leniu, double *ru, int lenru) {
 
 void setWorkspace(snProblem* prob, int m, int n, int ne,
 		  int negCon, int nnCon, int nnObj, int nnJac) {
+  /*
+   * setWorkspace - call snMem to determine required amount of
+   *                SNOPT integer and real workspace;
+   *                workspace is automatically (re-)allocated
+   * On entry:
+   *   prob       is the snProblem struct
+   *   m, n, ne   are integers indicating the number of constraints,
+   *              variables and nonzero elements in the Jacobian
+   *   negCon     is the number of nonzero elements in the nonlinear
+   *              Jacobian gCon
+   *   nnCon      is the number of nonlinear constraints
+   *   nnObj      is the number of nonlinear objective variables
+   *   nnJac      is the number of nonlinear Jacobian variables
+   * On exit:
+   *   Workspace is allocated to size determined by SNOPT.
+   */
   int miniw, minrw, inform, ineG;
   int memGuess = 0;
 
@@ -232,6 +380,21 @@ void setWorkspace(snProblem* prob, int m, int n, int ne,
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void setWorkspaceA(snProblem* prob, int nF, int n, int neA, int neG) {
+  /*
+   * setWorkspaceA - call snMemA to determine required amount of
+   *                 SNOPTA integer and real workspace;
+   *                 workspace is automatically (re-)allocated
+   * On entry:
+   *   prob       is the snProblem struct
+   *   nF, n      are integers indicating the number of constraints,
+   *              variables
+   *   neA        is the number of nonzero elements in the linear
+   *              Jacobian matrix A
+   *   neG        is the number of nonzero elements in the nonlinear
+   *              Jacobian G
+   * On exit:
+   *   Workspace is allocated to size determined by SNOPT.
+   */
   int miniw, minrw, inform, ineG;
   int memGuess = 0;
 
@@ -257,6 +420,14 @@ void setWorkspaceA(snProblem* prob, int nF, int n, int neA, int neG) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void setLog(snProblem* prob, isnLog snLog, isnLog2 snLog2, isqLog sqLog) {
+  /*
+   * setLog - sets user-defined log routines for SNOPT
+   * On entry:
+   *   prob    is the snProblem struct
+   *   snLog   is the major iteration log print routine
+   *   snLog2  is the minor iteration log print routine
+   *   sqLog   is the QP    iteration log print routine
+   */
   prob->snLog  = snLog;
   prob->snLog2 = snLog2;
   prob->sqLog  = sqLog;
@@ -265,6 +436,12 @@ void setLog(snProblem* prob, isnLog snLog, isnLog2 snLog2, isqLog sqLog) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void setSTOP(snProblem* prob, isnSTOP snSTOP) {
+  /*
+   * setSTOP - set the snSTOP routine for SNOPT
+   * On entry:
+   *   prob    is the snProblem struct
+   *   snSTOP  is the user-defined routine called at every major iteration
+   */
   prob->snSTOP = snSTOP;
 }
 
@@ -279,6 +456,10 @@ int snoptA(snProblem* prob, int start,
 	   double *x, int *xstate, double *xmul,
 	   double *F, int *Fstate, double *Fmul,
 	   int* nS, int* nInf, double* sInf) {
+  /*
+   * snoptA - call SNOPTA to solve the problem
+   * See SNOPT documentation on SNOPTA.
+   */
 
   int i, inform, iObj, miniw, minrw;
 
@@ -295,6 +476,7 @@ int snoptA(snProblem* prob, int start,
     jGvar[i]++;
   }
 
+
   iObj = ObjRow+1;
 
   f_snkera(start, prob->name, nF, n, ObjAdd, iObj, usrfun,
@@ -308,7 +490,6 @@ int snoptA(snProblem* prob, int start,
 	   &miniw, &minrw,
 	   prob->iu, prob->leniu, prob->ru, prob->lenru,
 	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
-
 
   for (i = 0; i < neA; i++) {
     iAfun[i]--;
@@ -324,51 +505,35 @@ int snoptA(snProblem* prob, int start,
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int solveA(snProblem* prob, int start,
-	   int nF, int n, double ObjAdd, int ObjRow,
-	   snFunA usrfun,
-	   int neA, int *iAfun, int *jAvar, double *A,
-	   int neG, int *iGfun, int *jGvar,
-	   double *xlow, double *xupp, double *Flow, double *Fupp,
-	   double *x, int *xstate, double *xmul,
-	   double *F, int *Fstate, double *Fmul,
-	   int* nS, int* nInf, double* sInf) {
+int snJac( snProblem* prob,
+	   int nF, int n, snFunA usrfun,
+	   double *x, double *xlow, double *xupp,
+	   int* neA, int iAfun[], int jAvar[], double A[],
+	   int* neG, int iGfun[], int jGvar[] ) {
+  /*
+   * snJac - compute Jacobian structure for SNOPTA
+   * See SNOPT documentation on snJac.
+   */
 
-  int i, inform, iObj, miniw, minrw;
+  int i, inform, lenA, lenG, miniw, minrw;
 
-  assert(prob->initCalled == 1);
+  lenA = n*nF;
+  lenG = n*nF;
 
-  if (prob->memCalled == 0) { setWorkspaceA(prob, nF, n, neA, neG); }
+  if (prob->memCalled == 0) { setWorkspaceA(prob, nF, n, lenA, lenG); }
 
-  for (i = 0; i < neA; i++) {
-    iAfun[i]++;
-    jAvar[i]++;
-  }
-  for (i = 0; i < neG; i++) {
-    iGfun[i]++;
-    jGvar[i]++;
-  }
+  f_snjac(&inform, nF, n, usrfun, x, xlow, xupp,
+	  iAfun, jAvar, lenA, neA, A,
+	  iGfun, jGvar, lenG, neG,
+	  &miniw, &minrw,
+	  prob->iu, prob->leniu, prob->ru, prob->lenru,
+	  prob->iw, prob->leniw, prob->rw, prob->lenrw);
 
-  iObj = ObjRow+1;
-
-  f_snkera(start, prob->name, nF, n, ObjAdd, iObj, usrfun,
-	   prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
-	   iAfun, jAvar, neA, A,
-	   iGfun, jGvar, neG,
-	   xlow, xupp, Flow, Fupp,
-	   x, xstate, xmul,
-	   F, Fstate, Fmul,
-	   &inform, nS, nInf, sInf,
-	   &miniw, &minrw,
-	   prob->iu, prob->leniu, prob->ru, prob->lenru,
-	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
-
-
-  for (i = 0; i < neA; i++) {
+  for (i = 0; i < *neA; i++) {
     iAfun[i]--;
     jAvar[i]--;
   }
-  for (i = 0; i < neG; i++) {
+  for (i = 0; i < *neG; i++) {
     iGfun[i]--;
     jGvar[i]--;
   }
@@ -385,56 +550,10 @@ int snoptB(snProblem* prob, int start, int m, int n, int ne,
 	   double *bl, double *bu, int *hs, double *x,
 	   double *pi, double *rc, double* objective,
 	   int* nS, int* nInf, double* sInf) {
-
-  int i, inform, iiObj, miniw, minrw;
-
-  assert(prob->initCalled == 1);
-
-  if (prob->memCalled == 0) {
-    setWorkspace(prob, m, n, ne, -1, nnCon, nnObj, nnJac);
-  }
-
-
-  for (i = 0; i < ne; i++) {
-    indJ[i]++;
-  }
-  for (i = 0; i <= n; i++) {
-    locJ[i]++;
-  }
-
-  iiObj = iObj+1;
-
-  f_snkerb(start, prob->name, m, n, ne,
-	   nnCon, nnObj, nnJac, iiObj,
-	   ObjAdd,
-	   funcon, funobj,
-	   prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
-	   valJ, indJ, locJ,
-	   bl, bu, hs, x, pi, rc,
-	   &inform, nS, nInf, sInf, objective,
-	   &miniw, &minrw,
-	   prob->iu, prob->leniu, prob->ru, prob->lenru,
-	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
-
-  for (i = 0; i < ne; i++) {
-    indJ[i]--;
-  }
-  for (i = 0; i <= n; i++) {
-    locJ[i]--;
-  }
-
-  return inform;
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-
-int solveB(snProblem* prob, int start, int m, int n, int ne,
-	   int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
-	   snConB funcon, snObjB funobj,
-	   double *valJ, int *indJ, int *locJ,
-	   double *bl, double *bu, int *hs, double *x,
-	   double *pi, double *rc, double* objective,
-	   int* nS, int* nInf, double* sInf) {
+  /*
+   * snoptB - call SNOPTB to solve the problem
+   * See SNOPT documentation on SNOPTB.
+   */
 
   int i, inform, iiObj, miniw, minrw;
 
@@ -485,6 +604,10 @@ int snoptC(snProblem* prob, int start, int m, int n, int ne,
 	   double *bl, double *bu, int *hs, double *x,
 	   double *pi, double *rc, double* objective,
 	   int* nS, int* nInf, double* sInf) {
+  /*
+   * snoptC - call SNOPTC to solve the problem
+   * See SNOPT documentation on SNOPTC.
+   */
 
   int i, inform, iiObj, miniw, minrw;
 
@@ -520,6 +643,56 @@ int snoptC(snProblem* prob, int start, int m, int n, int ne,
     locJ[i]--;
   }
 
+  return inform;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+int solveA(snProblem* prob, int start,
+	   int nF, int n, double ObjAdd, int ObjRow,
+	   snFunA usrfun,
+	   int neA, int *iAfun, int *jAvar, double *A,
+	   int neG, int *iGfun, int *jGvar,
+	   double *xlow, double *xupp, double *Flow, double *Fupp,
+	   double *x, int *xstate, double *xmul,
+	   double *F, int *Fstate, double *Fmul,
+	   int* nS, int* nInf, double* sInf) {
+  /*
+   * solveA - call SNOPTA to solve the problem
+   * See SNOPT documentation on SNOPTA.
+   */
+
+  int inform;
+  inform = snoptA( prob, start, nF, n, ObjAdd, ObjRow, usrfun,
+		   neA, iAfun, jAvar, A,
+		   neG, iGfun, jGvar,
+		   xlow, xupp, Flow, Fupp,
+		   x, xstate, xmul,
+		   F, Fstate, Fmul,
+		   nS, nInf, sInf );
+  return inform;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+int solveB(snProblem* prob, int start, int m, int n, int ne,
+	   int nnCon, int nnObj, int nnJac, int iObj, double ObjAdd,
+	   snConB funcon, snObjB funobj,
+	   double *valJ, int *indJ, int *locJ,
+	   double *bl, double *bu, int *hs, double *x,
+	   double *pi, double *rc, double* objective,
+	   int* nS, int* nInf, double* sInf) {
+  /*
+   * solveB - call SNOPTB to solve the problem
+   * See SNOPT documentation on SNOPTB.
+   */
+
+  int inform;
+  inform = snoptB( prob, start, m, n, ne,
+		   nnCon, nnObj, nnJac, iObj, ObjAdd,
+		   funcon, funobj, valJ, indJ, locJ,
+		   bl, bu, hs, x, pi, rc, objective,
+		   nS, nInf, sInf);
   return inform;
 }
 
@@ -532,47 +705,26 @@ int solveC(snProblem* prob, int start, int m, int n, int ne,
 	   double *bl, double *bu, int *hs, double *x,
 	   double *pi, double *rc, double* objective,
 	   int* nS, int* nInf, double* sInf) {
+  /*
+   * solveC - call SNOPTC to solve the problem
+   * See SNOPT documentation on SNOPTC.
+   */
 
-  int i, inform, iiObj, miniw, minrw;
-
-  assert(prob->initCalled == 1);
-
-  if (prob->memCalled == 0) {
-    setWorkspace(prob, m, n, ne, -1, nnCon, nnObj, nnJac);
-  }
-
-  for (i = 0; i < ne; i++) {
-    indJ[i]++;
-  }
-  for (i = 0; i <= n; i++) {
-    locJ[i]++;
-  }
-  iiObj = iObj+1;
-
-  f_snkerc(start, prob->name, m, n, ne,
-	   nnCon, nnObj, nnJac, iiObj, ObjAdd,
-	   usrfun,
-	   prob->snLog, prob->snLog2, prob->sqLog, prob->snSTOP,
-	   valJ, indJ, locJ,
-	   bl, bu, hs, x, pi, rc,
-	   &inform, nS, nInf, sInf, objective,
-	   &miniw, &minrw,
-	   prob->iu, prob->leniu, prob->ru, prob->lenru,
-	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
-
-  for (i = 0; i < ne; i++) {
-    indJ[i]--;
-  }
-  for (i = 0; i <= n; i++) {
-    locJ[i]--;
-  }
-
+  int inform;
+  inform = snoptC( prob, start, m, n, ne,
+		   nnCon, nnObj, nnJac, iObj, ObjAdd,
+		   usrfun, valJ, indJ, locJ,
+		   bl, bu, hs, x, pi, rc, objective,
+		   nS, nInf, sInf);
   return inform;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void deleteSNOPT(snProblem* prob) {
+  /*
+   * deleteSNOPT - frees internal memory associated with SNOPT
+   */
   f_snend(prob->iw, prob->leniw, prob->rw, prob->lenrw);
 
   free(prob->iw);
