@@ -74,8 +74,8 @@ MODINC         = @FC_MODINC@$(MODDIR)
 MODFLAGS       = $(MODLOC) $(MODINC)
 
 SNOPT_INCLUDE  = -I$(top_srcdir)/include
-SNOPT_C_LIBS   = -L$(libdir) -lsnopt7_c   $(SNOPT_LIB) $(blasLIB)
-SNOPT_CPP_LIBS = -L$(libdir) -lsnopt7_cpp $(SNOPT_LIB) $(blasLIB)
+SNOPT_C_LIBS   = -L$(libdir) -lsnopt7_c   $(blasLIB)
+SNOPT_CPP_LIBS = -L$(libdir) -lsnopt7_cpp $(blasLIB)
 
 #-----------------------------------------------------------------------
 
@@ -131,10 +131,10 @@ uninstall_cpp:
 #-----------------------------------------------------------------------
 
 $(LIBDIR)/libsnopt7_cpp.la: $(SNOPT_CPP_LO)
-	$(LINK_F) $(LDFLAGS) $(CXXFLAGS) -o $@ $^ -rpath $(libdir)
+	$(LINK_F) $(LDFLAGS) $(CXXFLAGS) -o $@ $^ $(SNOPT_LIB) -rpath $(libdir)
 
 $(LIBDIR)/libsnopt7_c.la: $(SNOPT_C_LO)
-	$(LINK_F) $(LDFLAGS) $(CFLAGS) -o $@ $^ -rpath $(libdir)
+	$(LINK_F) $(LDFLAGS) $(CFLAGS) -o $@ $^ $(SNOPT_LIB) -rpath $(libdir)
 
 #-----------------------------------------------------------------------
 
