@@ -96,9 +96,14 @@ extern "C" {
 
 
   /* SNOPT */
-  void f_sninit ( const char *name, int len, int summOn,
+  void f_sninit ( const char *print, int plen, int iprint,
+		  const char *summ,  int slen, int isumm,
 		  int iw[], int leniw, double rw[], int lenrw );
-  void f_snspec ( const char *specfile, int len, int *inform,
+  void f_snspec ( const char *specfile, int len, int ispecs, int *inform,
+		  int iw[], int leniw, double rw[], int lenrw );
+  void f_sninitf( const char *name, int len, int summOn,
+		  int iw[], int leniw, double rw[], int lenrw );
+  void f_snspecf( const char *specfile, int len, int *inform,
 		  int iw[], int leniw, double rw[], int lenrw );
 
   void f_sngetc ( const char *buffer, int lenb, char *ivalue,
@@ -116,15 +121,22 @@ extern "C" {
   void f_snsetr ( const char *buffer, int len, double rvalue, int *errors,
 		  int iw[], int leniw, double rw[], int lenrw );
 
-  void f_snsetprint ( const char *name, int len,
+  void f_snsetprint ( const char *name, int len, int iprint,
+		      int iw[], int leniw, double rw[], int lenrw );
+  void f_snsetprintf( const char *name, int len,
 		      int iw[], int leniw, double rw[], int lenrw );
   void f_snend ( int iw[], int leniw, double rw[], int lenrw );
 
 
   /* SQOPT */
-  void f_sqinit ( const char *name, int len, int summOn,
+  void f_sqinit ( const char *print, int plen, int iprint,
+		  const char *summ,  int slen, int isumm,
 		  int iw[], int leniw, double rw[], int lenrw );
-  void f_sqspec ( const char *specfile, int len, int *inform,
+  void f_sqspec ( const char *specfile, int len, int ispecs, int *inform,
+		  int iw[], int leniw, double rw[], int lenrw );
+  void f_sqinitf( const char *name, int len, int summOn,
+		  int iw[], int leniw, double rw[], int lenrw );
+  void f_sqspecf( const char *specfile, int len, int *inform,
 		  int iw[], int leniw, double rw[], int lenrw );
 
   void f_sqgetc ( const char *buffer, int lenb, char *ivalue,
@@ -142,7 +154,9 @@ extern "C" {
   void f_sqsetr ( const char *buffer, int len, double rvalue, int *errors,
 		  int iw[], int leniw, double rw[], int lenrw );
 
-  void f_sqsetprint ( const char *name, int len,
+  void f_sqsetprint ( const char *name, int len, int iprint,
+		      int iw[], int leniw, double rw[], int lenrw );
+  void f_sqsetprintf( const char *name, int len,
 		      int iw[], int leniw, double rw[], int lenrw );
   void f_sqend ( int iw[], int leniw, double rw[], int lenrw );
 

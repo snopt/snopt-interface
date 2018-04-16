@@ -1,5 +1,54 @@
 #include "snopt_cwrap.h"
 
+static const char *snversion =
+  " ==============================\n\
+    SNOPT  C interface  2.0.0   ";
+//  123456789|123456789|123456789|
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+void snInitX(snProblem* prob, char* name,
+	     char* prtfile, int iprint, char *sumfile, int isumm) {
+  /*
+   * snInitX - call snInit to initialize workspace for SNOPT
+   *
+   * On entry:
+   *   prob     is the snProblem struct
+   *   name     is the name of the problem
+   *   prtfile  is the name of the output print file
+   *   iprint   is the Fortran file unit number to use for prtfile
+   *            (iPrint == 0 if no print output)
+   *   sumfile  is the name of the summary output file
+   *            (iSumm == 0 if no summary output)
+   *   isumm    is the Fortran file unit number to use for sumfile
+   *
+   * On exit:
+   *   Internal workspace for SNOPT is initialized
+   */
+  int leniw, lenrw, plen, slen;
+
+  init2zero(prob);
+
+  leniw = 500;
+  lenrw = 500;
+
+  allocI(prob, leniw);
+  allocR(prob, lenrw);
+
+  prob->name   = name;
+
+  plen = strlen(prtfile);
+  slen = strlen(sumfile);
+
+  if (isumm != 0) {
+    printf("%s",snversion);
+  }
+
+  f_sninit(prtfile, plen, iprint, sumfile, slen, isumm,
+	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
+  prob->initCalled = 1;
+}
+
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void snInit(snProblem* prob, char* name, char* prtfile, int summOn) {
@@ -30,15 +79,11 @@ void snInit(snProblem* prob, char* name, char* prtfile, int summOn) {
   len = strlen(prtfile);
 
   if (summOn != 0) {
-    printf(" ==============================\n");
-    printf("   SNOPT  C interface  2.0.0   ");
-    fflush(stdout);
-    //------123456789|123456789|123456789|
+    printf("%s",snversion);
   }
 
-  f_sninit(prtfile, len, summOn,
-	   prob->iw, prob->leniw,
-	   prob->rw, prob->lenrw);
+  f_sninitf(prtfile, len, summOn, prob->iw, prob->leniw,
+	    prob->rw, prob->lenrw);
   prob->initCalled = 1;
 }
 
@@ -127,6 +172,23 @@ void reallocR(snProblem* prob, int len) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
+void setPrintfileX(snProblem* prob, char *prtname, int iprint) {
+  /*
+   * setPrintfile - set name of the output print file
+   * On entry:
+   *   prob     is the snProblem struct
+   *   prtname  is the name of the file
+   *   iprint   is the fortran unit number to use for the print file
+   */
+  int len = strlen(prtname);
+
+  assert(prob->initCalled == 1);
+  f_snsetprint(prtname, len, iprint,
+	       prob->iw, prob->leniw, prob->rw, prob->lenrw);
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
 void setPrintfile(snProblem* prob, char *prtname) {
   /*
    * setPrintfile - set name of the output print file
@@ -137,8 +199,31 @@ void setPrintfile(snProblem* prob, char *prtname) {
   int len = strlen(prtname);
 
   assert(prob->initCalled == 1);
-  f_snsetprint(prtname, len,
+  f_snsetprintf(prtname, len,
 		prob->iw, prob->leniw, prob->rw, prob->lenrw);
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+int setSpecsfileX(snProblem* prob, char *spcname, int ispecs) {
+  /*
+   * setPrintfile - call snSpecs to read in options file
+   * On entry:
+   *   prob     is the snProblem struct
+   *   spcname  is the name of the file
+   *   ispecs   is the Fortran unit file number for the specs file
+   * On exit:
+   *   Returns integer info code
+   *     (see SNOPT documentation for snSpecs)
+   */
+  int inform;
+  int len = strlen(spcname);
+
+  assert(prob->initCalled == 1);
+  f_snspec(spcname, len, ispecs, &inform,
+	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
+
+  return inform;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -157,7 +242,7 @@ int setSpecsfile(snProblem* prob, char *spcname) {
   int len = strlen(spcname);
 
   assert(prob->initCalled == 1);
-  f_snspec(spcname, len, &inform,
+  f_snspecf(spcname, len, &inform,
 	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
 
   return inform;

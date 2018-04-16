@@ -10,11 +10,13 @@
 /* File: sqopt_cwrap.h
  *   C interface for SQOPT.
  */
+
 typedef struct {
   char   *name;
 
   int     memCalled;
   int     initCalled;
+
   isqLog  sqLog;
 
   int     lenrw, leniw;
@@ -27,6 +29,8 @@ typedef struct {
 
 } sqProblem;
 
+void sqInitX        (sqProblem* prob, char* name,
+		     char* prtfile, int iprint, char *sumfile, int isumm);
 void sqInit         (sqProblem* prob, char* name, char* prtfile, int summOn);
 void init2zeroQ     (sqProblem* prob);
 
@@ -37,6 +41,9 @@ void reallocRQ      (sqProblem* prob, int len);
 
 void sqPrintfile   (sqProblem* prob, char* prtname);
 int  sqSpecsfile   (sqProblem* prob, char* spcname);
+
+void sqPrintfileX  (sqProblem* prob, char* prtname, int iprint);
+int  sqSpecsfileX  (sqProblem* prob, char* spcname, int ispecs);
 
 int sqSetParameter    (sqProblem* prob, char stropt[]);
 int sqGetParameter    (sqProblem* prob, char stropt[], char strout[]);
