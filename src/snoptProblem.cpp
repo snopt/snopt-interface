@@ -9,13 +9,13 @@ using namespace std;
 
 static const char *snversion =
   " ==============================\n\
-   SNOPT C++ interface  2.0.0   ";
+   SNOPT C++ interface  2.1.0   ";
 //  123456789|123456789|123456789|
 
 
 static const char *sqversion =
   " ==============================\n\
-   SQOPT C++ interface  2.0.0   ";
+   SQOPT C++ interface  2.1.0   ";
 //  123456789|123456789|123456789|
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
