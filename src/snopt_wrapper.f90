@@ -13,15 +13,14 @@ module snopt_wrapper
   external :: sninit, snspec, snopta, snkera, snmema, snjac, &
               snoptb, snkerb, snoptc, snkerc, snmem,         &
               npopt,  npkern,                                &
-              sngeti, sngetr, sngetc, snseti, snsetr, snset, &
+              sngeti, sngetr, snseti, snsetr, snset, &
               snFileOpenRead, snFileOpenAppend, snFileClose
 
   public  :: f_sninit, f_snsetprint, f_snspec, &
              f_snmema, f_snopta, f_snkera, f_snjac,  &
              f_snmem,  f_snoptb, f_snkerb, f_snoptc, f_snkerc, &
              f_snset,  f_snseti, f_snsetr, &
-             f_sngetc, f_sngeti, f_sngetr, &
-             f_snend
+             f_sngeti, f_sngetr, f_snend
   private :: newunit
 
   !-----------------------------------------------------------------------------
@@ -1054,40 +1053,6 @@ contains
                 cw, lencw, iw, leniw, rw, lenrw)
 
   end subroutine f_snsetr
-
-  !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-  subroutine f_sngetc(option, lin, cvalue, lout, Errors, &
-                      iw, leniw, rw, lenrw) bind(C,name="f_sngetc")
-    integer(c_int),    intent(in), value :: lin, lout, leniw, lenrw
-    character(c_char), intent(in)        :: option(lin)
-    character(c_char), intent(inout)     :: cvalue(lout)
-    integer(c_int),    intent(inout)     :: iw(leniw)
-    real(c_double),    intent(inout)     :: rw(lenrw)
-    integer(c_int),    intent(out)       :: Errors
-
-    !===========================================================================
-    ! Get option value via string.
-    !===========================================================================
-    character(lin)  :: buffer
-    character(lout) :: buffout
-    integer         :: j
-
-    errors = 0
-    buffer = ''
-    do j = 1, lin
-       if (option(j) == c_null_char) exit
-       buffer(j:j) = option(j)
-    end do
-
-    call snGetC(buffer, buffout, Errors, cw, lencw, iw, leniw, rw, lenrw)
-
-    do j = 1, lout-1
-       cvalue(j) = buffout(j:j)
-    end do
-    cvalue(lout) = c_null_char
-
-  end subroutine f_sngetc
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

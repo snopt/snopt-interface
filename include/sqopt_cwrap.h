@@ -39,11 +39,10 @@ void sqPrintfile   (sqProblem* prob, char* prtname);
 int  sqSpecsfile   (sqProblem* prob, char* spcname);
 
 int sqSetParameter    (sqProblem* prob, char stropt[]);
-int sqGetParameter    (sqProblem* prob, char stropt[], char strout[]);
 int sqSetIntParameter (sqProblem* prob, char stropt[], int opt);
-int sqGetIntParameter (sqProblem* prob, char stropt[], int opt);
+int sqGetIntParameter (sqProblem* prob, char stropt[], int *opt);
 int sqSetRealParameter(sqProblem* prob, char stropt[], double opt);
-int sqGetRealParameter(sqProblem* prob, char stropt[], double opt);
+int sqGetRealParameter(sqProblem* prob, char stropt[], double *opt);
 
 void sqUserI       (sqProblem* prob, int *iu, int leniu);
 void sqUserR       (sqProblem* prob, double *ru, int lenru);

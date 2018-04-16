@@ -119,19 +119,6 @@ int snoptProblem::setParameter(const char *stropt) {
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-int snoptProblem::getParameter(const char *stroptin, char *stroptout) {
-  assert(initCalled == 1);
-
-  int errors;
-  int stroptin_len  = strlen(stroptin);
-  int stroptout_len = strlen(stroptout);
-
-  f_sngetc(stroptin, stroptin_len, stroptout, stroptout_len,
-	    &errors, iw, leniw, rw, lenrw);
-  return errors;
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 int snoptProblem::setIntParameter(const char *stropt, int opt) {
   assert(initCalled == 1);
 

@@ -11,14 +11,13 @@ module sqopt_wrapper
 
   external :: sqinit, sqspec,                                &
               sqmem,  snoptq, snkerq,                        &
-              sqgeti, sqgetr, sqgetc, sqseti, sqsetr, sqset, &
+              sqgeti, sqgetr, sqseti, sqsetr, sqset, &
               snFileOpenRead, snFileOpenAppend, snFileClose
 
   public  :: f_sqinit, f_sqsetprint, f_sqspec, &
              f_sqmem,  f_sqopt,  f_snkerq, &
              f_sqset,  f_sqseti, f_sqsetr, &
-             f_sqgetc, f_sqgeti, f_sqgetr, &
-             f_sqend
+             f_sqgeti, f_sqgetr, f_sqend
   private :: newunit
 
   !-----------------------------------------------------------------------------
@@ -438,40 +437,6 @@ contains
                 cw, lencw, iw, leniw, rw, lenrw)
 
   end subroutine f_sqsetr
-
-  !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-  subroutine f_sqgetc(option, lin, cvalue, lout, Errors, &
-                      iw, leniw, rw, lenrw) bind(C,name="f_sqgetc")
-    integer(c_int),    intent(in), value :: lin, lout, leniw, lenrw
-    character(c_char), intent(in)        :: option(lin)
-    character(c_char), intent(inout)     :: cvalue(lout)
-    integer(c_int),    intent(inout)     :: iw(leniw)
-    real(c_double),    intent(inout)     :: rw(lenrw)
-    integer(c_int),    intent(out)       :: Errors
-
-    !===========================================================================
-    ! Get option value via string.
-    !===========================================================================
-    character(lin)  :: buffer
-    character(lout) :: buffout
-    integer         :: j
-
-    errors = 0
-    buffer = ''
-    do j = 1, lin
-       if (option(j) == c_null_char) exit
-       buffer(j:j) = option(j)
-    end do
-
-    call sqGetC(buffer, buffout, Errors, cw, lencw, iw, leniw, rw, lenrw)
-
-    do j = 1, lout-1
-       cvalue(j) = buffout(j:j)
-    end do
-    cvalue(lout) = c_null_char
-
-  end subroutine f_sqgetc
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
