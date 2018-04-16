@@ -39,7 +39,6 @@ public:
   void setPrintFile   (const char *prtname);
   void setPrintFile   (const char *prtname, int iprint);
 
-  int getParameter    (const char *stroptin, char *stroptout);
   int getIntParameter (const char *stropt,   int    &opt);
   int getRealParameter(const char *stropt,   double &opt);
   int setParameter    (const char *stroptin);

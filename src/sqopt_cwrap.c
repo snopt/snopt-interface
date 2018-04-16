@@ -201,19 +201,6 @@ int sqSetParameter(sqProblem* prob, char stropt[]) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int sqGetParameter(sqProblem* prob, char stropt[], char strout[]) {
-  int errors;
-  int inlen  = strlen(stropt);
-  int outlen = strlen(strout);
-
-  assert(prob->initCalled == 1);
-  f_sqgetc(stropt, inlen, strout, outlen, &errors,
-	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
-  return errors;
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-
 int sqSetIntParameter(sqProblem* prob, char stropt[], int opt) {
   int errors, len = strlen(stropt);
 
@@ -226,11 +213,11 @@ int sqSetIntParameter(sqProblem* prob, char stropt[], int opt) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int sqGetIntParameter(sqProblem* prob, char stropt[], int opt) {
+int sqGetIntParameter(sqProblem* prob, char stropt[], int *opt) {
   int errors, len = strlen(stropt);
 
   assert(prob->initCalled == 1);
-  f_sqgeti(stropt, len, &opt, &errors,
+  f_sqgeti(stropt, len, opt, &errors,
 	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
   return errors;
 }
@@ -248,11 +235,11 @@ int sqSetRealParameter(sqProblem* prob, char stropt[], double opt) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int sqGetRealParameter(sqProblem* prob, char stropt[], double opt) {
+int sqGetRealParameter(sqProblem* prob, char stropt[], double *opt) {
   int errors, len = strlen(stropt);
 
   assert(prob->initCalled == 1);
-  f_sqgetr (stropt, len, &opt, &errors,
+  f_sqgetr (stropt, len, opt, &errors,
 	     prob->iw, prob->leniw, prob->rw, prob->lenrw);
   return errors;
 }

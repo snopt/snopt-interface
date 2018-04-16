@@ -106,9 +106,6 @@ extern "C" {
   void f_snspecf( const char *specfile, int len, int *inform,
 		  int iw[], int leniw, double rw[], int lenrw );
 
-  void f_sngetc ( const char *buffer, int lenb, char *ivalue,
-		  int lenc, int *errors,
-		  int iw[], int leniw, double rw[], int lenrw );
   void f_sngeti ( const char *buffer, int len, int  *ivalue, int *errors,
 		  int iw[], int leniw, double rw[], int lenrw );
   void f_sngetr ( const char *buffer, int len, double *ivalue, int *errors,
@@ -139,9 +136,6 @@ extern "C" {
   void f_sqspecf( const char *specfile, int len, int *inform,
 		  int iw[], int leniw, double rw[], int lenrw );
 
-  void f_sqgetc ( const char *buffer, int lenb, char *ivalue,
-		  int lenc, int *errors,
-		  int iw[], int leniw, double rw[], int lenrw );
   void f_sqgeti ( const char *buffer, int len, int  *ivalue, int *errors,
 		  int iw[], int leniw, double rw[], int lenrw );
   void f_sqgetr ( const char *buffer, int len, double *ivalue, int *errors,

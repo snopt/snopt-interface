@@ -271,29 +271,6 @@ int setParameter(snProblem* prob, char stropt[]) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int getParameter(snProblem* prob, char stropt[], char strout[]) {
-  /*
-   * getParameter - returns SNOPT option/parameter
-   * On entry:
-   *   prob     is the snProblem struct
-   *   stropt   is the string containing the option and its value
-   * On exit:
-   *   Returns number of errors encountered
-   *   strout   contains the option's value
-   *     (see SNOPT documentation for snGetC)
-   */
-  int errors;
-  int inlen  = strlen(stropt);
-  int outlen = strlen(strout);
-
-  assert(prob->initCalled == 1);
-  f_sngetc(stropt, inlen, strout, outlen, &errors,
-	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
-  return errors;
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-
 int setIntParameter(snProblem* prob, char stropt[], int opt) {
   /*
    * setIntParameter - set an integer SNOPT option/parameter
@@ -316,7 +293,7 @@ int setIntParameter(snProblem* prob, char stropt[], int opt) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int getIntParameter(snProblem* prob, char stropt[], int opt) {
+int getIntParameter(snProblem* prob, char stropt[], int *opt) {
   /*
    * getIntParameter - get an integer SNOPT option/parameter
    * On entry:
@@ -330,7 +307,7 @@ int getIntParameter(snProblem* prob, char stropt[], int opt) {
   int errors, len = strlen(stropt);
 
   assert(prob->initCalled == 1);
-  f_sngeti(stropt, len, &opt, &errors,
+  f_sngeti(stropt, len, opt, &errors,
 	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
   return errors;
 }
@@ -358,7 +335,7 @@ int setRealParameter(snProblem* prob, char stropt[], double opt) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
-int getRealParameter(snProblem* prob, char stropt[], double opt) {
+int getRealParameter(snProblem* prob, char stropt[], double *opt) {
   /*
    * getRealParameter - get a real SNOPT option/parameter
    * On entry:
@@ -372,7 +349,7 @@ int getRealParameter(snProblem* prob, char stropt[], double opt) {
   int errors, len = strlen(stropt);
 
   assert(prob->initCalled == 1);
-  f_sngetr (stropt, len, &opt, &errors,
+  f_sngetr (stropt, len, opt, &errors,
 	     prob->iw, prob->leniw, prob->rw, prob->lenrw);
   return errors;
 }
