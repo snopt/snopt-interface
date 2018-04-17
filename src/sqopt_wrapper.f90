@@ -87,7 +87,7 @@ contains
     !===========================================================================
     character(plen) :: pfile
     character(slen) :: sfile
-    integer         :: j
+    integer         :: j, stat
 
     pfile  = ''
     if (iPrint /= 6) then
@@ -99,7 +99,8 @@ contains
              end do
           end if
        end if
-       call snFileOpenAppend(iPrint, trim(pfile))
+       call snFileOpenAppend(iPrint, trim(pfile), stat)
+       if (stat /= 0) return
     end if
 
     sfile  = ''
@@ -112,7 +113,8 @@ contains
              end do
           end if
        end if
-       call snFileOpenAppend(iSumm,  trim(sfile))
+       call snFileOpenAppend(iSumm,  trim(sfile), stat)
+       if (stat /= 0) return
     end if
 
     call sqInit &
@@ -176,7 +178,7 @@ contains
     !===========================================================================
     ! Set print file name and unit.
     !===========================================================================
-    integer        :: Errors, j
+    integer        :: Errors, j, stat
     character(len) :: prtfile
 
     if (iPrint /= 6) then
@@ -185,7 +187,8 @@ contains
           if (name(j) == c_null_char) exit
           prtfile(j:j) = name(j)
        end do
-       call snFileOpenAppend(iPrint,trim(prtfile))
+       call snFileOpenAppend(iPrint,trim(prtfile), stat)
+       if (stat /= 0) return
     end if
 
     call sqSeti &
@@ -218,7 +221,9 @@ contains
     end do
 
     if (prtfile /= '') then
-       call snFileAppend(iPrt,trim(prtfile))
+       call snFileAppend(iPrt,trim(prtfile),stat)
+       if (stat /= 0) return
+
        call sqSeti('Print file', iPrt, 0, 0, Errors, &
                     cw, lencw, iw, leniw, rw, lenrw)
     end if
@@ -240,7 +245,7 @@ contains
     !===========================================================================
     ! Read options from the given specifications file.
     !===========================================================================
-    integer        :: j
+    integer        :: j, stat
     character(len) :: spcfile
 
     inform  = 0
@@ -254,7 +259,8 @@ contains
 
     ! If we have a file, try to read it.
     if (spcfile /= '') then
-       call snFileOpenRead(iSpecs,trim(spcfile))
+       call snFileOpenRead(iSpecs,trim(spcfile),stat)
+       if (stat /= 0) return
        call sqSpec(iSpecs, inform, cw, lencw, iw, leniw, rw, lenrw)
        close(iSpecs)
     end if
