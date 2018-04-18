@@ -387,7 +387,7 @@ contains
     !===========================================================================
     ! Read options from the given specifications file.
     !===========================================================================
-    integer        :: j
+    integer        :: j, stat
     character(len) :: spcfile
 
     inform  = 0

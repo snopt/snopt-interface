@@ -211,7 +211,7 @@ contains
     !===========================================================================
     ! Set print file name and unit.
     !===========================================================================
-    integer        :: Errors, j, iPrt
+    integer        :: Errors, j, iPrt, stat
     character(len) :: prtfile
 
     prtfile = ''
