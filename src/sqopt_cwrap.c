@@ -1,8 +1,70 @@
 #include "sqopt_cwrap.h"
 
+static char *sqversion =
+  " ==============================\n\
+    SQOPT  C interface  2.1.0   ";
+//  123456789|123456789|123456789|
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+void sqInitX(sqProblem* prob, char* name,
+	     char* prtfile, int iprint, char *sumfile, int isumm) {
+  /*
+   * sqInitX - call sqInit to initialize workspace for SQOPT
+   *
+   * On entry:
+   *   prob     is the sqProblem struct
+   *   name     is the name of the problem
+   *   prtfile  is the name of the output print file
+   *   iprint   is the Fortran file unit number to use for prtfile
+   *            (iPrint == 0 if no print output)
+   *   sumfile  is the name of the summary output file
+   *            (iSumm == 0 if no summary output)
+   *   isumm    is the Fortran file unit number to use for sumfile
+   *
+   * On exit:
+   *   Internal workspace for SQOPT is initialized
+   */
+  int leniw, lenrw, plen, slen;
+
+  init2zeroQ(prob);
+
+  leniw = 500;
+  lenrw = 500;
+
+  allocIQ(prob, leniw);
+  allocRQ(prob, lenrw);
+
+  prob->name   = name;
+
+  plen = strlen(prtfile);
+  slen = strlen(sumfile);
+
+  if (isumm != 0) {
+    printf("%s",sqversion);
+  }
+
+  f_sqinit(prtfile, plen, iprint, sumfile, slen, isumm,
+	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
+  prob->initCalled = 1;
+}
+
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void sqInit(sqProblem* prob, char* name, char* prtfile, int summOn) {
+  /*
+   * sqInit - call snInit to initialize workspace for SQOPT
+   * On entry:
+   *   prob     is the sqProblem struct
+   *   name     is the name of the problem
+   *   prtfile  is the name of the output print file
+   *            (empty string for no print file)
+   *   summOn   is an integer indicating whether summary output
+   *            (to screen) should be turned on (!= 0) or off (== 0)
+   *
+   * On exit:
+   *   Internal workspace for SQOPT is initialized
+   */
   int leniw, lenrw, len;
 
   init2zeroQ(prob);
@@ -18,15 +80,11 @@ void sqInit(sqProblem* prob, char* name, char* prtfile, int summOn) {
   len = strlen(prtfile);
 
   if (summOn != 0) {
-    printf(" ==============================\n");
-    printf("   SQOPT  C interface  2.0.0   ");
-    fflush(stdout);
-    //------123456789|123456789|123456789|
+    printf("%s",sqversion);
   }
 
-  f_sqinit(prtfile, len, summOn,
-	   prob->iw, prob->leniw,
-	   prob->rw, prob->lenrw);
+  f_sqinitf(prtfile, len, summOn,
+	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
   prob->initCalled = 1;
 }
 
@@ -85,12 +143,35 @@ void reallocRQ(sqProblem* prob, int len) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
+void sqPrintfileX(sqProblem* prob, char *prtname, int iprint) {
+  int len = strlen(prtname);
+
+  assert(prob->initCalled == 1);
+  f_sqsetprint(prtname, len, iprint,
+		prob->iw, prob->leniw, prob->rw, prob->lenrw);
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
 void sqPrintfile(sqProblem* prob, char *prtname) {
   int len = strlen(prtname);
 
   assert(prob->initCalled == 1);
-  f_sqsetprint(prtname, len,
+  f_sqsetprintf(prtname, len,
 		prob->iw, prob->leniw, prob->rw, prob->lenrw);
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+int sqSpecsfileX(sqProblem* prob, char *spcname, int ispecs) {
+  int inform;
+  int len = strlen(spcname);
+
+  assert(prob->initCalled == 1);
+  f_sqspec(spcname, len, ispecs, &inform,
+	   prob->iw, prob->leniw, prob->rw, prob->lenrw);
+
+  return inform;
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -100,7 +181,7 @@ int sqSpecsfile(sqProblem* prob, char *spcname) {
   int len = strlen(spcname);
 
   assert(prob->initCalled == 1);
-  f_sqspec(spcname, len, &inform,
+  f_sqspecf(spcname, len, &inform,
 	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
 
   return inform;

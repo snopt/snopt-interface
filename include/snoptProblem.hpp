@@ -37,6 +37,7 @@ protected:
 public:
   void setProbName    (const char *Prob);
   void setPrintFile   (const char *prtname);
+  void setPrintFile   (const char *prtname, int iprint);
 
   int getIntParameter (const char *stropt,   int    &opt);
   int getRealParameter(const char *stropt,   double &opt);
@@ -66,7 +67,10 @@ protected:
 
 public:
   void initialize     (const char *prtfile, int summOn);
+  void initialize     (const char *prtfile, int iprint, const char *sumfile, int isumm);
+
   int  setSpecsFile   (const char *specname);
+  int  setSpecsFile   (const char *specname, int ispecs);
 
   void setLog         (isnLog snLog, isnLog2 snLog2, isqLog sqLog);
   void setSTOP        (isnSTOP snSTOP);
@@ -154,7 +158,11 @@ public:
   ~sqoptProblem();
 
   void initialize  (const char *prtfile, int summOn);
+  void initialize  (const char *prtfile, int iprint, const char *sumfile, int isumm);
+
   int  setSpecsFile(const char *specname);
+  int  setSpecsFile(const char *specname, int ispecs);
+
   void setLog      (isqLog sqLog);
   void setWorkspace(int m, int n, int neA, int ncObj, int nnH);
 

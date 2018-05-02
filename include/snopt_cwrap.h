@@ -10,6 +10,7 @@
 /* File: snopt_cwrap.h
  *   C interface for SNOPTB and SNOPTC.
  */
+
 typedef struct {
   char   *name;
 
@@ -31,6 +32,8 @@ typedef struct {
 
 } snProblem;
 
+void snInitX        ( snProblem* prob, char* name,
+		      char* prtfile, int iprint, char* sumfile, int isumm );
 void snInit         ( snProblem* prob, char* name, char* prtfile, int summOn );
 void init2zero      ( snProblem* prob );
 
@@ -41,6 +44,9 @@ void reallocR       ( snProblem* prob, int len );
 
 void setPrintfile   ( snProblem* prob, char* prtname );
 int  setSpecsfile   ( snProblem* prob, char* spcname );
+
+void setPrintfileX  ( snProblem* prob, char* prtname, int iprint );
+int  setSpecsfileX  ( snProblem* prob, char* spcname, int ispecs );
 
 int setParameter    ( snProblem* prob, char stropt[] );
 int setIntParameter ( snProblem* prob, char stropt[], int opt );

@@ -7,6 +7,17 @@
 
 using namespace std;
 
+static const char *snversion =
+  " ==============================\n\
+   SNOPT C++ interface  2.1.0   ";
+//  123456789|123456789|123456789|
+
+
+static const char *sqversion =
+  " ==============================\n\
+   SQOPT C++ interface  2.1.0   ";
+//  123456789|123456789|123456789|
+
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 snoptProblem::snoptProblem() {
   init2zero();
@@ -106,7 +117,15 @@ void snoptProblem::setPrintFile(const char *prtname) {
   assert(initCalled == 1);
 
   int len = strlen(prtname);
-  f_snsetprint(prtname, len, iw, leniw, rw, lenrw);
+  f_snsetprintf(prtname, len, iw, leniw, rw, lenrw);
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+void snoptProblem::setPrintFile(const char *prtname, int iprint) {
+  assert(initCalled == 1);
+
+  int len = strlen(prtname);
+  f_snsetprint(prtname, len, iprint, iw, leniw, rw, lenrw);
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -207,13 +226,26 @@ void snoptProblemABC::initialize(const char*prtfile, int summOn) {
   int len = strlen(prtfile);
 
   if (summOn != 0) {
-    printf(" ==============================\n");
-    printf("  SNOPT  C++ interface  2.0.0  ");
-    fflush(stdout);
-    //------123456789|123456789|123456789|
+    std::cout << snversion;
   }
 
-  f_sninit(prtfile, len, summOn, iw, leniw, rw, lenrw);
+  f_sninitf(prtfile, len, summOn, iw, leniw, rw, lenrw);
+  initCalled = 1;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+void snoptProblemABC::initialize(const char*prtfile, int iprint,
+				 const char*sumfile, int isumm) {
+  int plen, slen;
+  plen = strlen(prtfile);
+  slen = strlen(prtfile);
+
+  if (isumm != 0) {
+    std::cout << snversion;
+  }
+
+  f_sninit(prtfile, plen, iprint, sumfile, slen, isumm,
+	   iw, leniw, rw, lenrw);
   initCalled = 1;
 }
 
@@ -222,9 +254,23 @@ int snoptProblemABC::setSpecsFile(const char *specname) {
   assert(initCalled == 1);
 
   int inform, len = strlen(specname);
-  f_snspec(specname, len, &inform, iw, leniw, rw, lenrw);
+  f_snspecf(specname, len, &inform, iw, leniw, rw, lenrw);
+  if (inform != 101){
+    std::cerr << "Warning: unable to find specs file " <<
+      specname << std::endl;
+  }
+  return inform;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+int snoptProblemABC::setSpecsFile(const char *specname, int ispecs) {
+  assert(initCalled == 1);
+
+  int inform, len = strlen(specname);
+  f_snspec(specname, len, ispecs, &inform, iw, leniw, rw, lenrw);
   if(inform != 101){
-    printf("Warning: unable to find specs file %s \n", specname);
+    std::cerr << "Warning: unable to find specs file " <<
+      specname << std::endl;
   }
   return inform;
 }
@@ -543,13 +589,26 @@ void sqoptProblem::initialize(const char*prtfile, int summOn) {
   int len = strlen(prtfile);
 
   if (summOn != 0) {
-    printf(" ==============================\n");
-    printf("  SQOPT  C++ interface  2.0.0  ");
-    fflush(stdout);
-    //------123456789|123456789|123456789|
+    std::cout << sqversion;
   }
 
-  f_sqinit(prtfile, len, summOn, iw, leniw, rw, lenrw);
+  f_sqinitf(prtfile, len, summOn, iw, leniw, rw, lenrw);
+  initCalled = 1;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+void sqoptProblem::initialize(const char*prtfile, int iprint,
+			      const char*sumfile, int isumm) {
+  int plen, slen;
+  plen = strlen(prtfile);
+  slen = strlen(prtfile);
+
+  if (isumm != 0) {
+    std::cout << sqversion;
+  }
+
+  f_sqinit(prtfile, plen, iprint, sumfile, slen, isumm,
+	   iw, leniw, rw, lenrw);
   initCalled = 1;
 }
 
@@ -558,9 +617,24 @@ int sqoptProblem::setSpecsFile(const char *specname) {
   assert(initCalled == 1);
 
   int inform, len = strlen(specname);
-  f_sqspec(specname, len, &inform, iw, leniw, rw, lenrw);
+  f_sqspecf(specname, len, &inform, iw, leniw, rw, lenrw);
   if(inform != 101){
-    printf("Warning: unable to find specs file %s \n", specname);
+    std::cerr << "Warning: unable to find specs file " <<
+      specname << std::endl;
+  }
+
+  return inform;
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+int sqoptProblem::setSpecsFile(const char *specname, int ispecs) {
+  assert(initCalled == 1);
+
+  int inform, len = strlen(specname);
+  f_sqspec(specname, len, ispecs, &inform, iw, leniw, rw, lenrw);
+  if(inform != 101){
+    std::cerr << "Warning: unable to find specs file " <<
+      specname << std::endl;
   }
 
   return inform;

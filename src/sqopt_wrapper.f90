@@ -9,49 +9,53 @@ module sqopt_wrapper
 
   public
 
-  external :: sqinit, sqspec,                                &
-              sqmem,  snoptq, snkerq,                        &
-              sqgeti, sqgetr, sqseti, sqsetr, sqset, &
-              snFileOpenRead, snFileOpenAppend, snFileClose
+  external :: &
+       sqinit, sqspec, sqinitf, sqspecf, sqendf,      &
+       sqmem,  snoptq, snkerq,                        &
+       sqgeti, sqgetr, sqseti, sqsetr, sqset, &
+       snFileRead, snFileOpenRead, &
+       snFileOpenAppend, snFileClose
 
-  public  :: f_sqinit, f_sqsetprint, f_sqspec, &
-             f_sqmem,  f_sqopt,  f_snkerq, &
-             f_sqset,  f_sqseti, f_sqsetr, &
-             f_sqgeti, f_sqgetr, f_sqend
-  private :: newunit
+  public  :: &
+       f_sqinit, f_sqinitf, f_sqspec, f_sqspecf, &
+       f_sqsetprint, f_sqsetprintf, &
+       f_sqmem,  f_sqopt,  f_snkerq, &
+       f_sqset,  f_sqseti, f_sqsetr, &
+       f_sqgeti, f_sqgetr, f_sqend
 
   !-----------------------------------------------------------------------------
 
   interface
      ! Interface for user-defined subroutines.
-
-     subroutine sqLog(Prob, ProbTag, Elastc, gotR, jstFea, feasbl, &
-                      m, mBS, nnH, nS, jSq, jBr, jSr,              &
-                      linesP, linesS, itn, itQP, kPrc, lvlInf,     &
-                      pivot, step, nInf, sInf, wtInf,              &
-                      ObjPrt, condHz, djqPrt, rgNorm, kBS, xBS,    &
-                      iw, leniw)
-       character,        intent(in) :: ProbTag*20
-       logical,          intent(in) :: Elastc, gotR, jstFea, feasbl
-       integer,          intent(in) :: Prob, m, mBS, nnH, nS, jSq, jBr, jSr, &
-                                       itn, itQP, kPrc, linesP, linesS,      &
-                                       lvlInf, nInf, kBS(mBS), leniw
-       double precision, intent(in) :: condHz, djqPrt, ObjPrt, pivot, rgNorm, &
-                                       step, sInf, wtInf, xBS(mBS)
+     subroutine sqLog &
+         (Prob, ProbTag, Elastc, gotR, jstFea, feasbl, &
+          m, mBS, nnH, nS, jSq, jBr, jSr,              &
+          linesP, linesS, itn, itQP, kPrc, lvlInf,     &
+          pivot, step, nInf, sInf, wtInf,              &
+          ObjPrt, condHz, djqPrt, rgNorm, kBS, xBS,    &
+          iw, leniw)
+       character, intent(in) :: &
+            ProbTag*20
+       logical, intent(in) :: &
+            Elastc, gotR, jstFea, feasbl
+       integer, intent(in) :: &
+            Prob, m, mBS, nnH, nS, jSq, jBr, jSr, itn, itQP, kPrc, &
+            linesP, linesS, lvlInf, nInf, kBS(mBS), leniw
+       double precision, intent(in) :: &
+            condHz, djqPrt, ObjPrt, pivot, rgNorm, &
+            step, sInf, wtInf, xBS(mBS)
        integer,       intent(inout) :: iw(leniw)
      end subroutine sqLog
 
-     subroutine iusrHx(nnH, x, Hx, nState, cu, lencu, iu, leniu, ru, lenru)
+     subroutine iusrHx &
+          (nnH, x, Hx, nState, cu, lencu, iu, leniu, ru, lenru)
        integer,          intent(in)    :: nnH, nState, lencu, leniu, lenru
        double precision, intent(in)    :: x(nnH)
-
        character,        intent(inout) :: cu(lencu)*8
        integer,          intent(inout) :: iu(leniu)
        double precision, intent(inout) :: ru(lenru)
-
        double precision, intent(out)   :: Hx(nnH)
      end subroutine iusrHx
-
   end interface
 
   !-----------------------------------------------------------------------------
@@ -64,8 +68,65 @@ contains
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqinit(name, len, summOn, iw, leniw, rw, lenrw) &
+  subroutine f_sqinit &
+      (printfile, plen, iPrint, summaryfile, slen, &
+       iSumm, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqinit")
+
+    integer(c_int),    intent(in), value :: &
+         plen, slen, leniw, lenrw, iPrint, iSumm
+    character(c_char), intent(in)        :: &
+         printfile(plen), summaryfile(slen)
+    integer(c_int),    intent(inout)     :: &
+         iw(leniw)
+    real(c_double),    intent(inout)     :: &
+         rw(lenrw)
+
+    !===========================================================================
+    ! Call sqInit.  Pass provided file unit numbers.
+    !===========================================================================
+    character(plen) :: pfile
+    character(slen) :: sfile
+    integer         :: j, stat
+
+    pfile  = ''
+    if (iPrint /= 6) then
+       if (plen > 0) then
+          if (printfile(1) /= c_null_char) then
+             do j = 1, plen
+                if (printfile(j) == c_null_char) exit
+                pfile(j:j) = printfile(j)
+             end do
+          end if
+       end if
+       call snFileOpenAppend(iPrint, trim(pfile), stat)
+       if (stat /= 0) return
+    end if
+
+    sfile  = ''
+    if (iSumm /= 6) then
+       if (slen > 0) then
+          if (summaryfile(1) /= c_null_char) then
+             do j = 1, slen
+                if (summaryfile(j) == c_null_char) exit
+                sfile(j:j) = summaryfile(j)
+             end do
+          end if
+       end if
+       call snFileOpenAppend(iSumm,  trim(sfile), stat)
+       if (stat /= 0) return
+    end if
+
+    call sqInit &
+         (iPrint, iSumm, cw, lencw, iw, leniw, rw, lenrw)
+
+  end subroutine f_sqinit
+
+  !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  subroutine f_sqinitf &
+       (name, len, summOn, iw, leniw, rw, lenrw) &
+       bind(C,name="f_sqinitf")
 
     integer(c_int),    intent(in), value :: len, summOn, leniw, lenrw
     character(c_char), intent(in)        :: name(len)
@@ -79,38 +140,68 @@ contains
     ! 07 Jul 2014: First version.
     !===========================================================================
     character(len) :: file
+    character*6    :: screen
     integer        :: j, iPrt, iSum
 
-    if (len == 0) then
-       iPrt = 0
-    else
-       if (name(1) == c_null_char) then
-          iPrt = 0
-       else
-          file  = ''
+    file  = ''
+    if (len > 0) then
+       if (name(1) /= c_null_char) then
           do j = 1, len
              if (name(j) == c_null_char) exit
              file(j:j) = name(j)
           end do
-          iPrt = newunit()
-          call snFileOpenAppend(iPrt, trim(file))
        end if
     end if
 
     if (summOn == 0) then
-       iSum = 0
+       screen = ''
     else
-       iSum = 6
+       screen = 'screen'
     end if
 
-    call sqInit(iPrt, iSum, cw, lencw, iw, leniw, rw, lenrw)
+    call sqInitF &
+         (trim(file), screen, iPrt, iSum, cw, lencw, iw, leniw, rw, lenrw)
 
-  end subroutine f_sqinit
+  end subroutine f_sqinitf
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqsetprint(name, len, iw, leniw, rw, lenrw) &
+  subroutine f_sqsetprint &
+       (name, len, iPrint, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqsetprint")
+
+    integer(c_int),    intent(in), value :: len, iPrint, leniw, lenrw
+    character(c_char), intent(in)        :: name(len)
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
+
+    !===========================================================================
+    ! Set print file name and unit.
+    !===========================================================================
+    integer        :: Errors, j, stat
+    character(len) :: prtfile
+
+    if (iPrint /= 6) then
+       prtfile = ''
+       do j = 1, len
+          if (name(j) == c_null_char) exit
+          prtfile(j:j) = name(j)
+       end do
+       call snFileOpenAppend(iPrint,trim(prtfile), stat)
+       if (stat /= 0) return
+    end if
+
+    call sqSeti &
+         ('Print file', iPrint, 0, 0, Errors, &
+          cw, lencw, iw, leniw, rw, lenrw)
+
+  end subroutine f_sqsetprint
+
+  !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  subroutine f_sqsetprintf &
+       (name, len, iw, leniw, rw, lenrw) &
+       bind(C,name="f_sqsetprintf")
 
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: name(len)
@@ -120,7 +211,7 @@ contains
     !===========================================================================
     ! Set print file name and unit.
     !===========================================================================
-    integer        :: Errors, j, iPrt
+    integer        :: Errors, j, iPrt, stat
     character(len) :: prtfile
 
     prtfile = ''
@@ -130,20 +221,22 @@ contains
     end do
 
     if (prtfile /= '') then
-       iPrt = newunit()
-       call snFileOpenAppend(iPrt,trim(prtfile))
+       call snFileAppend(iPrt,trim(prtfile),stat)
+       if (stat /= 0) return
+
        call sqSeti('Print file', iPrt, 0, 0, Errors, &
                     cw, lencw, iw, leniw, rw, lenrw)
     end if
 
-  end subroutine f_sqsetprint
+  end subroutine f_sqsetprintf
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqspec(name, len, inform, iw, leniw, rw, lenrw) &
+  subroutine f_sqspec &
+       (name, len, iSpecs, inform, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqspec")
 
-    integer(c_int),    intent(in), value :: len, leniw, lenrw
+    integer(c_int),    intent(in), value :: len, iSpecs, leniw, lenrw
     character(c_char), intent(in)        :: name(len)
     integer(c_int),    intent(inout)     :: iw(leniw)
     real(c_double),    intent(inout)     :: rw(lenrw)
@@ -152,11 +245,10 @@ contains
     !===========================================================================
     ! Read options from the given specifications file.
     !===========================================================================
-    integer        :: iSpec, j
+    integer        :: j, stat
     character(len) :: spcfile
 
     inform  = 0
-    iSpec   = 4
 
     ! Get specs file name.
     spcfile = ''
@@ -167,21 +259,57 @@ contains
 
     ! If we have a file, try to read it.
     if (spcfile /= '') then
-       call snFileOpenRead(iSpec,trim(spcfile))
-       call sqSpec(iSpec, inform, cw, lencw, iw, leniw, rw, lenrw)
-       close(iSpec)
+       call snFileOpenRead(iSpecs,trim(spcfile),stat)
+       if (stat /= 0) return
+       call sqSpec(iSpecs, inform, cw, lencw, iw, leniw, rw, lenrw)
+       close(iSpecs)
     end if
 
   end subroutine f_sqspec
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqmem(info, m, n, neA, ncObj, nnH, &
-                     miniw, minrw, iw, leniw, rw, lenrw) &
-                     bind(C,name="f_sqmem")
+  subroutine f_sqspecf &
+       (name, len, inform, iw, leniw, rw, lenrw) &
+       bind(C,name="f_sqspecf")
 
-    integer(c_int), intent(in), value :: m, n, neA, ncObj, nnH, &
-                                         leniw, lenrw
+    integer(c_int),    intent(in), value :: len, leniw, lenrw
+    character(c_char), intent(in)        :: name(len)
+    integer(c_int),    intent(inout)     :: iw(leniw)
+    real(c_double),    intent(inout)     :: rw(lenrw)
+    integer(c_int),    intent(out)       :: inform
+
+    !===========================================================================
+    ! Read options from the given specifications file.
+    !===========================================================================
+    integer        :: j
+    character(len) :: spcfile
+
+    inform  = 0
+
+    ! Get specs file name.
+    spcfile = ''
+    do j = 1, len
+       if (name(j) == c_null_char) exit
+       spcfile(j:j) = name(j)
+    end do
+
+    ! If we have a file, try to read it.
+    if (spcfile /= '') then
+       call sqSpecF(trim(spcfile), inform, cw, lencw, iw, leniw, rw, lenrw)
+    end if
+
+  end subroutine f_sqspecf
+
+  !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  subroutine f_sqmem &
+      (info, m, n, neA, ncObj, nnH, &
+       miniw, minrw, iw, leniw, rw, lenrw) &
+       bind(C,name="f_sqmem")
+
+    integer(c_int), intent(in), value :: &
+         m, n, neA, ncObj, nnH, leniw, lenrw
     integer(c_int), intent(inout)     :: iw(leniw)
     real(c_double), intent(inout)     :: rw(lenrw)
 
@@ -192,24 +320,27 @@ contains
     !===========================================================================
     integer :: mincw
 
-    call sqMem(INFO, m, n, neA, ncObj, nnH, &
-               mincw, miniw, minrw, &
-               cw, lencw, iw, leniw, rw, lenrw)
+    call sqMem &
+        (INFO, m, n, neA, ncObj, nnH, &
+         mincw, miniw, minrw, &
+         cw, lencw, iw, leniw, rw, lenrw)
 
   end subroutine f_sqmem
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqopt(Start, c_qpHx, m, n, neA, ncObj, nnH, &
-                     iObj, ObjAdd, Prob,                   &
-                     valA, indA, locA, bl, bu, cObj,       &
-                     eType, hs, x, pi, rc,                 &
-                     INFO, nS, nInf, sInf, Obj,            &
-                     miniw, minrw,                         &
-                     iu, leniu, ru, lenru,                 &
-                     iw, leniw, rw, lenrw) bind(C,name='f_sqopt')
-    integer(c_int), intent(in), value :: Start, m, n, iObj, neA, ncObj, nnH, &
-                                         leniu, lenru, leniw, lenrw
+  subroutine f_sqopt &
+      (Start, c_qpHx, m, n, neA, ncObj, nnH, &
+       iObj, ObjAdd, Prob,                   &
+       valA, indA, locA, bl, bu, cObj,       &
+       eType, hs, x, pi, rc,                 &
+       INFO, nS, nInf, sInf, Obj,            &
+       miniw, minrw,                         &
+       iu, leniu, ru, lenru,                 &
+       iw, leniw, rw, lenrw) bind(C,name='f_sqopt')
+    integer(c_int), intent(in), value :: &
+         Start, m, n, iObj, neA, ncObj, nnH, &
+         leniu, lenru, leniw, lenrw
     real(c_double), intent(in), value :: ObjAdd
 
     integer(c_int),    intent(in) :: eType(n+m), indA(neA), locA(n+1)
@@ -253,30 +384,33 @@ contains
        pname(j:j) = Prob(j)
     end do
 
-    call sqOpt(nStart, qpHx, m, n, neA, nNames,       &
-               ncObj, nnH, iObj, ObjAdd, pname,       &
-               valA, indA, locA, bl, bu, cObj, Names, &
-               eType, hs, x, pi, rc,                  &
-               INFO, mincw, miniw, minrw,             &
-               nS, nInf, sInf, Obj,                   &
-               cw, lencw, iu, leniu, ru, lenru,       &
-               cw, lencw, iw, leniw, rw, lenrw)
+    call sqOpt &
+        (nStart, qpHx, m, n, neA, nNames,       &
+         ncObj, nnH, iObj, ObjAdd, pname,       &
+         valA, indA, locA, bl, bu, cObj, Names, &
+         eType, hs, x, pi, rc,                  &
+         INFO, mincw, miniw, minrw,             &
+         nS, nInf, sInf, Obj,                   &
+         cw, lencw, iu, leniu, ru, lenru,       &
+         cw, lencw, iw, leniw, rw, lenrw)
 
   end subroutine f_sqopt
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_snkerq(Start, c_qpHx, c_sqLog,         &
-                      m, n, neA, ncObj, nnH,          &
-                      iObj, ObjAdd, Prob,             &
-                      valA, indA, locA, bl, bu, cObj, &
-                      eType, hs, x, pi, rc,           &
-                      INFO, nS, nInf, sInf, Obj,      &
-                      miniw, minrw,                   &
-                      iu, leniu, ru, lenru,           &
-                      iw, leniw, rw, lenrw) bind(C,name='f_snkerq')
-    integer(c_int), intent(in), value :: Start, m, n, iObj, neA, ncObj, nnH, &
-                                         leniu, lenru, leniw, lenrw
+  subroutine f_snkerq &
+      (Start, c_qpHx, c_sqLog,         &
+       m, n, neA, ncObj, nnH,          &
+       iObj, ObjAdd, Prob,             &
+       valA, indA, locA, bl, bu, cObj, &
+       eType, hs, x, pi, rc,           &
+       INFO, nS, nInf, sInf, Obj,      &
+       miniw, minrw,                   &
+       iu, leniu, ru, lenru,           &
+       iw, leniw, rw, lenrw) bind(C,name='f_snkerq')
+    integer(c_int), intent(in), value :: &
+         Start, m, n, iObj, neA, ncObj, nnH, &
+         leniu, lenru, leniw, lenrw
     real(c_double), intent(in), value :: ObjAdd
 
     integer(c_int),    intent(in) :: eType(n+m), indA(neA), locA(n+1)
@@ -326,15 +460,16 @@ contains
        pname(j:j) = Prob(j)
     end do
 
-    call snKerQ(nStart, qpHx, myLogQ,                  &
-                m, n, neA, nNames,                     &
-                ncObj, nnH, iObj, ObjAdd, pname,       &
-                valA, indA, locA, bl, bu, cObj, Names, &
-                eType, hs, x, pi, rc,                  &
-                INFO, mincw, miniw, minrw,             &
-                nS, nInf, sInf, Obj,                   &
-                cw, lencw, iu, leniu, ru, lenru,       &
-                cw, lencw, iw, leniw, rw, lenrw)
+    call snKerQ &
+        (nStart, qpHx, myLogQ,                  &
+         m, n, neA, nNames,                     &
+         ncObj, nnH, iObj, ObjAdd, pname,       &
+         valA, indA, locA, bl, bu, cObj, Names, &
+         eType, hs, x, pi, rc,                  &
+         INFO, mincw, miniw, minrw,             &
+         nS, nInf, sInf, Obj,                   &
+         cw, lencw, iu, leniu, ru, lenru,       &
+         cw, lencw, iw, leniw, rw, lenrw)
 
   end subroutine f_snkerq
 
@@ -348,14 +483,14 @@ contains
     !===========================================================================
     ! Finish up.
     !===========================================================================
-    close(iw(12))  ! print file
-    if (iw(13) /= 6) close(iw(13))  ! summary file
+    call sqEndF( cw, lencw, iw, leniw, rw, lenrw )
 
   end subroutine f_sqend
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqset(option, len, Errors, iw, leniw, rw, lenrw) &
+  subroutine f_sqset &
+       (option, len, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqset")
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
@@ -382,7 +517,8 @@ contains
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqseti(option, len, ivalue, Errors, iw, leniw, rw, lenrw) &
+  subroutine f_sqseti &
+       (option, len, ivalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqseti")
     integer(c_int),    intent(in), value :: len, ivalue, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
@@ -403,14 +539,15 @@ contains
        buffer(j:j) = option(j)
     end do
 
-    call sqSeti(buffer, ivalue, 0, 0, Errors, &
-                cw, lencw, iw, leniw, rw, lenrw)
+    call sqSeti &
+         (buffer, ivalue, 0, 0, Errors, cw, lencw, iw, leniw, rw, lenrw)
 
   end subroutine f_sqseti
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqsetr(option, len, rvalue, Errors, iw, leniw, rw, lenrw) &
+  subroutine f_sqsetr &
+       (option, len, rvalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqsetr")
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     real(c_double),    intent(in), value :: rvalue
@@ -433,14 +570,15 @@ contains
        buffer(j:j) = option(j)
     end do
 
-    call sqSetr(buffer, rvalue, 0, 0, Errors, &
-                cw, lencw, iw, leniw, rw, lenrw)
+    call sqSetr &
+         (buffer, rvalue, 0, 0, Errors, cw, lencw, iw, leniw, rw, lenrw)
 
   end subroutine f_sqsetr
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqgeti(option, len, ivalue, Errors, iw, leniw, rw, lenrw) &
+  subroutine f_sqgeti &
+       (option, len, ivalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqgeti")
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
@@ -467,7 +605,8 @@ contains
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  subroutine f_sqgetr(option, len, rvalue, Errors, iw, leniw, rw, lenrw) &
+  subroutine f_sqgetr &
+       (option, len, rvalue, Errors, iw, leniw, rw, lenrw) &
        bind(C,name="f_sqgetr")
     integer(c_int),    intent(in), value :: len, leniw, lenrw
     character(c_char), intent(in)        :: option(len)
@@ -492,25 +631,6 @@ contains
     call sqGetR(buffer, rvalue, Errors, cw, lencw, iw, leniw, rw, lenrw)
 
   end subroutine f_sqgetr
-
-  !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-  integer function newunit()
-    !===========================================================================
-    integer, parameter :: unit_min = 10, unit_max = 1000
-    logical :: opened
-    integer :: j
-
-    newunit = -1
-    do j = unit_min, unit_max
-       inquire(unit=j,opened=opened)
-       if (.not. opened) then
-          newunit = j
-          exit
-       end if
-    end do
-
-  end function newunit
 
   !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
