@@ -11,32 +11,37 @@ extern "C" {
 #endif
 
   typedef void (*isnLog)
-  ( int *iAbort, int *info, int *HQNType, int KTcond[], int *MjrPrt, int *minimz,
-    int *n, int *nb, int *nnCon0, int *nS,
+  ( int *iAbort, int KTcond[], int *MjrPrt, int *minimz,
+    int *n, int *nb, int *nnCon0, int *nnObj, int *nS,
     int *itn, int *nMajor, int *nMinor, int *nSwap,
     double *condHz, int *iObj, double *sclObj, double *ObjAdd,
-    double *fMrt, double *PenNrm, double *step,
+    double *fObj, double *fMrt, double *PenNrm, double *step,
     double *prInf, double *duInf, double *vimax, double *virel, int hs[],
     int *ne, int nlocJ[], int locJ[], int indJ[], double Jcol[],
-    double Ascale[], double bl[], double bu[], double fCon[], double yCon[], double x[],
+    double Ascale[], double bl[], double bu[],
+    double Fx[], double fCon[], double yCon[], double x[],
     char cu[], int *lencu, int iu[], int *leniu, double ru[], int *lenru,
     char cw[], int *lencw, int iw[], int *leniw, double rw[], int *lenrw );
 
   typedef void (*isnLog2)
-  ( int *Prob, char *ProbTag, int *Elastc, int *gotR, int *jstFea, int *feasbl,
+  ( int *Prob, char *ProbTag, int *Elastc, int *gotR,
+    int *jstFea, int *feasbl, int *justPh1,
     int *m, int *mBS, int *nnH, int *nS, int *jSq, int *jBr, int *jSr,
-    int *linesP, int *linesS, int *itn, int *itQP, int *kPrc, int *lvlInf,
-    double *pivot, double *step, int *nInf, double *sInf, double *wtInf,
-    double *ObjPrt, double *condHz, double *djqPrt, double *rgNorm,
+    int *linesP, int *linesS, int *itn, int *itQP, int *kPrc, int *lvlObjE,
+    double *pivot, double *step,
+    int *nInf, double *sInf, int *nInfE, double *sinfE, double *wtInf,
+    int *nonOpt,  double *ObjPrt, double *condHz, double *djqPrt, double *rgNorm,
     int kBS[], double xBS[],
     int iw[], int *leniw );
 
   typedef void (*isqLog)
-  ( int *Prob, char *ProbTag, int *Elastc, int *gotR, int *jstFea, int *feasbl,
+  ( int *Prob, char *ProbTag, int *Elastc, int *gotR,
+    int *jstFea, int *feasbl, int *justPhs1,
     int *m, int *mBS, int *nnH, int *nS, int *jSq, int *jBr, int *jSr,
-    int *linesP, int *linesS, int *itn, int *itQP, int *kPrc, int *lvlInf,
-    double *pivot, double *step, int *nInf, double *sInf, double *wtInf,
-    double *ObjPrt, double *condHz, double *djqPrt, double *rgNorm,
+    int *linesP, int *linesS, int *itn, int *itQP, int *kPrc, int *lvlObjE,
+    double *pivot, double *step,
+    int *nInf, double *sInf, int *ninfE, double *sInfE, double *wtInf,
+    int *nonOpt, double *ObjPrt, double *condHz, double *djqPrt, double *rgNorm,
     int kBS[], double xBS[],
     int iw[], int *leniw );
 
@@ -46,10 +51,11 @@ extern "C" {
     int *nnCon0, int *nnCon, int *nnObj0, int *nnObj, int *nS,
     int *itn, int *nMajor, int *nMinor, int *nSwap,
     double *condHz, int *iObj, double *sclObj, double *ObjAdd,
-    double *fMrt, double *PenNrm, double *step,
+    double *fObj, double *fMrt, double *PenNrm, double *step,
     double *prInf, double *duInf, double *vimax, double *virel, int hs[],
     int *ne, int *nlocJ, int locJ[], int indJ[], double Jcol[], int *negCon,
-    double Ascale[], double bl[], double bu[], double fCon[], double gCon[], double gObj[],
+    double Ascale[], double bl[], double bu[],
+    double Fx[], double fCon[], double gCon[], double gObj[],
     double yCon[], double pi[], double rc[], double rg[], double x[],
     char cu[], int *lencu, int iu[], int *leniu, double ru[], int *lenru,
     char cw[], int *lencw, int iw[], int *leniw, double rw[], int *lenrw );
@@ -96,9 +102,14 @@ extern "C" {
 
 
   /* SNOPT */
-  void f_sninit ( const char *name, int len, int summOn,
+  void f_sninit ( const char *print, int plen, int iprint,
+		  const char *summ,  int slen, int isumm,
 		  int iw[], int leniw, double rw[], int lenrw );
-  void f_snspec ( const char *specfile, int len, int *inform,
+  void f_snspec ( const char *specfile, int len, int ispecs, int *inform,
+		  int iw[], int leniw, double rw[], int lenrw );
+  void f_sninitf( const char *name, int len, int summOn,
+		  int iw[], int leniw, double rw[], int lenrw );
+  void f_snspecf( const char *specfile, int len, int *inform,
 		  int iw[], int leniw, double rw[], int lenrw );
 
   void f_sngeti ( const char *buffer, int len, int  *ivalue, int *errors,
@@ -113,15 +124,22 @@ extern "C" {
   void f_snsetr ( const char *buffer, int len, double rvalue, int *errors,
 		  int iw[], int leniw, double rw[], int lenrw );
 
-  void f_snsetprint ( const char *name, int len,
+  void f_snsetprint ( const char *name, int len, int iprint,
+		      int iw[], int leniw, double rw[], int lenrw );
+  void f_snsetprintf( const char *name, int len,
 		      int iw[], int leniw, double rw[], int lenrw );
   void f_snend ( int iw[], int leniw, double rw[], int lenrw );
 
 
   /* SQOPT */
-  void f_sqinit ( const char *name, int len, int summOn,
+  void f_sqinit ( const char *print, int plen, int iprint,
+		  const char *summ,  int slen, int isumm,
 		  int iw[], int leniw, double rw[], int lenrw );
-  void f_sqspec ( const char *specfile, int len, int *inform,
+  void f_sqspec ( const char *specfile, int len, int ispecs, int *inform,
+		  int iw[], int leniw, double rw[], int lenrw );
+  void f_sqinitf( const char *name, int len, int summOn,
+		  int iw[], int leniw, double rw[], int lenrw );
+  void f_sqspecf( const char *specfile, int len, int *inform,
 		  int iw[], int leniw, double rw[], int lenrw );
 
   void f_sqgeti ( const char *buffer, int len, int  *ivalue, int *errors,
@@ -136,7 +154,9 @@ extern "C" {
   void f_sqsetr ( const char *buffer, int len, double rvalue, int *errors,
 		  int iw[], int leniw, double rw[], int lenrw );
 
-  void f_sqsetprint ( const char *name, int len,
+  void f_sqsetprint ( const char *name, int len, int iprint,
+		      int iw[], int leniw, double rw[], int lenrw );
+  void f_sqsetprintf( const char *name, int len,
 		      int iw[], int leniw, double rw[], int lenrw );
   void f_sqend ( int iw[], int leniw, double rw[], int lenrw );
 
