@@ -2,7 +2,7 @@
 
 static char *sqversion =
   " ==============================\n\
-    SQOPT  C interface  2.1.0   ";
+    SQOPT  C interface  2.2.0   ";
 //  123456789|123456789|123456789|
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -25,15 +25,58 @@ void sqInitX(sqProblem* prob, char* name,
    * On exit:
    *   Internal workspace for SQOPT is initialized
    */
-  int leniw, lenrw, plen, slen;
+  sqInitXW(prob, name, prtfile, iprint, sumfile, isumm, 0, 0, 0, 0);
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+void sqInitXW(sqProblem* prob, char* name,
+	      char* prtfile, int iprint, char *sumfile, int isumm,
+	      int *iw, int leniw, double *rw, int lenrw) {
+  /*
+   * sqInitXW - call sqInit to initialize workspace for SQOPT
+   *
+   * On entry:
+   *   prob     is the sqProblem struct
+   *   name     is the name of the problem
+   *   prtfile  is the name of the output print file
+   *   iprint   is the Fortran file unit number to use for prtfile
+   *            (iPrint == 0 if no print output)
+   *   sumfile  is the name of the summary output file
+   *            (iSumm == 0 if no summary output)
+   *   isumm    is the Fortran file unit number to use for sumfile
+   *
+   *   iw, leniw
+   *   rw, lenrw
+   *            are the integer and real workspaces and their lengths.
+   *            If leniw/lenrw < 500 or iw/rw is null, the workspace will
+   *            be allocated automatically.
+   *
+   * On exit:
+   *   Internal workspace for SQOPT is initialized
+   */
+  int plen, slen;
 
   init2zeroQ(prob);
+  if (leniw >= 500 && lenrw >= 500) {
+    if (iw != 0 && rw != 0) {
+      prob->leniw = leniw;
+      prob->iw    = iw;
 
-  leniw = 500;
-  lenrw = 500;
+      prob->lenrw = lenrw;
+      prob->rw    = rw;
 
-  allocIQ(prob, leniw);
-  allocRQ(prob, lenrw);
+      prob->userWork = 1;
+    } else {
+      allocIQ(prob,leniw);
+      allocRQ(prob,lenrw);
+    }
+    prob->memCalled = 1;
+
+  } else {
+    allocIQ(prob,500);
+    allocRQ(prob,500);
+  }
 
   prob->name   = name;
 
@@ -65,15 +108,55 @@ void sqInit(sqProblem* prob, char* name, char* prtfile, int summOn) {
    * On exit:
    *   Internal workspace for SQOPT is initialized
    */
-  int leniw, lenrw, len;
+  sqInitW(prob, name, prtfile, summOn, 0, 0, 0, 0);
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+void sqInitW(sqProblem* prob, char* name, char* prtfile, int summOn,
+	     int *iw, int leniw, double *rw, int lenrw) {
+  /*
+   * sqInitW - call snInit to initialize workspace for SQOPT
+   * On entry:
+   *   prob     is the sqProblem struct
+   *   name     is the name of the problem
+   *   prtfile  is the name of the output print file
+   *            (empty string for no print file)
+   *   summOn   is an integer indicating whether summary output
+   *            (to screen) should be turned on (!= 0) or off (== 0)
+   *
+   *   iw, leniw
+   *   rw, lenrw
+   *            are the integer and real workspaces and their lengths.
+   *            If leniw/lenrw < 500 or iw/rw is null, the workspace will
+   *            be allocated automatically.
+   *
+   * On exit:
+   *   Internal workspace for SQOPT is initialized
+   */
+  int len;
 
   init2zeroQ(prob);
 
-  leniw = 500;
-  lenrw = 500;
+  if (leniw >= 500 && lenrw >= 500) {
+    if (iw != 0 && rw != 0) {
+      prob->leniw = leniw;
+      prob->iw    = iw;
 
-  allocIQ(prob, leniw);
-  allocRQ(prob, lenrw);
+      prob->lenrw = lenrw;
+      prob->rw    = rw;
+
+      prob->userWork = 1;
+    } else {
+      allocIQ(prob,leniw);
+      allocRQ(prob,lenrw);
+    }
+    prob->memCalled = 1;
+
+  } else {
+    allocIQ(prob,500);
+    allocRQ(prob,500);
+  }
 
   prob->name   = name;
 
@@ -95,6 +178,7 @@ void init2zeroQ(sqProblem* prob) {
 
   prob->memCalled  = 0;
   prob->initCalled = 0;
+  prob->userWork   = 0;
 
   prob->sqLog      = NULL;
 
@@ -391,8 +475,10 @@ int sqopt(sqProblem* prob, int start, sqFunHx qpHx,
 void deleteSQOPT(sqProblem* prob) {
   f_sqend(prob->iw, prob->leniw, prob->rw, prob->lenrw);
 
-  free(prob->iw);
-  free(prob->rw);
+  if (prob->userWork == 0) {
+    free(prob->iw);
+    free(prob->rw);
+  }
 
   init2zeroQ(prob);
 }

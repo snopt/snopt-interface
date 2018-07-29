@@ -16,6 +16,7 @@ typedef struct {
 
   int     memCalled;
   int     initCalled;
+  int     userWork;
 
   isqLog  sqLog;
 
@@ -32,6 +33,13 @@ typedef struct {
 void sqInitX        (sqProblem* prob, char* name,
 		     char* prtfile, int iprint, char *sumfile, int isumm);
 void sqInit         (sqProblem* prob, char* name, char* prtfile, int summOn);
+
+void sqInitXW       (sqProblem* prob, char* name,
+		     char* prtfile, int iprint, char *sumfile, int isumm,
+		     int *iw, int leniw, double *rw, int lenrw);
+void sqInitW        (sqProblem* prob, char* name, char* prtfile, int summOn,
+		     int *iw, int leniw, double *rw, int lenrw);
+
 void init2zeroQ     (sqProblem* prob);
 
 void allocIQ        (sqProblem* prob, int len);

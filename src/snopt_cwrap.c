@@ -2,7 +2,7 @@
 
 static const char *snversion =
   " ==============================\n\
-    SNOPT  C interface  2.1.0   ";
+    SNOPT  C interface  2.2.0   ";
 //  123456789|123456789|123456789|
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -25,15 +25,59 @@ void snInitX(snProblem* prob, char* name,
    * On exit:
    *   Internal workspace for SNOPT is initialized
    */
-  int leniw, lenrw, plen, slen;
+  snInitXW( prob, name, prtfile, iprint, sumfile, isumm, 0, 0, 0, 0);
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+void snInitXW(snProblem* prob, char* name,
+	      char* prtfile, int iprint, char *sumfile, int isumm,
+	      int *iw, int leniw, double *rw, int lenrw) {
+  /*
+   * snInitX - call snInit to initialize workspace for SNOPT
+   *
+   * On entry:
+   *   prob     is the snProblem struct
+   *   name     is the name of the problem
+   *   prtfile  is the name of the output print file
+   *   iprint   is the Fortran file unit number to use for prtfile
+   *            (iPrint == 0 if no print output)
+   *   sumfile  is the name of the summary output file
+   *            (iSumm == 0 if no summary output)
+   *   isumm    is the Fortran file unit number to use for sumfile
+   *
+   *   iw, leniw
+   *   rw, lenrw
+   *            are the integer and real workspaces and their lengths.
+   *            If leniw/lenrw < 500 or iw/rw is null, the workspace will
+   *            be allocated automatically.
+   *
+   * On exit:
+   *   Internal workspace for SNOPT is initialized
+   */
+  int plen, slen;
 
   init2zero(prob);
 
-  leniw = 500;
-  lenrw = 500;
+  if (leniw >= 500 && lenrw >= 500) {
+    if (iw != 0 && rw != 0) {
+      prob->leniw = leniw;
+      prob->iw    = iw;
 
-  allocI(prob, leniw);
-  allocR(prob, lenrw);
+      prob->lenrw = lenrw;
+      prob->rw    = rw;
+
+      prob->userWork = 1;
+    } else {
+      allocI(prob,leniw);
+      allocR(prob,lenrw);
+    }
+    prob->memCalled = 1;
+
+  } else {
+    allocI(prob,500);
+    allocR(prob,500);
+  }
 
   prob->name   = name;
 
@@ -66,13 +110,55 @@ void snInit(snProblem* prob, char* name, char* prtfile, int summOn) {
    * On exit:
    *   Internal workspace for SNOPT is initialized
    */
+  snInitW(prob, name, prtfile, summOn, 0, 0, 0, 0);
+}
+
+/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+
+void snInitW(snProblem* prob, char* name, char* prtfile, int summOn,
+	     int *iw, int leniw, double *rw, int lenrw) {
+  /*
+   * snInit - call snInit to initialize workspace for SNOPT
+   * On entry:
+   *   prob     is the snProblem struct
+   *   name     is the name of the problem
+   *   prtfile  is the name of the output print file
+   *            (empty string for no print file)
+   *   summOn   is an integer indicating whether summary output
+   *            (to screen) should be turned on (!= 0) or off (== 0)
+   *
+   *   iw, leniw
+   *   rw, lenrw
+   *            are the integer and real workspaces and their lengths.
+   *            If leniw/lenrw < 500 or iw/rw is null, the workspace will
+   *            be allocated automatically.
+   *
+   * On exit:
+   *   Internal workspace for SNOPT is initialized
+   */
+  int len;
+
   init2zero(prob);
 
-  leniw = 500;
-  lenrw = 500;
+  if (leniw >= 500 && lenrw >= 500) {
+    if (iw != 0 && rw != 0) {
+      prob->leniw = leniw;
+      prob->iw    = iw;
 
-  allocI(prob, leniw);
-  allocR(prob, lenrw);
+      prob->lenrw = lenrw;
+      prob->rw    = rw;
+
+      prob->userWork = 1;
+    } else {
+      allocI(prob,leniw);
+      allocR(prob,lenrw);
+    }
+    prob->memCalled = 1;
+
+  } else {
+    allocI(prob,500);
+    allocR(prob,500);
+  }
 
   prob->name   = name;
 
@@ -97,6 +183,7 @@ void init2zero(snProblem* prob) {
 
   prob->memCalled  = 0;
   prob->initCalled = 0;
+  prob->userWork   = 0;
 
   prob->snLog     = NULL;
   prob->snLog2    = NULL;
@@ -789,8 +876,10 @@ void deleteSNOPT(snProblem* prob) {
    */
   f_snend(prob->iw, prob->leniw, prob->rw, prob->lenrw);
 
-  free(prob->iw);
-  free(prob->rw);
+  if (prob->userWork == 0) {
+    free(prob->iw);
+    free(prob->rw);
+  }
 
   init2zero(prob);
 }

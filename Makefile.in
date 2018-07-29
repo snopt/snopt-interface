@@ -61,7 +61,7 @@ SNOPT_CPP_LO = $(SNOPT_CPP_FILES:%=$(SNOPT_SRCDIR)/%.lo)
 
 #-----------------------------------------------------------------------
 
-SNOPT_C_EX   = toyA  toyB  toyC  hs118
+SNOPT_C_EX   = toyA  toyB  toyC  hs118  toyC_w
 SNOPT_CPP_EX = sntoya  sntoyB  sntoyC  catmixa  hs118  sntoyB_w
 
 SNOPT_C_EXAMPLES   = $(SNOPT_C_EX:%=$(SNOPT_C_EX_OBJDIR)/%)

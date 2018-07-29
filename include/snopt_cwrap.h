@@ -16,6 +16,7 @@ typedef struct {
 
   int     memCalled;
   int     initCalled;
+  int     userWork;
 
   isnSTOP snSTOP;
   isnLog  snLog;
@@ -35,6 +36,13 @@ typedef struct {
 void snInitX        ( snProblem* prob, char* name,
 		      char* prtfile, int iprint, char* sumfile, int isumm );
 void snInit         ( snProblem* prob, char* name, char* prtfile, int summOn );
+
+void snInitXW       ( snProblem* prob, char* name,
+		      char* prtfile, int iprint, char* sumfile, int isumm,
+		      int *iw, int leniw, double *rw, int lenrw );
+void snInitW        ( snProblem* prob, char* name, char* prtfile, int summOn,
+		      int *iw, int leniw, double *rw, int lenrw );
+
 void init2zero      ( snProblem* prob );
 
 void allocI         ( snProblem* prob, int len );
