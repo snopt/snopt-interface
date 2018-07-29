@@ -1,6 +1,20 @@
 snopt-interfaces
 ================
 
+Version 2.2:
+
+Added ability to specify workspace explicitly and bypass internall snMem*
+calls.  In the C++ interface, new constructors allow passing iw/leniw and
+rw/lenrw.  In the C interface, new initialization calls snInitW and snInitWX
+let user pass iw/leniw and rw/lenrw.
+
+In all cases, if leniw or lenrw is less than 500, then the workspace will be
+automatically allocated.  If iw or rw is NULL, then the workspace is
+allocated with leniw/lenrw if those values are acceptable, otherwise snMem*
+is called.  If iw and rw are not NULL, then no internal allocation is done
+and the workspace and lengths are accepted.
+
+-----------------
 Version 2.1:
 
 New calls to snInit/snSpec added that allow the user to define the Fortran
