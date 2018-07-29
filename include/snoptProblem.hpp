@@ -11,15 +11,28 @@
 
 class snoptProblem {
 protected:
-  snoptProblem();
-  snoptProblem(const char*name);
+  // default constructor
+  snoptProblem(const char*name, int *iw, int aleniw, double *rw, int alenrw);
+
+  // delegated constructors
+  snoptProblem() :
+    snoptProblem("        ", 0, 0, 0, 0) {};
+  snoptProblem(int aleniw, int alenrw) :
+    snoptProblem("        ", 0, aleniw, 0, alenrw) {};
+  snoptProblem(int *aiw, int aleniw, double *arw, int alenrw) :
+    snoptProblem("        ", aiw, aleniw, arw, alenrw) {} ;
+  snoptProblem(const char*name) :
+    snoptProblem(name, 0, 0, 0, 0) {};
+  snoptProblem(const char*name, int aleniw, int alenrw) :
+    snoptProblem(name, 0, aleniw, 0, alenrw) {};
+
   ~snoptProblem();
 
   void init2zero();
 
   char    Prob[30];
 
-  int     initCalled, memCalled;
+  int     initCalled, memCalled, userWork;
 
   int     leniw, lenrw;
   double *rw;
@@ -54,8 +67,21 @@ public:
 
 class snoptProblemABC : public snoptProblem  {
 protected:
-  snoptProblemABC();
-  snoptProblemABC(const char*name);
+  // default constructor
+  snoptProblemABC(const char*name, int *iw, int aleniw, double *rw, int alenrw);
+
+  // delegated constructors
+  snoptProblemABC() :
+    snoptProblemABC("        ", 0, 0, 0, 0) {};
+  snoptProblemABC(const char*name) :
+    snoptProblemABC(name, 0, 0, 0, 0) {};
+  snoptProblemABC(int aleniw, int alenrw) :
+    snoptProblemABC("        ", 0, aleniw, 0, alenrw) {};
+  snoptProblemABC(int *aiw, int aleniw, double *arw, int alenrw) :
+    snoptProblemABC("        ", aiw, aleniw, arw, alenrw) {};
+  snoptProblemABC(const char*name, int aleniw, int alenrw) :
+    snoptProblemABC(name, 0, aleniw, 0, alenrw) {};
+
   ~snoptProblemABC();
 
   void init2zero();
@@ -80,8 +106,21 @@ public:
 
 class snoptProblemA : public snoptProblemABC {
 public:
-  snoptProblemA();
-  snoptProblemA(const char *name);
+  // default constructor
+  snoptProblemA(const char*name, int *iw, int aleniw, double *rw, int alenrw);
+
+  // delegated constructors
+  snoptProblemA() :
+    snoptProblemA("        ", 0, 0, 0, 0) {};
+  snoptProblemA(const char*name) :
+    snoptProblemA(name, 0, 0, 0, 0) {};
+  snoptProblemA(int aleniw, int alenrw) :
+    snoptProblemA("        ", 0, aleniw, 0, alenrw) {};
+  snoptProblemA(int *aiw, int aleniw, double *arw, int alenrw) :
+    snoptProblemA("        ", aiw, aleniw, arw, alenrw) {};
+  snoptProblemA(const char*name, int aleniw, int alenrw) :
+    snoptProblemA(name, 0, aleniw, 0, alenrw) {};
+
   ~snoptProblemA();
 
   void setWorkspace(int neF, int n, int neA, int neG);
@@ -111,8 +150,21 @@ public:
 
 class snoptProblemC : public snoptProblemABC {
 public:
-  snoptProblemC();
-  snoptProblemC(const char*name);
+  // default constructor
+  snoptProblemC(const char*name, int *iw, int aleniw, double *rw, int alenrw);
+
+  // delegated constructors
+  snoptProblemC() :
+    snoptProblemC("        ", 0, 0, 0, 0) {};
+  snoptProblemC(const char*name) :
+    snoptProblemC(name, 0, 0, 0, 0) {};
+  snoptProblemC(int aleniw, int alenrw) :
+    snoptProblemC("        ", 0, aleniw, 0, alenrw) {};
+  snoptProblemC(int *aiw, int aleniw, double *arw, int alenrw) :
+    snoptProblemC("        ", aiw, aleniw, arw, alenrw) {};
+  snoptProblemC(const char*name, int aleniw, int alenrw) :
+    snoptProblemC(name, 0, aleniw, 0, alenrw) {};
+
   ~snoptProblemC();
 
   void setWorkspace(int m, int n, int ne, int negCon,
@@ -131,8 +183,21 @@ public:
 
 class snoptProblemB : public snoptProblemC {
 public:
-  snoptProblemB();
-  snoptProblemB(const char*name);
+  // default constructor
+  snoptProblemB(const char*name, int *aiw, int aleniw, double *arw, int alenrw);
+
+  // delegated constructors
+  snoptProblemB() :
+    snoptProblemB("        ", 0, 0, 0, 0) {};
+  snoptProblemB(const char*name) :
+    snoptProblemB(name, 0, 0, 0, 0) {};
+  snoptProblemB(int aleniw, int alenrw) :
+    snoptProblemB("        ", 0, aleniw, 0, alenrw) {};
+  snoptProblemB(int *aiw, int aleniw, double *arw, int alenrw) :
+    snoptProblemB("        ", aiw, aleniw, arw, alenrw) {};
+  snoptProblemB(const char*name, int aleniw, int alenrw) :
+    snoptProblemB(name, 0, aleniw, 0, alenrw) {};
+
   ~snoptProblemB();
 
   int solve(int starttype, int m, int n, int ne, int negCon,
@@ -153,8 +218,21 @@ private:
   void init2zero();
 
 public:
-  sqoptProblem();
-  sqoptProblem(const char*name);
+  // default constructor
+  sqoptProblem(const char*name, int *iw, int aleniw, double *rw, int alenrw);
+
+  // delegated constructors
+  sqoptProblem() :
+    sqoptProblem("        ", 0, 0, 0, 0) {};
+  sqoptProblem(const char*name) :
+    sqoptProblem(name, 0, 0, 0, 0) {};
+  sqoptProblem(int aleniw, int alenrw) :
+    sqoptProblem("        ", 0, aleniw, 0, alenrw) {};
+  sqoptProblem(int *aiw, int aleniw, double *arw, int alenrw) :
+    sqoptProblem("        ", aiw, aleniw, arw, alenrw) {};
+  sqoptProblem(const char*name, int aleniw, int alenrw) :
+    sqoptProblem(name, 0, aleniw, 0, alenrw) {};
+
   ~sqoptProblem();
 
   void initialize  (const char *prtfile, int summOn);

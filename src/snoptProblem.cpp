@@ -9,44 +9,53 @@ using namespace std;
 
 static const char *snversion =
   " ==============================\n\
-   SNOPT C++ interface  2.1.0   ";
+   SNOPT C++ interface  2.2.0   ";
 //  123456789|123456789|123456789|
 
 
 static const char *sqversion =
   " ==============================\n\
-   SQOPT C++ interface  2.1.0   ";
+   SQOPT C++ interface  2.2.0   ";
 //  123456789|123456789|123456789|
 
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblem::snoptProblem() {
-  init2zero();
-  sprintf(Prob, "%8s", "        ");
-
-  allocI(500);
-  allocR(500);
-}
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblem::snoptProblem(const char *name) {
+snoptProblem::snoptProblem(const char *name, int *aiw, int aleniw, double *arw, int alenrw) {
   init2zero();
-
   sprintf(Prob, "%8s", name);
 
-  allocI(500);
-  allocR(500);
+  if (aleniw >= 500 && alenrw >= 500) {
+    if (aiw != 0 && arw != 0) {
+      leniw = aleniw;
+      lenrw = alenrw;
+      iw    = aiw;
+      rw    = arw;
+      userWork  = 1;
+    }
+    else {
+      allocI(aleniw);
+      allocR(alenrw);
+    }
+    memCalled = 1;
+  }
+  else {
+    allocI(500);
+    allocR(500);
+  }
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 snoptProblem::~snoptProblem() {
   f_snend(iw, leniw, rw, lenrw);
 
-  delete []rw;  delete []iw;
+  if (userWork == 0) {
+    delete []rw;  delete []iw;
+  }
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblem::init2zero() {
-  initCalled = 0; memCalled = 0;
+  initCalled = 0; memCalled = 0; userWork = 0;
 
   leniw = 0; lenrw = 0;
   iw    = 0; rw    = 0;
@@ -59,6 +68,7 @@ void snoptProblem::init2zero() {
 void snoptProblem::allocI(int aleniw) {
   // Reset work array lengths.
   // Allocate new memory for work arrays.
+  assert(aleniw >= 500);
   leniw = aleniw;
   iw    = new int[leniw];
 }
@@ -67,6 +77,7 @@ void snoptProblem::allocI(int aleniw) {
 void snoptProblem::allocR(int alenrw) {
   // Reset work array lengths.
   // Allocate new memory for work arrays.
+  assert(alenrw >= 500);
   lenrw = alenrw;
   rw    = new double[lenrw];
 }
@@ -202,12 +213,9 @@ void snoptProblem::setUserspace  (int*aiu,     int aleniu,
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemABC::snoptProblemABC() {
-  init2zero();
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemABC::snoptProblemABC(const char *name) : snoptProblem(name) {
+snoptProblemABC::snoptProblemABC(const char *name, int *aiw, int aleniw,
+				 double *arw, int alenrw) :
+  snoptProblem(name, aiw, aleniw, arw, alenrw) {
   init2zero();
 }
 
@@ -290,11 +298,9 @@ void snoptProblemABC::setSTOP(isnSTOP asnSTOP) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemA::snoptProblemA() {
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemA::snoptProblemA(const char *name) : snoptProblemABC(name) {
+snoptProblemA::snoptProblemA(const char *name,
+			     int *aiw, int aleniw, double *arw, int alenrw) :
+  snoptProblemABC(name,aiw,aleniw,arw,alenrw) {
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -432,11 +438,9 @@ int snoptProblemA::solve(int starttype, int neF, int n, double ObjAdd,
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemC::snoptProblemC() {
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemC::snoptProblemC(const char *name) : snoptProblemABC(name) {
+snoptProblemC::snoptProblemC(const char *name,
+			     int *aiw, int aleniw, double *arw, int alenrw) :
+  snoptProblemABC(name,aiw,aleniw,arw,alenrw) {
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -510,11 +514,9 @@ int snoptProblemC::solve(int starttype, int m, int n, int ne, int negCon,
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemB::snoptProblemB() : snoptProblemC() {
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-snoptProblemB::snoptProblemB(const char *name) : snoptProblemC(name) {
+snoptProblemB::snoptProblemB(const char *name,
+			     int *aiw, int aleniw, double *arw, int alenrw) :
+  snoptProblemC(name,aiw,aleniw,arw,alenrw) {
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -566,12 +568,9 @@ int snoptProblemB::solve(int starttype, int m, int n, int ne, int negCon,
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-sqoptProblem::sqoptProblem() {
-  init2zero();
-}
-
-/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-sqoptProblem::sqoptProblem(const char *name) : snoptProblem(name) {
+sqoptProblem::sqoptProblem(const char *name,
+			     int *aiw, int aleniw, double *arw, int alenrw) :
+  snoptProblem(name,aiw,aleniw,arw,alenrw) {
   init2zero();
 }
 
