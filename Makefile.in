@@ -56,8 +56,8 @@ SNOPT_CPP_EX_OBJDIR = $(top_builddir)/cppexamples
 SNOPT_C_FILES   = snopt_wrapper sqopt_wrapper snopt_cwrap sqopt_cwrap
 SNOPT_CPP_FILES = snopt_wrapper sqopt_wrapper snoptProblem
 
-SNOPT_C_LO   = $(SNOPT_C_FILES:%=$(SNOPT_SRCDIR)/%.lo)
-SNOPT_CPP_LO = $(SNOPT_CPP_FILES:%=$(SNOPT_SRCDIR)/%.lo)
+SNOPT_C_LO   = $(SNOPT_C_FILES:%=$(SNOPT_OBJDIR)/%.lo)
+SNOPT_CPP_LO = $(SNOPT_CPP_FILES:%=$(SNOPT_OBJDIR)/%.lo)
 
 #-----------------------------------------------------------------------
 
