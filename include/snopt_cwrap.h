@@ -8,7 +8,7 @@
 #include "snopt.h"
 
 /* File: snopt_cwrap.h
- *   C interface for SNOPTB and SNOPTC.
+ *   C interface for SNOPT
  */
 
 typedef struct {
