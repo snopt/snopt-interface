@@ -63,6 +63,7 @@ module sqopt_wrapper
   ! Character arrays don't work well with Fortran/C/C++ so have a dummy one here.
   integer, parameter :: lencw = 500
   character*8        :: cw(lencw)
+  !$OMP THREADPRIVATE(cw)
 
 contains
 
