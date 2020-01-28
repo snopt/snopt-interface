@@ -36,9 +36,7 @@ file unit numbers to be used with the print file, summary file, and specs file.
 
 Please see
 
-   http://ccom.ucsd.edu/~optimizers/usage/c
-
-   http://ccom.ucsd.edu/~optimizers/usage/cpp
+   https://ccom.ucsd.edu/~optimizers/docs/snopt/
 
 for more information on how to link to the libraries and use the C/C++
 interface.
