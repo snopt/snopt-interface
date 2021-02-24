@@ -17,7 +17,7 @@ void snInit(snProblem* prob, char* name, char* prtfile, int summOn) {
 
   len = strlen(prtfile);
 
-  f_sninit (prtfile, len, summOn,
+  f_sninitf (prtfile, len, summOn,
 	     prob->iw, prob->leniw,
 	     prob->rw, prob->lenrw);
   prob->initCalled = 1;
@@ -117,7 +117,7 @@ void setPrintfile(snProblem* prob, char *prtname) {
   int len = strlen(prtname);
 
   assert(prob->initCalled == 1);
-  f_snsetprint(prtname, len,
+  f_snsetprintf(prtname, len,
 		prob->iw, prob->leniw, prob->rw, prob->lenrw);
 }
 
@@ -128,7 +128,7 @@ int setSpecsfile(snProblem* prob, char *spcname) {
   int len = strlen(spcname);
 
   assert(prob->initCalled == 1);
-  f_snspec(spcname, len, &inform,
+  f_snspecf(spcname, len, &inform,
 	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
 
   return inform;
@@ -147,7 +147,7 @@ int setParameter(snProblem* prob, char stropt[]) {
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-
+/*
 int getParameter(snProblem* prob, char stropt[], char strout[]) {
   int errors;
   int inlen  = strlen(stropt);
@@ -158,7 +158,7 @@ int getParameter(snProblem* prob, char stropt[], char strout[]) {
 	    prob->iw, prob->leniw, prob->rw, prob->lenrw);
   return errors;
 }
-
+*/
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 int setIntParameter(snProblem* prob, char stropt[], int opt) {
@@ -439,10 +439,7 @@ int solveC(snProblem* prob, int start, double* objective,
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 void deleteSNOPT(snProblem* prob) {
-  f_snend ();
-
-  free(prob->iw);
-  free(prob->rw);
+  f_snend (prob->iw, prob->leniw, prob->rw, prob->lenrw);
 
   free(prob->locJ);
   free(prob->indJ);

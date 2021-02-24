@@ -51,7 +51,7 @@ public:
 
   void initialize     (const char *prtfile, int summOn);
 
-  int getParameter    (const char *stroptin, char *stroptout);
+  //int getParameter    (const char *stroptin, char *stroptout);
   int getIntParameter (const char *stropt,   int    &opt);
   int getRealParameter(const char *stropt,   double &opt);
   int setParameter    (const char *stroptin);

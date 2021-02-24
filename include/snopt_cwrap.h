@@ -70,7 +70,7 @@ void setPrintfile   ( snProblem* prob, char* prtname );
 int  setSpecsfile   ( snProblem* prob, char* spcname );
 
 int setParameter    ( snProblem* prob, char stropt[] );
-int getParameter    ( snProblem* prob, char stropt[], char strout[] );
+//int getParameter    ( snProblem* prob, char stropt[], char strout[] );
 int setIntParameter ( snProblem* prob, char stropt[], int opt );
 int getIntParameter ( snProblem* prob, char stropt[], int opt );
 int setRealParameter( snProblem* prob, char stropt[], double opt );

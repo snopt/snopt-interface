@@ -31,7 +31,7 @@ snoptProblem::snoptProblem( const char *name ) {
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 snoptProblem::~snoptProblem() {
-  f_snend();
+  f_snend(iw, leniw, rw, lenrw);
 
   delete []rw;  delete []iw;
 }
@@ -107,7 +107,7 @@ void snoptProblem::reallocR( int alenrw ) {
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void snoptProblem::initialize( const char*prtfile, int summOn ) {
   int len = strlen(prtfile);
-  f_sninit( prtfile, len, summOn, iw, leniw, rw, lenrw );
+  f_sninitf( prtfile, len, summOn, iw, leniw, rw, lenrw );
   initCalled = 1;
 }
 
@@ -121,7 +121,7 @@ void snoptProblem::setPrintFile( const char *prtname ) {
   assert( initCalled == 1 );
 
   int len = strlen(prtname);
-  f_snsetprint( prtname, len, iw, leniw, rw, lenrw );
+  f_snsetprintf( prtname, len, iw, leniw, rw, lenrw );
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -129,7 +129,7 @@ int snoptProblem::setSpecsFile( const char *specname ) {
   assert( initCalled == 1 );
 
   int len = strlen(specname);
-  f_snspec( specname, len, &inform, iw, leniw, rw, lenrw );
+  f_snspecf( specname, len, &inform, iw, leniw, rw, lenrw );
   if( inform != 101 ){
     printf("Warning: unable to find specs file %s \n", specname);
   }
@@ -147,6 +147,7 @@ int snoptProblem::setParameter( const char *stropt ) {
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+/*
 int snoptProblem::getParameter( const char *stroptin, char *stroptout ) {
   assert( initCalled == 1 );
 
@@ -158,7 +159,7 @@ int snoptProblem::getParameter( const char *stroptin, char *stroptout ) {
 	    &errors, iw, leniw, rw, lenrw );
   return errors;
 }
-
+*/
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 int snoptProblem::setIntParameter( const char *stropt, int opt ) {
   assert( initCalled == 1 );
