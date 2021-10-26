@@ -51,7 +51,7 @@ extern "C" {
     int *nnCon0, int *nnCon, int *nnObj0, int *nnObj, int *nS,
     int *itn, int *nMajor, int *nMinor, int *nSwap,
     double *condHz, int *iObj, double *sclObj, double *ObjAdd,
-    double *fObj, double *fMrt, double *PenNrm, double *step,
+    double *fObj, double *fMrt, double PenNrm[], double *step,
     double *prInf, double *duInf, double *vimax, double *virel, int hs[],
     int *ne, int *nlocJ, int locJ[], int indJ[], double Jcol[], int *negCon,
     double Ascale[], double bl[], double bu[],
@@ -112,6 +112,10 @@ extern "C" {
   void f_snspecf( const char *specfile, int len, int *inform,
 		  int iw[], int leniw, double rw[], int lenrw );
 
+  void f_sninitx( const char *print, int plen,
+		  const char *summ,  int slen,
+		  int iw[], int leniw, double rw[], int lenrw );
+
   void f_sngeti ( const char *buffer, int len, int  *ivalue, int *errors,
 		  int iw[], int leniw, double rw[], int lenrw );
   void f_sngetr ( const char *buffer, int len, double *ivalue, int *errors,
@@ -140,6 +144,10 @@ extern "C" {
   void f_sqinitf( const char *name, int len, int summOn,
 		  int iw[], int leniw, double rw[], int lenrw );
   void f_sqspecf( const char *specfile, int len, int *inform,
+		  int iw[], int leniw, double rw[], int lenrw );
+
+  void f_sqinitx( const char *print, int plen,
+		  const char *summ,  int slen,
 		  int iw[], int leniw, double rw[], int lenrw );
 
   void f_sqgeti ( const char *buffer, int len, int  *ivalue, int *errors,

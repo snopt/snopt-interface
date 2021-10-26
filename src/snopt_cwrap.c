@@ -86,6 +86,7 @@ void snInitXW(snProblem* prob, char* name,
 
   if (isumm != 0) {
     printf("%s",snversion);
+    fflush(stdout);
   }
 
   f_sninit(prtfile, plen, iprint, sumfile, slen, isumm,
@@ -166,6 +167,7 @@ void snInitW(snProblem* prob, char* name, char* prtfile, int summOn,
 
   if (summOn != 0) {
     printf("%s",snversion);
+    fflush(stdout);
   }
 
   f_sninitf(prtfile, len, summOn, prob->iw, prob->leniw,

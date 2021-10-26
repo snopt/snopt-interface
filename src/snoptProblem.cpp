@@ -234,7 +234,7 @@ void snoptProblemABC::initialize(const char*prtfile, int summOn) {
   int len = strlen(prtfile);
 
   if (summOn != 0) {
-    std::cout << snversion;
+    std::cout << snversion << flush;
   }
 
   f_sninitf(prtfile, len, summOn, iw, leniw, rw, lenrw);
@@ -249,7 +249,7 @@ void snoptProblemABC::initialize(const char*prtfile, int iprint,
   slen = strlen(prtfile);
 
   if (isumm != 0) {
-    std::cout << snversion;
+    std::cout << snversion << flush;
   }
 
   f_sninit(prtfile, plen, iprint, sumfile, slen, isumm,
@@ -588,7 +588,7 @@ void sqoptProblem::initialize(const char*prtfile, int summOn) {
   int len = strlen(prtfile);
 
   if (summOn != 0) {
-    std::cout << sqversion;
+    std::cout << sqversion << flush;
   }
 
   f_sqinitf(prtfile, len, summOn, iw, leniw, rw, lenrw);
@@ -603,7 +603,7 @@ void sqoptProblem::initialize(const char*prtfile, int iprint,
   slen = strlen(prtfile);
 
   if (isumm != 0) {
-    std::cout << sqversion;
+    std::cout << sqversion << flush;
   }
 
   f_sqinit(prtfile, plen, iprint, sumfile, slen, isumm,
